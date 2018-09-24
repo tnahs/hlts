@@ -1,0 +1,91 @@
+{% extends "_index.html" %}
+
+
+{% block section %}
+
+    <script src="{{ url_for('static', filename='js/medKit.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/editor.js') }}"></script>
+
+    <form method="POST" action="{{ url_for('main.edit', in_request=id, referrer=referrer) }}">
+
+        <div class="block floating">
+
+            <div class="label">edit annotation</div>
+
+            <div class="content">
+
+                <button class="link button form" type="submit">update</button>
+                     <a class="link button form" href="{{ url_for('main.dashboard') }}">cancel</a>
+                <button class="link button form" type="reset">reset</button>
+                <button class="link button form" type="submit" name="duplicate">duplicate</button>
+
+            </div>
+
+        </div>
+
+        <div class="block bleeding">
+
+            <div class="content">
+
+                <div id="editor">
+
+                    {{ form_annotation.csrf_token }}
+
+                    {{ form_annotation.passage(class_="enableMarkdown") }}
+                    {{ form_source.name }}
+                    {{ form_author.name }}
+                    {{ form_annotation.notes(class_="enableMarkdown") }}
+
+                    <medKit name='tag'></medKit>
+                    {{ form_annotation.tags(id="tag-medKitData") }}
+
+                    <medKit name='collection'></medKit>
+                    {{ form_annotation.collections(id="collection-medKitData") }}
+
+                    <div class="text upper metaData">
+
+                        {{ form_annotation.created.label }}: {{ form_annotation.created.data.strftime('%B %d, %Y') }}<br>
+                        {{ form_annotation.modified.label }}: {{ form_annotation.modified.data.strftime('%B %d, %Y') }}<br>
+                        {{ form_annotation.origin.label }}: {{ form_annotation.origin.data }}<br>
+                        {{ form_annotation.protected.label }}: {{ form_annotation.protected.data }}<br>
+                        {{ form_annotation.id.label }}: {{ form_annotation.id.data }}<br>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+    <script>
+
+        const tagMedKit = new MedKit(
+            "tag",
+            {
+                pillBoxInputPlaceholder: "add tags...",
+                pillCustomClasses: ["pill", "tag"],
+                suggestionDataURL: "/ajax/tags",
+                pillColorsDataURL: "/ajax/colors",
+                zIndex: 200
+            }
+        );
+        tagMedKit.initMedKit()
+
+        const collectionMedKit = new MedKit(
+            "collection",
+            {
+                pillBoxInputPlaceholder: "add to collections...",
+                pillCustomClasses: ["pill", "collection"],
+                suggestionDataURL: "/ajax/collections",
+                pillColorsDataURL: "/ajax/colors",
+                zIndex: 100
+            }
+        );
+        collectionMedKit.initMedKit()
+
+    </script>
+
+{% endblock %}

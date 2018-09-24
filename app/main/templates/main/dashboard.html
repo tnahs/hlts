@@ -1,0 +1,166 @@
+{% from "_macros.html" import render_base_annotation, render_multiple_base_annotations, attribution_from_source_obj with context %}
+
+{% extends "_index.html" %}
+
+
+{% block section %}
+
+    <div class="block floating">
+
+        <div class="label">{{ dash.today.strftime('%B %d, %Y') }}</div>
+
+        <div class="content">
+
+            <div class="text upper dashboard">{{ dash.annotation_count }} annotations</div>
+            <div class="text upper dashboard">{{ dash.tag_count }} tags</div>
+            <div class="text upper dashboard">{{ dash.collection_count }} collections</div>
+
+        </div>
+
+    </div>
+
+    {% if dash.pinned_collections or dash.pinned_tags %}
+
+        <div class="block floating">
+
+            {% if dash.pinned_collections %}
+
+                <div class="label">pinned collections</div>
+
+                <div class="content">
+
+                    {% for collection in dash.pinned_collections %}
+
+                        <a class="pill collection" name="{{ collection.name }}" href="{{ url_for('main.collection', in_request=collection.name) }}">{{ collection.name }}</a>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+            {% if dash.pinned_tags %}
+
+                <div class="label">pinned tags</div>
+
+                <div class="content">
+
+                    {% for tag in dash.pinned_tags %}
+
+                        <a class="pill tag" name="{{ tag.name }}" href="{{ url_for('main.tag', in_request=tag.name) }}">{{ tag.name }}</a>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    {% endif %}
+
+    {% if dash.daily_annotation %}
+
+        <div class="block floating">
+
+            <div class="label">quote of the day</div>
+
+            <div class="content">
+
+                {{ render_base_annotation(dash.daily_annotation) }}
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+    {% if dash.recent_tags or dash.recent_collections or dash.recent_sources or dash.recent_authors %}
+
+        <div class="block floating">
+
+            {% if dash.recent_tags %}
+
+                <div class="label">recent tags</div>
+
+                <div class="content">
+
+                    {% for tag in dash.recent_tags %}
+
+                        <a class="pill tag" name="{{ tag.name }}" href="{{ url_for('main.tag', in_request=tag.name) }}">{{ tag.name }}</a>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+            {% if dash.recent_collections %}
+
+                <div class="label">recent collections</div>
+
+                <div class="content">
+
+                    {% for collection in dash.recent_collections %}
+
+                        <a class="pill collection" name="{{ collection.name }}" href="{{ url_for('main.collection', in_request=collection.name) }}">{{ collection.name }}</a>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+            {% if dash.recent_sources %}
+
+                <div class="label">recent sources</div>
+
+                <div class="content">
+
+                    {% for source in dash.recent_sources %}
+
+                        <a class="link button dashboard" href="{{ url_for('main.source', in_request=source.id) }}">{{ attribution_from_source_obj(source) }}</a>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+            {% if dash.recent_authors %}
+
+                <div class="label">recent authors</div>
+
+                <div class="content">
+
+                    {% for author in dash.recent_authors %}
+
+                        <a class="link button dashboard" href="{{ url_for('main.author', in_request=author.id) }}">{{ author.name }}</a>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    {% endif %}
+
+    {% if dash.daily_topic and dash.daily_topic_annotations %}
+
+        <div class="block floating">
+
+            <div class="label">topic of the day: <span class="accent">{{ dash.daily_topic.name }}</span></div>
+
+            <div class="content">
+
+                {{ render_multiple_base_annotations(dash.daily_topic_annotations) }}
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+{% endblock %}

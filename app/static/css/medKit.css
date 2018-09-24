@@ -1,0 +1,83 @@
+medKit {
+
+	display: block;
+	position: relative;
+}
+
+medKit div[id$="medKitData"]{
+
+	visibility: hidden;
+}
+
+medKit div[id$="medKitPillBox"]{
+
+	margin: 5px 0;
+}
+
+medKit input[id$="medKitInput"] {
+
+	background-color: white !important;
+
+	padding: 8px 12px !important;
+	margin: 7px 0 0 0 !important;
+
+	transition: .2s;
+}
+
+medKit input[id$="medKitInput"]:focus {
+
+	background-color: hsl(0, 0%, 95%) !important;
+}
+
+medKit div[id$="medKitSuggestionBox"] {
+
+	background-color:  hsla(220, 100%, 90%, 0.95);
+	position: absolute;
+	width: 100%;
+
+	-webkit-box-shadow: 2px 2px 0px 0px rgba(0,0,0,0.125);
+	   -moz-box-shadow: 2px 2px 0px 0px rgba(0,0,0,0.125);
+	        box-shadow: 2px 2px 0px 0px rgba(0,0,0,0.125);
+}
+
+medKit div[class$="medKitSuggestion"] {
+
+	padding: 8px 12px;
+
+	cursor: pointer;
+
+	/* font block */
+	font-family: var(--sans-serif-condensed-font);
+	color: var(--input-text-color);
+	font-size: 10.5pt;
+	font-weight: 400;
+	letter-spacing: .25px;
+	line-height: 150%;
+	text-transform: uppercase;
+
+	transition: .2s;
+}
+
+medKit div[class$="medKitSuggestion"]:hover,
+medKit div[id$="medKitSuggestionSelected"] {
+
+	background-color:  hsla(220, 100%, 85%, 0.95);
+
+}
+
+medKit .medKitPill {
+
+	margin: 3px !important;
+}
+
+medKit .medKitPill:hover {
+
+	background-color: hsl(0, 0%, 92%) !important;
+	color: red !important;
+}
+
+medKit .medKitPill.warning {
+
+	background-color: red !important;
+	color: white !important;
+}

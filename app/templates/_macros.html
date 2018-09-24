@@ -1,0 +1,253 @@
+{% macro no_results(message) -%}
+
+    <div class="block floating">
+
+        <div class="content">
+
+            <div class="text upper">{{ message }}</div>
+
+        </div>
+
+    </div>
+
+{%- endmacro %}
+
+
+{% macro pagination(results) -%}
+
+    <div class="pagination">
+
+        <div class="matches">
+
+            <div class="matchInfo">
+
+                {{ results.total }} match{% if results.total != 1 %}es{% endif %}
+
+            </div>
+
+        </div>
+
+        <div class="pages">
+
+            {%- for page in pages %}
+
+                {% if loop.index != results.page %}
+
+                    <a class="pageNumber" href='{{ page }}'>{{ loop.index }}</a>
+
+                {% else %}
+
+                    <span class="pageNumber current">{{ loop.index }}</span>
+
+                {% endif %}
+
+            {%- endfor %}
+
+        </div>
+
+    </div>
+
+{%- endmacro %}
+
+
+{% macro attribution_from_source_obj(item) -%}
+
+    {# Renders source from serialize() output. #}
+
+    {% if item.name %}{{ item.name }}{% endif %}
+
+    {% if (item.name and item.author.name) %} ⋅ {% endif %}
+
+    {% if item.author.name %}{{ item.author.name }}{% endif %}
+
+{%- endmacro %}
+
+
+{% macro attribution_from_annotation_obj(annotation) -%}
+
+    {# Renders source from Annotation object. #}
+
+    {% if annotation.source %}
+
+        <a href="{{ url_for('main.source', in_request=annotation.source_id) }}">{{ annotation.source.name }}</a>
+
+    {% endif %}
+
+    {% if (annotation.source.name and annotation.source.author) %}
+
+        ⋅ {# dot separator #}
+
+    {% endif %}
+
+    {% if annotation.source.author.name %}
+
+        <a href="{{ url_for('main.author', in_request=annotation.source.author_id) }}">{{ annotation.source.author.name }}</a>
+
+    {% endif %}
+
+{%- endmacro %}
+
+
+{% macro render_interactive_annotation(annotation) -%}
+
+    <div id="{{ annotation.id }}" class="annotationContainer">
+
+        {{ render_base_annotation(annotation) }}
+
+        <div class="annotationOptions">
+
+            {% if request.endpoint == 'main.trash' %}
+
+                <div class="link button pmTrigger"
+                     data="{{ annotation.id }}"
+                     message="restore annotation?"
+                     url="{{ url_for('main.restore_annotation') }}"
+                     action="restore">restore</div>
+
+                <div class="link button pmTrigger"
+                     data="{{ annotation.id }}"
+                     message="kill annotation?"
+                     url="{{ url_for('main.kill_annotation') }}"
+                     action="kill">kill</div>
+
+            {% else %}
+
+                <a class="link button" href="{{ url_for('main.edit', in_request=annotation.id) }}">edit</a>
+                <div class="link button pmTrigger"
+                     data="{{ annotation.id }}"
+                     message="delete annotation?"
+                     url="{{ url_for('main.delete_annotation') }}"
+                     action="delete">delete</div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+{%- endmacro %}
+
+
+{% macro render_multiple_interactive_annotations(results) -%}
+
+    {# Renders paginated annotation. #}
+
+    {% for annotation in results.items %}
+
+        {{ render_interactive_annotation(annotation) }}
+
+    {% endfor %}
+
+{%- endmacro %}
+
+
+{% macro render_base_annotation(annotation) -%}
+
+    <div class="annotation">
+
+        <div class="markdown passage">{{ annotation.passage | markdown }}</div>
+
+        <div class="metaData">
+
+            {% if annotation.source %}
+
+                <div class="attribution">
+
+                    {{ attribution_from_annotation_obj(annotation) }}
+
+                </div>
+
+                <br>
+
+            {% endif %}
+
+            {% if annotation.notes %}
+
+                <div class="notes">{{ annotation.notes | markdown }}</div>
+
+                <br>
+
+            {% endif %}
+
+            {% if annotation.in_collection %}
+
+                {% for collection in annotation.collections %}
+
+                    <a class="pill collection" name="{{ collection.name }}" href="{{ url_for('main.collection', in_request=collection.name) }}">{{ collection.name }}</a>
+
+                {% endfor %}
+
+            {% endif %}
+
+            {% if annotation.is_tagged %}
+
+                {% for tag in annotation.tags %}
+
+                    <a class="pill tag" name="{{ tag.name }}" href="{{ url_for('main.tag', in_request=tag.name) }}">{{ tag.name }}</a>
+
+                {% endfor %}
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+{%- endmacro %}
+
+
+{% macro render_multiple_base_annotations(results) -%}
+
+    {# Renders paginated annotation. #}
+
+    {% for annotation in results.items %}
+
+        {{ render_base_annotation(annotation) }}
+
+        <br>
+        <br>
+
+    {% endfor %}
+
+{%- endmacro %}
+
+
+{% macro debug_bar() -%}
+
+	{% if DEBUG %}
+
+		DEBUG TOOLBAR --------------------
+		<div>endpoint: {{ request.endpoint.split('.')[-1] }}</div>
+		<br>
+		<div>results: {{ results }}</div>
+		<br>
+		<div>in_request: {{ in_request }}</div>
+		<br>
+		<div>source: {% if source %}{{ source.name }}{% endif %}</div>
+		<br>
+		<div>author: {% if author %}{{ author.author }}{% endif %}</div>
+		<br>
+		<div>page: {{ page }}</div>
+		<br>
+		<div>pages: {{ pages }}</div>
+		<br>
+		<div>tagfilter: {{ tagfilter }}</div>
+		<br>
+		<div>tags: {{ tags }}</div>
+		<br>
+		<div>path: {{ request.path }}</div>
+		<br>
+		<div>url: {{ request.url }}</div>
+		<br>
+		<div>args:
+			{% for key, value in request.args.iteritems() %}
+				[{{ key }}: {{ value }}]
+			{% endfor %}
+		</div>
+		DEBUG TOOLBAR --------------------
+		<br>
+		<br>
+
+	{% endif %}
+
+{%- endmacro %}

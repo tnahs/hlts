@@ -1,0 +1,69 @@
+{% from "_macros.html" import no_results, attribution_from_source_obj with context %}
+
+{% extends "_index.html" %}
+
+
+{% macro build_index(results, endpoint, link_by, classes) -%}
+
+    {% for letter, items in results.items() | sort %}
+
+        <div class="label">{{ letter }}</div>
+
+        <div class="content">
+
+            {% for item in items %}
+
+                {% if link_by == 'name' %}
+
+                    {% set url = url_for(endpoint, in_request=item.name) %}
+
+                {% elif link_by == 'id' %}
+
+                    {% set url = url_for(endpoint, in_request=item.id) %}
+
+                {% endif %}
+
+                <a class="{{ classes | join(' ') }}" name="{{ item.name }}" href="{{ url }}">{{ item.name }} ⋅ {{ item.frequency }}</a>
+
+            {% endfor %}
+
+        </div>
+
+    {% endfor %}
+
+{%- endmacro %}
+
+
+{% block section %}
+
+    {% if results | length == 0 %}
+
+        {{ no_results("nothing here...") }}
+
+    {% else %}
+
+        <div class="block bleeding">
+
+            {% if request.view_args['mode'] == 'sources' %}
+
+                {{ build_index(results=results, endpoint='main.source', link_by='id', classes=['link', 'button', 'index']) }}
+
+            {% elif request.view_args['mode'] == 'authors' %}
+
+                {{ build_index(results=results, endpoint='main.author', link_by='id', classes=['link', 'button', 'index']) }}
+
+            {% elif request.view_args['mode'] == 'tags' %}
+
+                {{ build_index(results=results, endpoint='main.tag', link_by='name', classes=['pill', 'tag']) }}
+
+            {% elif request.view_args['mode'] == 'collections' %}
+
+                {{ build_index(results=results, endpoint='main.collection', link_by='name', classes=['pill', 'collection']) }}
+
+            {% endif %}
+
+        </div>
+
+    {% endif %}
+
+{% endblock %}

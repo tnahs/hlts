@@ -1,0 +1,115 @@
+{% extends "_index.html" %}
+
+{% block section %}
+
+	<div id="settings">
+
+		{% if request.view_args['mode'] == 'main' %}
+
+			<div class="block bleeding">
+
+				<div class="label">misc settings</div>
+
+				<div class="content">
+
+					<form method="POST" action="{{ url_for('user.settings', mode='main') }}">
+
+						{{ settings_form.csrf_token }}
+
+						{{ settings_form.theme_index.label }} ⋅ {{ settings_form.theme_index }}<br>
+						{{ settings_form.results_per_page.label }} ⋅ {{ settings_form.results_per_page }}<br>
+						{{ settings_form.recent_days.label }} ⋅ {{ settings_form.recent_days }}<br>
+
+						<br>
+
+						{{ USER_AGENT.browser }}<br>
+						{{ USER_AGENT.platform }}<br>
+						{{ USER_AGENT.version }}<br>
+						{{ USER_AGENT.language }}<br>
+
+						<br>
+
+						<button class="link button" type="submit" name="general">update</button>
+
+					</form>
+
+				</div>
+
+			</div>
+
+		{% elif request.view_args['mode'] == 'login' %}
+
+			<div class="block bleeding">
+
+				<div class="label">login info</div>
+
+				<div class="content">
+
+					<form method="POST" action="{{ url_for('user.settings', mode='user') }}">
+
+						{{ user_form.csrf_token }}
+
+						{{ user_form.username.label }} ⋅ {{ user_form.username(placeholder="username") }}<br>
+						{{ user_form.password.label }} ⋅ {{ user_form.password(placeholder="password") }}<br>
+						{{ user_form.password_change.label }} ⋅ {{ user_form.password_change(placeholder="change password") }}<br>
+						{{ user_form.password_confirm.label }} ⋅ {{ user_form.password_confirm(placeholder="confirm password") }}<br>
+
+						<br>
+
+						<button class="link button" type="submit" name="user">update</button>
+
+					</form>
+
+				</div>
+
+			</div>
+
+		{% elif request.view_args['mode'] == 'tools' %}
+
+			<div class="block bleeding">
+
+				<div class="label">export / restore</div>
+
+				<div class="content">
+
+					<a class="link button settings" href="{{ url_for('io.export_annotations') }}">export annotations</a>
+					<a class="link button settings" href="{{ url_for('io.restore_json') }}">restore json</a>
+					<a class="link button settings" href="{{ url_for('io.restore_legacy_json') }}">restore legacy json</a>
+
+				</div>
+
+			</div>
+
+			{% if current_user.is_admin %}
+
+				<div class="block bleeding">
+
+					<div class="label">admin tools</div>
+
+					<div class="content">
+
+						<a class="link button settings" href="{{ url_for('admin.flash_me', which='success') }}">flash success</a>
+						<a class="link button settings" href="{{ url_for('admin.flash_me', which='warning') }}">flash warning</a>
+						<a class="link button settings" href="{{ url_for('admin.reset') }}">reset</a>
+
+					</div>
+
+				</div>
+
+			{% endif %}
+
+		{% endif %}
+
+		<div class="block floating">
+
+			<div class="content">
+
+				<a class="link button settings" href="{{ url_for('user.logout') }}">logout</a>
+
+			</div>
+
+		</div>
+
+	</div>
+
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "_index.html" %}
+
+{% block body %}
+
+<body>
+
+	<div id="login">
+
+		<div class="loginContainer dropShadowBig">
+
+			{% set next = request.args.get('next', None) %}
+
+			<form method="POST" action="{{ url_for('user.login', next=next) }}">
+
+				<div class="loginForm">
+
+					{{ login_form.csrf_token }}
+
+					{{ login_form.username }}
+					{{ login_form.password }}
+					<br>
+					{{ login_form.remember }} <span class="text upper faded">{{ login_form.remember.label }}</span><br>
+
+				</div>
+
+				<div class="loginFormOptions">
+
+					<button class="link button faded" type="submit">login</button>
+
+				</div>
+
+			</form>
+
+			<div class="loginAccent"></div>
+
+		</div>
+
+
+	</div>
+
+</body>
+
+{% endblock %}

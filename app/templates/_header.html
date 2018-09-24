@@ -1,0 +1,38 @@
+{% macro header_buttons(endpoint, modes) -%}
+
+	{% for mode in modes %}
+
+		{% set current = 'current' if request.view_args['mode'] == mode else '' %}
+
+		<a class="link button header {{ current }}" href='{{ url_for(endpoint, mode=mode) }}'>{{ mode }}</a>
+
+	{% endfor %}
+
+{%- endmacro %}
+
+
+{% if request.endpoint in ['main.index', 'main.tags', 'main.recent', 'main.collections', 'user.settings'] %}
+
+	<div class="block floating">
+
+		<div class="content">
+
+			{% if request.endpoint == 'main.index' %}
+
+				{{ header_buttons(endpoint='main.index', modes=['sources', 'authors', 'tags', 'collections']) }}
+
+			{% elif request.endpoint == 'main.recent' %}
+
+				{{ header_buttons(endpoint='main.recent', modes=['imported', 'edited', 'added']) }}
+
+			{% elif request.endpoint == 'user.settings' %}
+
+				{{ header_buttons(endpoint='user.settings', modes=['main', 'login', 'tools']) }}
+
+			{% endif %}
+
+		</div>
+
+	</div>
+
+{% endif %}

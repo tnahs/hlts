@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1, user-scalable=no" />
+
+        <title>HL+S</title>
+
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/petitModal.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/medKit.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/default.css') }}" />
+
+        {% if current_user.is_authenticated %}
+            <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/' ~ current_user.theme) }}" />
+        {% endif %}
+
+    </head>
+
+    {% block body %}
+
+        <body>
+
+            {% include "_nav.html" %}
+
+            <main>
+
+                {% include "_header.html" %}
+
+                <section>
+
+                    {% block section %}{% endblock %}
+
+                </section>
+
+                <footer></footer>
+
+            </main>
+
+        </body>
+
+    {% endblock %}
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/petitModal.js') }}"></script>
+
+</html>

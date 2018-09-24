@@ -1,0 +1,153 @@
+"use strict";
+
+window.addEventListener("load", function(){
+
+    /* -------------------------------------------------------------------- */
+    /* Close flash window ------------------------------------------------- */
+
+    const flashWindow = document.querySelector("flash .window");
+
+    if (flashWindow) {
+
+        const main = document.querySelector("main");
+        const flashClose = document.querySelector("flash .close");
+
+        const rootStyles = window.getComputedStyle(document.body);
+        const navMenuHeight = rootStyles.getPropertyValue("--navMenuHeight");
+        const navFlashHeight = rootStyles.getPropertyValue("--navFlashHeight");
+        const navMenuHeightInt = parseInt(navMenuHeight.slice(0, -2));
+        const navFlashHeightInt = parseInt(navFlashHeight.slice(0, -2));
+
+        main.style.paddingTop =  `${navMenuHeightInt + navFlashHeightInt}px`;
+
+        flashClose.addEventListener("click", function() {
+
+            flashWindow.remove()
+
+            main.style.paddingTop = `${navMenuHeightInt}px`;
+        });
+    }
+
+
+    /* -------------------------------------------------------------------- */
+    // Nav ---------------------------------------------------------------- */
+
+
+    document.addEventListener("scroll", ( ) => {
+
+        let scrollPosY = document.body.scrollTop;
+        const nav = document.querySelector("nav");
+
+        if (scrollPosY > 0) {
+
+            nav.classList.add("dropShadowBig");
+        }
+
+        else {
+
+            nav.classList.remove("dropShadowBig");
+        }
+    });
+
+    /* -------------------------------------------------------------------- */
+    /* Color pills -------------------------------------------------------- */
+
+    fetchColorsData("/ajax/colors");
+
+    function fetchColorsData(pillColorsDataURL) {
+
+        const pillColorsData = [];
+
+        fetch(pillColorsDataURL, {credentials: "include"})
+            .then(response => response.json())
+            .then(data => {
+                pillColorsData.push(...data);
+                refreshPillColors(pillColorsData);
+            }
+        )
+    }
+
+    function refreshPillColors(pillColorsData) {
+
+        const pills = document.querySelectorAll('.pill');
+
+        for (let data of pillColorsData) {
+
+            for (let pill of pills) {
+
+                const pillName = pill.getAttribute('name');
+
+                if (pillName == data.name){
+
+                    pill.style.background = data.color;
+                    pill.style.color = 'white';
+                }
+            }
+        }
+    }
+
+    /* -------------------------------------------------------------------- */
+    // Mark passages ------------------------------------------------------ */
+
+    markPassages(searchInfo);
+
+    function markPassages(searchInfo) {
+
+        if (!searchInfo["unsafe"]) {
+
+            if (searchInfo["key"] == "" || searchInfo["key"] == "passages") {
+
+                const markedClass = "marked";
+
+                const terms = searchInfo["terms"];
+                const passages = document.querySelectorAll(".passage");
+
+                for (let passage of passages) {
+
+                    for (let term of terms) {
+
+                        term = term.replace(searchInfo["wildcard_symbol"], "");
+
+                        const termRegExp = new RegExp(term, "gi");
+                        const thisMatch = "$&";
+
+                        const markup = `<span class="${markedClass}">${thisMatch}</span>`;
+                        const markedHTML = passage.innerHTML.replace(termRegExp, markup);
+
+                        passage.innerHTML = markedHTML;
+                    }
+                }
+            }
+        }
+    }
+
+    /* -------------------------------- show/hide annotation options -------------------------------- */
+
+    const annotationContainers = document.querySelectorAll(".annotationContainer");
+
+    for (let annotationContainer of annotationContainers) {
+
+        annotationContainer.addEventListener("mouseover", function(){ activate(annotationContainer) });
+        annotationContainer.addEventListener("mouseout", function(){ deactivate(annotationContainer) });
+    }
+
+    function activate(annotationContainer) {
+
+        annotationContainer.classList.add("annotationContainerVisible");
+        annotationContainer.classList.add("dropShadowBig");
+
+        const options = annotationContainer.lastElementChild;
+        options.style.opacity = "1";
+    }
+
+    function deactivate(annotationContainer) {
+
+        annotationContainer.classList.remove("annotationContainerVisible");
+        annotationContainer.classList.remove("dropShadowBig");
+
+        const options = annotationContainer.lastElementChild;
+        options.style.opacity = "0";
+    }
+
+});
+
