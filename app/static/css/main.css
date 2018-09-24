@@ -590,16 +590,16 @@ a *:hover {
 		border-bottom: solid 2px  hsl(0, 0%, 85%) !important;
 	}
 
-.annotation {
+.annotationContainer .annotation {
 
-	padding: 10px 15px 10px 15px;
+	padding: 15px;
 
 	border-bottom: solid 2px hsla(0,0%,0%,0);
 
 	transition: .3s;
 }
 
-.annotationOptions {
+.annotationContainer .annotationOptions {
 
 	padding: 15px 20px;
 
@@ -614,6 +614,10 @@ a *:hover {
 /* ------------------ passage ----------------- */
 
 .annotation .passage {
+
+	/* used to counteract line-height at top of passage */
+	margin-top: -4px;
+
 	/* font block */
 	font-family: var(--sans-serif-font);
 	color: var(--body-text-color);
