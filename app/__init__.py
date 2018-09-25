@@ -37,7 +37,6 @@ def create_app():
     from app.errors import errors
     from app.io import io
     from app.api import api
-    from app.admin import admin
 
     # register blueprints
     app.register_blueprint(user)
@@ -45,7 +44,6 @@ def create_app():
     app.register_blueprint(errors)
     app.register_blueprint(io, url_prefix='/io')
     app.register_blueprint(api, url_prefix='/api')
-    app.register_blueprint(admin, url_prefix='/admin')
 
     from app.models import User
 

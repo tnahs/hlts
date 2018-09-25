@@ -2,9 +2,11 @@
 
 import re
 import string
-
-from flask import request, url_for
+from functools import wraps
 from urlparse import urlparse, urljoin
+
+from flask import current_app, request, url_for
+from flask_login import current_user
 
 
 def home_url():
@@ -62,3 +64,22 @@ class SortIt(object):
     @staticmethod
     def by_frequency(list_of_dictionaries, sort_key='frequency'):
         return sorted(list_of_dictionaries, key=lambda k: k[sort_key], reverse=True)
+
+
+def admin_only(func):
+    """ https://flask-login.readthedocs.io/en/latest/_modules/flask_login/utils.html#login_required
+    """
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
+
+        if current_app.login_manager._login_disabled:
+
+            return func(*args, **kwargs)
+
+        elif not current_user.is_admin:
+
+            return current_app.login_manager.unauthorized()
+
+        return func(*args, **kwargs)
+
+    return decorated_view

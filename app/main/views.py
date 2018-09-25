@@ -7,7 +7,7 @@ import app.defaults as AppDefaults
 
 from app import db
 from app.models import Annotation, Source, Author, Tag, Collection
-from app.tools import home_url, SortIt
+from app.tools import home_url, SortIt, admin_only
 
 from app.main import main
 from app.main.forms import AnnotationForm, SourceForm, AuthorForm
@@ -728,6 +728,7 @@ def untagged():
 
 
 @main.route("/user")
+@admin_only
 @login_required
 def user():
 
