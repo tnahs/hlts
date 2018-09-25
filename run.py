@@ -1,46 +1,29 @@
-#!flask/bin/python
+from app import create_app, db
 
 import app.defaults as AppDefaults
-
-from app import create_app, db
-from app.models import User, Tag, Source, Annotation
+from app.cli import register_cli
+from app.models import User, Source, Author, Tag, Collection, Annotation
 
 from flask import request
 from werkzeug.useragents import UserAgent
 
 
 app = create_app()
+register_cli(app)
 
 
 @app.shell_context_processor
 def make_shell_context():
-    """ docstring
-    """
-    return {
-        'db': db,
-        'User': User,
-        'Tag': Tag,
-        'Source': Source,
-        'Annotation': Annotation
-    }
+    return dict(db=db, User=User, Source=Source, Author=Author, Tag=Tag,
+                Collection=Collection,Annotation=Annotation)
 
 
 @app.context_processor
 def inject_defaults():
-    """ docstring
-    """
-    return dict(
-        SOURCE_NONE=AppDefaults.SOURCE_NONE,
-        AUTHOR_NONE=AppDefaults.AUTHOR_NONE,
-        DEBUG=app.debug
-    )
+    return dict(SOURCE_NONE=AppDefaults.SOURCE_NONE,
+                AUTHOR_NONE=AppDefaults.AUTHOR_NONE,DEBUG=app.debug)
 
 
 @app.context_processor
 def inject_user_agent():
-
-    # TODO WIP for detecting when on mobile.
-
-    user_agent = UserAgent(request.headers.get('User-Agent'))
-
-    return dict(USER_AGENT=user_agent)
+    return dict(USER_AGENT=UserAgent(request.headers.get('User-Agent')))

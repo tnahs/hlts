@@ -153,7 +153,6 @@ class User(UserMixin, db.Model):
 
     theme_index = db.Column(db.Integer(), default=AppDefaults.THEME_INDEX)
 
-    # TODO remove this eventually...
     results_per_page = db.Column(db.Integer(), default=AppDefaults.RESULTS_PER_PAGE)
     recent_days = db.Column(db.Integer(), default=AppDefaults.RECENT_DAYS)
 
