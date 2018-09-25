@@ -728,7 +728,6 @@ def untagged():
 
 
 @main.route("/user")
-@admin_only
 @login_required
 def user():
 
@@ -737,6 +736,7 @@ def user():
 
 @main.route("/clear_all")
 @login_required
+@admin_only
 def clear_all():
 
     for result in Annotation.get_all():

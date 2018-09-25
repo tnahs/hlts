@@ -5,7 +5,7 @@ import string
 from functools import wraps
 from urlparse import urlparse, urljoin
 
-from flask import current_app, request, url_for
+from flask import current_app, request, url_for, abort
 from flask_login import current_user
 
 
@@ -67,19 +67,19 @@ class SortIt(object):
 
 
 def admin_only(func):
-    """ https://flask-login.readthedocs.io/en/latest/_modules/flask_login/utils.html#login_required
+    """
+    https://flask-login.readthedocs.io/en/latest/_modules/flask_login/utils.html#login_required
+
+    return current_app.login_manager.unauthorized()
+
     """
     @wraps(func)
     def decorated_view(*args, **kwargs):
-
         if current_app.login_manager._login_disabled:
-
             return func(*args, **kwargs)
-
+        elif not current_user.is_authenticated:
+            return abort(401)
         elif not current_user.is_admin:
-
-            return current_app.login_manager.unauthorized()
-
+            return abort(401)
         return func(*args, **kwargs)
-
     return decorated_view

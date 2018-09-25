@@ -32,3 +32,6 @@ run cli command to initiate db: <br>
 
 basic structure to run cli commands: <br>
 `heroku run flask [CLI-COMMAND] --app [APPNAME]`
+
+check heroku logs: <br>
+`heroku logs --app [APPNAME]`

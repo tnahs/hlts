@@ -80,24 +80,6 @@
 
 			</div>
 
-			{% if current_user.is_admin %}
-
-				<div class="block bleeding">
-
-					<div class="label">admin tools</div>
-
-					<div class="content">
-
-						<a class="link button settings" href="{{ url_for('admin.flash_me', which='success') }}">flash success</a>
-						<a class="link button settings" href="{{ url_for('admin.flash_me', which='warning') }}">flash warning</a>
-						<a class="link button settings" href="{{ url_for('admin.reset') }}">reset</a>
-
-					</div>
-
-				</div>
-
-			{% endif %}
-
 		{% endif %}
 
 		<div class="block floating">
