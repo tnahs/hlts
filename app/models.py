@@ -312,6 +312,7 @@ class Source(db.Model, ToDictMixin, PingedMixin):
 
             db.session.add(author)
 
+        # Ping to show in recently modified
         author.ping()
 
         self.author_id = author.id
@@ -589,7 +590,7 @@ class AnnotationQueryMixin(object):
 
         results = Annotation.query \
             .filter_by(deleted=False) \
-            .filter(Annotation.created > recent) \
+            .filter(Annotation.modified > recent) \
             .order_by(Annotation.modified.desc())
 
         return results
@@ -886,20 +887,19 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
 
             db.session.add(source)
 
+        # Ping to show in recently modified
         source.ping()
 
-        # Link current annotation to the newly instanciated or queried Source
         self.source_id = source.id
 
     def refresh_tags(self, tags):
         """ tags: list
         """
-        # Clear current tags
+
         self.tags = []
 
         # Remove redundant and blank list entries
-        tags = set(tags)
-        tags = filter(None, tags)
+        tags = filter(None, set(tags))
 
         for name in tags:
 
@@ -908,6 +908,7 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
             if not tag:
                 tag = Tag(name)
 
+            # Ping to show in recently modified
             tag.ping()
 
             self.tags.append(tag)
@@ -915,12 +916,11 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
     def refresh_collections(self, collections):
         """ collections: list
         """
-        # Clear current collections
+
         self.collections = []
 
         # Remove redundant and blank list entries
-        collections = set(collections)
-        collections = filter(None, collections)
+        collections = filter(None, set(collections))
 
         for name in collections:
 
@@ -929,6 +929,7 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
             if not collection:
                 collection = Collection(name)
 
+            # Ping to show in recently modified
             collection.ping()
 
             self.collections.append(collection)

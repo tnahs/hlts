@@ -15,13 +15,13 @@ register_cli(app)
 @app.shell_context_processor
 def make_shell_context():
     return dict(db=db, User=User, Source=Source, Author=Author, Tag=Tag,
-                Collection=Collection,Annotation=Annotation)
+                Collection=Collection, Annotation=Annotation)
 
 
 @app.context_processor
 def inject_defaults():
     return dict(SOURCE_NONE=AppDefaults.SOURCE_NONE,
-                AUTHOR_NONE=AppDefaults.AUTHOR_NONE,DEBUG=app.debug)
+                AUTHOR_NONE=AppDefaults.AUTHOR_NONE, DEBUG=app.debug)
 
 
 @app.context_processor

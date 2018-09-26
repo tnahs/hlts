@@ -13,7 +13,7 @@ from app.main import main
 from app.main.forms import AnnotationForm, SourceForm, AuthorForm
 from app.main.tools import SearchAnnotations, annotation_view
 
-from flask import render_template, request, redirect, url_for, flash, jsonify
+from flask import render_template, request, redirect, url_for, flash, jsonify, abort
 from flask_login import login_required, current_user
 from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
@@ -732,6 +732,20 @@ def untagged():
 def user():
 
     return jsonify(current_user.serialize())
+
+
+@main.route("/e404")
+@login_required
+def e404():
+
+    return abort(404)
+
+
+@main.route("/e500")
+@login_required
+def e500():
+
+    return abort(500)
 
 
 @main.route("/clear_all")
