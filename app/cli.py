@@ -109,8 +109,8 @@ def register_cli(app):
 
             # Create Default User
 
-            user = User(username=getenv("DEFAULT_USER"),
-                        password=getenv("DEFAULT_USER_PASSWORD"),
+            user = User(username=getenv("DEFAULT_APP_USER"),
+                        password=getenv("DEFAULT_APP_USER_PASSWORD"),
                         admin=False)
 
             try:
@@ -126,8 +126,8 @@ def register_cli(app):
 
             # Create Default Admin
 
-            user = User(username=getenv("DEFAULT_ADMIN"),
-                        password=getenv("DEFAULT_ADMIN_PASSWORD"),
+            user = User(username=getenv("ADMIN_APP_USER"),
+                        password=getenv("ADMIN_APP_USER_PASSWORD"),
                         admin=True)
 
             try:
@@ -167,8 +167,8 @@ def register_cli(app):
 
             # Create Default User
 
-            user = User(username=getenv("DEFAULT_USER"),
-                        password=getenv("DEFAULT_USER_PASSWORD"),
+            user = User(username=getenv("DEFAULT_APP_USER"),
+                        password=getenv("DEFAULT_APP_USER_PASSWORD"),
                         admin=False)
 
             try:
@@ -184,8 +184,8 @@ def register_cli(app):
 
             # Create Default Admin
 
-            user = User(username=getenv("DEFAULT_ADMIN"),
-                        password=getenv("DEFAULT_ADMIN_PASSWORD"),
+            user = User(username=getenv("ADMIN_APP_USER"),
+                        password=getenv("ADMIN_APP_USER_PASSWORD"),
                         admin=True)
 
             try:

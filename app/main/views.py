@@ -714,8 +714,8 @@ def e500():
 @login_required
 def log_errors():
 
-    current_app.logger.info("Here's some info!")
-    current_app.logger.warning("A warning occurred!")
-    current_app.logger.error("An error occurred!")
+    current_app.logger.info("Logging some info!")
+    current_app.logger.warning("Logging a warning!")
+    current_app.logger.error("Logging an error!")
 
-    return "logged!"
+    return "Log successful!"

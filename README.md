@@ -23,10 +23,10 @@
 `heroku config:set MAIL_PASSWORD=[MAIL-PASSWORD] --app [APPNAME]` <br>
 `heroku config:set MAIL_PORT=[MAIL-PORT] --app [APPNAME]` <br>
 `heroku config:set MAIL_USE_TLS=[MAIL-USE-TLS] --app [APPNAME]` <br>
-`heroku config:set DEFAULT_USER=[DEFAULT-USER] --app [APPNAME]` <br>
-`heroku config:set DEFAULT_USER_PASSWORD=[DEFAULT-USER-PASSWORD] --app [APPNAME]` <br>
-`heroku config:set DEFAULT_ADMIN=[DEFAULT-ADMIN] --app [APPNAME]` <br>
-`heroku config:set DEFAULT_ADMIN_PASSWORD=[DEFAULT-ADMIN-PASSWORD] --app [APPNAME]` <br>
+`heroku config:set DEFAULT_APP_USER=[DEFAULT-USER] --app [APPNAME]` <br>
+`heroku config:set DEFAULT_APP_USER_PASSWORD=[DEFAULT-USER-PASSWORD] --app [APPNAME]` <br>
+`heroku config:set ADMIN_APP_USER=[DEFAULT-ADMIN] --app [APPNAME]` <br>
+`heroku config:set ADMIN_APP_USER_PASSWORD=[DEFAULT-ADMIN-PASSWORD] --app [APPNAME]` <br>
 
 5. Connect app to Github.
 
