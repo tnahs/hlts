@@ -492,20 +492,28 @@ a *:hover {
 
 *.link.button.warning,
 *.link.button.warning:hover {
+
 	color: var(--accent-warning);
 }
 
 *.link.button.faded:hover {
+
 	color: hsla(220, 100%, 75%, 1.00) !important;
 }
 
 *.link.button.faded {
+
 	color: rgba(0, 0, 0, 0.25) !important;
 }
 
 .current {
 
 	color: hsla(220, 100%, 75%, 1.00) !important;
+}
+
+.warning {
+
+	color: var(--accent-warning) !important;
 }
 
 .accent {
@@ -773,6 +781,10 @@ form *::-webkit-input-placeholder {
 
 	font-family: var(--sans-serif-condensed-font) !important;
 	color: var(--input-placeholder-color);
+	font-size: 11pt;
+	font-weight: 400;
+	letter-spacing: .75px;
+	line-height: unset;
 	text-transform: uppercase;
 
 	transition: color 0.3s;
@@ -804,6 +816,12 @@ textarea {
 textarea {
 
 	vertical-align: top;
+}
+
+
+input[type=password]{
+
+	letter-spacing: 2px;
 }
 
 
@@ -993,7 +1011,7 @@ textarea {
 #login {
 	display: grid;
 	grid-template-columns: 1fr;
-	grid-template-rows: 100vh;
+	grid-template-rows: 75vh;
 	align-items: center;
 	justify-items: center;
 }
@@ -1023,7 +1041,8 @@ textarea {
 	background-color: hsl(0, 0%, 95%);
 }
 
-#login .loginContainer .loginForm input:focus {
+#login .loginContainer .loginForm input[type=text]:focus,
+#login .loginContainer .loginForm input[type=password]:focus {
 
 	-webkit-box-shadow: inset 2px 2px 0px 0px hsl(0, 0%, 85%);
 	   -moz-box-shadow: inset 2px 2px 0px 0px hsl(0, 0%, 85%);
@@ -1039,4 +1058,28 @@ textarea {
 #login .loginContainer .loginAccent {
 
 	background-color: hsla(220, 100%, 90%, 0.95);
+}
+
+
+
+/* ---------------- */
+
+#error {
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: 50vh;
+	align-items: center;
+	justify-items: center;
+}
+
+#error .errorContainer {
+
+	background-color: white;
+	min-width: 500px;
+
+	padding: 50px;
+
+	display: grid;
+	grid-template-rows: 75px max-content;
+	justify-items: center;
 }

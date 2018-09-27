@@ -9,6 +9,10 @@ from flask import current_app, request, url_for, abort
 from flask_login import current_user
 
 
+def land_url():
+    return url_for('main.land')
+
+
 def home_url():
     return url_for('main.dashboard')
 

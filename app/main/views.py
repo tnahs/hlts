@@ -13,7 +13,8 @@ from app.main import main
 from app.main.forms import AnnotationForm, SourceForm, AuthorForm
 from app.main.tools import SearchAnnotations, annotation_view
 
-from flask import render_template, request, redirect, url_for, flash, jsonify, abort
+from flask import render_template, request, redirect, url_for, flash, \
+    jsonify, abort, current_app
 from flask_login import login_required, current_user
 from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
@@ -680,58 +681,19 @@ Testing
 """
 
 
-@main.route("/pinged_tags")
+@main.route("/e401")
+@admin_only
 @login_required
-def pinged_tags():
+def e401():
 
-    results = Tag.get_recently_pinged(days=current_user.recent_days)
-
-    return jsonify([t.serialize() for t in results])
+    return "Admin account!"
 
 
-@main.route("/pinged_collections")
+@main.route("/e403")
 @login_required
-def pinged_collections():
+def e403():
 
-    results = Collection.get_recently_pinged(days=current_user.recent_days)
-
-    return jsonify([c.serialize() for c in results])
-
-
-@main.route("/pinged_sources")
-@login_required
-def pinged_sources():
-
-    results = Source.get_recently_pinged(days=current_user.recent_days)
-
-    return jsonify([t.serialize() for t in results])
-
-
-@main.route("/pinged_authors")
-@login_required
-def pinged_authors():
-
-    results = Author.get_recently_pinged(days=current_user.recent_days)
-
-    return jsonify([s.author.serialize() for s in results])
-
-
-@main.route("/untagged")
-@login_required
-def untagged():
-
-    query = Annotation.query.all()
-
-    result = Annotation.get_untagged_from_query(query)
-
-    return jsonify(result)
-
-
-@main.route("/user")
-@login_required
-def user():
-
-    return jsonify(current_user.serialize())
+    return abort(403)
 
 
 @main.route("/e404")
@@ -748,14 +710,12 @@ def e500():
     return abort(500)
 
 
-@main.route("/clear_all")
+@main.route("/log_errors")
 @login_required
-@admin_only
-def clear_all():
+def log_errors():
 
-    for result in Annotation.get_all():
-        db.session.delete(result)
+    current_app.logger.warning("A warning occurred!")
+    current_app.logger.error("An error occurred!")
+    current_app.logger.info("Here's some info!")
 
-    db.session.commit()
-
-    return "deleted!"
+    return "logged!"

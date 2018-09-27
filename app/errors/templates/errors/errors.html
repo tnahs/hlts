@@ -1,0 +1,31 @@
+{% extends "_index.html" %}
+
+{% block body %}
+
+    <body>
+
+        <div id="error">
+
+            <div class="errorContainer dropShadowBig">
+
+                <div class="errorMessage">
+
+                    <span class="text upper warning">error {{ error.number }}: </span>
+
+                    <span class="text upper">{{ error.message }}</span>
+
+                </div>
+
+                <div class="errorLink">
+
+                    <a class="button link" href="{{ LAND_URL }}">Return to HL+S</a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </body>
+
+{% endblock %}
