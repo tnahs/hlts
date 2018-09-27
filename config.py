@@ -14,4 +14,4 @@ class Config(object):
     LOGGING_MAIL_USERNAME = os.getenv("LOGGING_MAIL_USERNAME")
     LOGGING_MAIL_PASSWORD = os.getenv("LOGGING_MAIL_PASSWORD")
     LOGGING_MAIL_PORT = int(os.getenv("LOGGING_MAIL_PORT") or 25)
-    LOGGING_MAIL_TLS = os.getenv("LOGGING_MAIL_USE_TLS") is not None
+    LOGGING_MAIL_TLS = os.getenv("LOGGING_MAIL_TLS") is not None
