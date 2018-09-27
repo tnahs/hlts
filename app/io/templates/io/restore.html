@@ -1,0 +1,46 @@
+{% extends "_index.html" %}
+
+{% block section %}
+
+    <div class="block floating">
+
+        <span class="label">restore from json</span>
+
+        <div class="content">
+
+            <span class="text upper warning">warning: this will delete all current annotations!</span>
+
+        </div>
+
+    </div>
+
+    <div class="block bleeding">
+
+        <div class="content">
+
+            <form method="POST" action="{{ url_for('io.restore_from_json') }}" enctype=multipart/form-data>
+
+                <input type="file" name="json">
+
+                <br>
+                <br>
+
+                <input type="checkbox" name="confirm"/> <span class="text upper">confirm</span>
+
+                <br>
+                <br>
+
+                <button class="link button" type="submit">restore</button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+
+{% endblock %}
+
+

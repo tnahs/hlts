@@ -2,9 +2,10 @@
 
 from app.io import io
 
+from app.tools import home_url
 from app.io.tools import ExportJSON, ImportJSON
 
-from flask import Response, redirect, url_for, request, flash
+from flask import Response, redirect, url_for, request, flash, render_template
 from flask_login import login_required
 
 
@@ -29,13 +30,13 @@ def restore_from_json():
 
     if request.method == 'POST':
 
-        confirm = request.values.get('confirm')
+        confirmed = request.values.get('confirm')
 
         if 'json' not in request.files:
 
             flash('No json file selected!', 'warning')
 
-        elif confirm:
+        elif confirmed:
 
             file_ = request.files['json']
 
@@ -44,17 +45,10 @@ def restore_from_json():
             import_json.restore_annotations()
 
         else:
-            flash('must confirm!', 'warning')
+            flash('you must confirm before continuing!', 'warning')
 
-        return redirect(url_for('user.settings'))
+            return redirect(url_for('io.restore_from_json'))
 
-    return '''
-            <h1>restore annotations from json</h1>
-            <br>
-            <h1>** THIS WILL DELETE ALL THE CURRENT ANNOTATIONS **</h1>
-            <form method="POST" action="/io/restore_from_json" enctype=multipart/form-data>
-                <input type="file" name="json">
-                <br> confirm? <input type="checkbox" name="confirm"/>
-                <br> <button type="submit">restore</button>
-            </form>
-            '''
+        return redirect(home_url())
+
+    return render_template("io/restore.html")
