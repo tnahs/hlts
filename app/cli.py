@@ -21,7 +21,6 @@ def register_cli(app):
         except:
             click.echo("Unexpected error: {0}".format(sys.exc_info()[0]))
 
-
     @app.cli.command()
     def drop_db():
 
@@ -33,7 +32,6 @@ def register_cli(app):
 
             except:
                 click.echo("Unexpected error: {0}".format(sys.exc_info()[0]))
-
 
     @app.cli.command()
     def create_user():
@@ -50,7 +48,7 @@ def register_cli(app):
             db.session.add(user)
             db.session.commit()
 
-        except IntegrityError as error:
+        except IntegrityError:
             click.echo("Username already taken!")
 
         except:
@@ -59,7 +57,6 @@ def register_cli(app):
         else:
             click.echo("\nCreated User!")
             click.echo("<Username: {0.username}> <Admin: {0.is_admin}>".format(user))
-
 
     @app.cli.command()
     def edit_user():
@@ -92,22 +89,21 @@ def register_cli(app):
             click.echo("\nUpdated User!")
             click.echo("<Username: {0.username}> <Admin: {0.is_admin}>".format(user))
 
-
     @app.cli.command()
     def revert_user():
 
-        if click.confirm("\nWARNING! Reset User to default?", abort=True):
+        if click.confirm("\nWARNING! Reset users to default?", abort=True):
 
-            click.echo("\nResetting User...")
+            click.echo("\nResetting users...")
 
-            # Remove all Users
+            # Remove all users
 
             for user in User.query.all():
                 db.session.delete(user)
 
             db.session.commit()
 
-            # Create Default User
+            # Create Default user
 
             user = User(username=getenv("DEFAULT_APP_USER"),
                         password=getenv("DEFAULT_APP_USER_PASSWORD"),
@@ -124,7 +120,7 @@ def register_cli(app):
                 click.echo("\nCreated Default User!")
                 click.echo("<Username: {0.username}> <Admin: {0.is_admin}>".format(user))
 
-            # Create Default Admin
+            # Create Admin user
 
             user = User(username=getenv("ADMIN_APP_USER"),
                         password=getenv("ADMIN_APP_USER_PASSWORD"),
@@ -138,9 +134,8 @@ def register_cli(app):
                 click.echo("Unexpected error: {0}.".format(sys.exc_info()[0]))
 
             else:
-                click.echo("\nCreated Default Admin!")
+                click.echo("\nCreated Admin User!")
                 click.echo("<Username: {0.username}> <Admin: {0.is_admin}>".format(user))
-
 
     @app.cli.command()
     def quick_reset():
@@ -165,7 +160,7 @@ def register_cli(app):
             except:
                 click.echo("Unexpected error: {0}".format(sys.exc_info()[0]))
 
-            # Create Default User
+            # Create Default user
 
             user = User(username=getenv("DEFAULT_APP_USER"),
                         password=getenv("DEFAULT_APP_USER_PASSWORD"),
@@ -182,7 +177,7 @@ def register_cli(app):
                 click.echo("\nCreated Default User!")
                 click.echo("<Username: {0.username}> <Admin: {0.is_admin}>".format(user))
 
-            # Create Default Admin
+            # Create Admin user
 
             user = User(username=getenv("ADMIN_APP_USER"),
                         password=getenv("ADMIN_APP_USER_PASSWORD"),
@@ -196,5 +191,5 @@ def register_cli(app):
                 click.echo("Unexpected error: {0}.".format(sys.exc_info()[0]))
 
             else:
-                click.echo("\nCreated Default Admin!")
+                click.echo("\nCreated Admin User!")
                 click.echo("<Username: {0.username}> <Admin: {0.is_admin}>".format(user))

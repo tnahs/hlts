@@ -7,14 +7,13 @@ import app.defaults as AppDefaults
 
 from app import db
 from app.models import Annotation, Source, Author, Tag, Collection
-from app.tools import home_url, SortIt, admin_only
+from app.tools import home_url, SortIt
 
 from app.main import main
 from app.main.forms import AnnotationForm, SourceForm, AuthorForm
 from app.main.tools import SearchAnnotations, annotation_view
 
-from flask import render_template, request, redirect, url_for, flash, \
-    jsonify, abort, current_app
+from flask import render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_required, current_user
 from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
@@ -672,50 +671,3 @@ def ajax_authors():
     result = Author.query_to_multiple_dict(query)
 
     return jsonify(result)
-
-
-"""
-
-Testing
-
-"""
-
-
-@main.route("/e401")
-@admin_only
-@login_required
-def e401():
-
-    return "Admin account!"
-
-
-@main.route("/e403")
-@login_required
-def e403():
-
-    return abort(403)
-
-
-@main.route("/e404")
-@login_required
-def e404():
-
-    return abort(404)
-
-
-@main.route("/e500")
-@login_required
-def e500():
-
-    return abort(500)
-
-
-@main.route("/log_errors")
-@login_required
-def log_errors():
-
-    current_app.logger.info("Logging some info!")
-    current_app.logger.warning("Logging a warning!")
-    current_app.logger.error("Logging an error!")
-
-    return "Log successful!"

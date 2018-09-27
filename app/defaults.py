@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 
-# tags
-UNTAGGED = "untagged"
-
 # class User defaults
 ADMIN = False
 THEME_INDEX = 0
