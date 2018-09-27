@@ -10,7 +10,7 @@ from flask import render_template, current_app
 @errors.app_errorhandler(401)
 def error401(exception):
 
-    current_app.logger.error(exception)
+    current_app.logger.warning(exception)
 
     error = {
         "number": 401,
@@ -24,7 +24,7 @@ def error401(exception):
 @errors.app_errorhandler(403)
 def error400(exception):
 
-    current_app.logger.error(exception)
+    current_app.logger.warning(exception)
 
     error = {
         "number": 403,
@@ -38,7 +38,7 @@ def error400(exception):
 @errors.app_errorhandler(404)
 def error404(exception):
 
-    current_app.logger.error(exception)
+    current_app.logger.warning(exception)
 
     error = {
         "number": 404,
