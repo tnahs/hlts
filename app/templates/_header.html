@@ -11,7 +11,7 @@
 {%- endmacro %}
 
 
-{% if request.endpoint in ['main.index', 'main.tags', 'main.recent', 'main.collections', 'user.settings'] %}
+{% if request.endpoint in ['main.index', 'main.tags', 'main.recent', 'main.collections'] %}
 
 	<div class="block floating">
 
@@ -24,10 +24,6 @@
 			{% elif request.endpoint == 'main.recent' %}
 
 				{{ header_buttons(endpoint='main.recent', modes=['imported', 'edited', 'added']) }}
-
-			{% elif request.endpoint == 'user.settings' %}
-
-				{{ header_buttons(endpoint='user.settings', modes=['main', 'login', 'tools']) }}
 
 			{% endif %}
 

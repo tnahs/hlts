@@ -2,45 +2,46 @@
 
 {% block body %}
 
-<body>
 
-	<div id="login">
+	<body>
 
-		<div class="loginContainer dropShadowBig">
+		<div id="userLogin">
 
-			{% set next = request.args.get('next', None) %}
+			<div class="loginContainer dropShadowBig">
 
-			<form method="POST" action="{{ url_for('user.login', next=next) }}">
+				{% set next = request.args.get('next', None) %}
 
-				<div class="loginForm">
+				<form method="POST" action="{{ url_for('user.login', next=next) }}">
 
-					{{ login_form.csrf_token }}
+					<div class="loginForm">
 
-					{{ login_form.username }}
-					{{ login_form.password }}
+						{{ login_form.csrf_token }}
 
-					<br>
-					<br>
+						{{ login_form.username }}
+						{{ login_form.password }}
 
-					{{ login_form.remember }} <span class="text upper faded">{{ login_form.remember.label }}</span><br>
+						<br>
+						<br>
 
-				</div>
+						{{ login_form.remember }} <span class="text upper faded">{{ login_form.remember.label }}</span><br>
 
-				<div class="loginFormOptions">
+					</div>
 
-					<button class="link button faded" type="submit">login</button>
+					<div class="loginFormOptions">
 
-				</div>
+						<button class="link button faded" type="submit">login</button>
 
-			</form>
+					</div>
 
-			<div class="loginAccent"></div>
+				</form>
+
+				<div class="loginAccent"></div>
+
+			</div>
+
 
 		</div>
 
-
-	</div>
-
-</body>
+	</body>
 
 {% endblock %}

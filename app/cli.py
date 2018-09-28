@@ -28,7 +28,7 @@ def register_cli(app):
 
             try:
                 db.drop_all()
-                click.echo("Database erased!")
+                click.echo("Database Erased!")
 
             except:
                 click.echo("Unexpected error: {0}".format(sys.exc_info()[0]))
@@ -71,9 +71,13 @@ def register_cli(app):
             new_username = click.prompt("New Username")
             user.username = new_username
 
+        if click.confirm("Change Email?"):
+            new_email = click.prompt("New Email")
+            user.email = new_email
+
         if click.confirm("Change Password?"):
             new_password = click.prompt("New Password", hide_input=True, confirmation_prompt=True)
-            user.password = user._hash_password(new_password)
+            user.password = user.init_password(new_password)
 
         if click.confirm("Change Admin Status?"):
             new_admin_status = click.prompt("New Admin Status?", type=bool)
@@ -105,8 +109,9 @@ def register_cli(app):
 
             # Create Default user
 
-            user = User(username=getenv("DEFAULT_APP_USER"),
-                        password=getenv("DEFAULT_APP_USER_PASSWORD"),
+            user = User(username=getenv("DEFAULT_APPUSER_USERNAME"),
+                        email=getenv("DEFAULT_APPUSER_EMAIL"),
+                        password=getenv("DEFAULT_APPUSER_PASSWORD"),
                         admin=False)
 
             try:
@@ -122,8 +127,9 @@ def register_cli(app):
 
             # Create Admin user
 
-            user = User(username=getenv("ADMIN_APP_USER"),
-                        password=getenv("ADMIN_APP_USER_PASSWORD"),
+            user = User(username=getenv("ADMIN_APPUSER_USERNAME"),
+                        email=getenv("ADMIN_APPUSER_EMAIL"),
+                        password=getenv("ADMIN_APPUSER_PASSWORD"),
                         admin=True)
 
             try:
@@ -146,7 +152,7 @@ def register_cli(app):
 
             try:
                 db.drop_all()
-                click.echo("Database Initiated!")
+                click.echo("Database Erased!")
 
             except:
                 click.echo("Unexpected error: {0}".format(sys.exc_info()[0]))
@@ -155,15 +161,16 @@ def register_cli(app):
 
             try:
                 db.create_all()
-                click.echo("Database erased!")
+                click.echo("Database Initiated!")
 
             except:
                 click.echo("Unexpected error: {0}".format(sys.exc_info()[0]))
 
             # Create Default user
 
-            user = User(username=getenv("DEFAULT_APP_USER"),
-                        password=getenv("DEFAULT_APP_USER_PASSWORD"),
+            user = User(username=getenv("DEFAULT_APPUSER_USERNAME"),
+                        email=getenv("DEFAULT_APPUSER_EMAIL"),
+                        password=getenv("DEFAULT_APPUSER_PASSWORD"),
                         admin=False)
 
             try:
@@ -179,8 +186,9 @@ def register_cli(app):
 
             # Create Admin user
 
-            user = User(username=getenv("ADMIN_APP_USER"),
-                        password=getenv("ADMIN_APP_USER_PASSWORD"),
+            user = User(username=getenv("ADMIN_APPUSER_USERNAME"),
+                        email=getenv("ADMIN_APPUSER_EMAIL"),
+                        password=getenv("ADMIN_APPUSER_PASSWORD"),
                         admin=True)
 
             try:

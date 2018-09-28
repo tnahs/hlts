@@ -148,14 +148,14 @@ nav {
 	transition: .3s;
 
 	display: grid;
-	grid-template-areas: "navMenu navSearch"
-						 "navflash navflash";
-	grid-template-columns: max-content auto;
+	grid-template-areas: "navMain navSearch navUser"
+						 "navflash navflash navflash";
+	grid-template-columns: max-content auto max-content;
 }
 
-	menu {
+	mainMenu {
 
-		grid-area: navMenu;
+		grid-area: navMain;
 
 		height: var(--navMenuHeight);
 		padding: 0 15px 0 30px;
@@ -167,7 +167,7 @@ nav {
 		align-items: center;
 	}
 
-	menu a {
+	mainMenu a {
 
 		/* font block */
 		font-family: var(--sans-serif-condensed-font);
@@ -179,35 +179,35 @@ nav {
 		text-transform: uppercase;
 	}
 
-	menu a:hover {
+	mainMenu a:hover {
 
 		color: hsla(220, 100%, 75%, 1.00);
 	}
 
-	menu img.dashboardIcon {
+	mainMenu img.dashboardIcon {
 
 		width: 80px;
 		height: 30px;
 	}
 
-	menu img.addIcon {
+	mainMenu img.addIcon {
 
 		width: 40px;
 		height: 40px;
 	}
 
-	menu img.settingsIcon {
+	mainMenu img.toolsIcon {
 
 		width: 40px;
 		height: 40px;
 	}
 
-	menu img.deletedIcon {
+	mainMenu img.trashIcon {
 		width: 40px;
 		height: 40px;
 	}
 
-	search {
+	searchMenu {
 
 		grid-area: navSearch;
 
@@ -220,13 +220,13 @@ nav {
 		background-color: hsla(220, 100%, 90%, 0.95);
 	}
 
-	search img.searchIcon {
+	searchMenu img.searchIcon {
 
 		width: 40px;
 		height: 40px;
 	}
 
-	search input {
+	searchMenu input {
 
 		width: 100%;
 		padding-left: 10px;
@@ -241,6 +241,26 @@ nav {
 		text-transform: uppercase;
 
 		transition: color 0.3s;
+	}
+
+	userMenu {
+
+		grid-area: navUser;
+
+		display: grid;
+		grid-template-columns: repeat(2, max-content);
+		grid-column-gap: 5px;
+		align-items: center;
+
+		padding: 0 30px 0 30px;
+		background-color: hsla(220, 100%, 90%, 0.95);
+		background-color: white
+	}
+
+	userMenu img.settingsIcon {
+
+		width: 50px;
+		height: 50px;
 	}
 
 	flash {
@@ -524,6 +544,11 @@ a *:hover {
 .faded {
 
 	color: rgba(0, 0, 0, 0.25) !important;
+}
+
+.white {
+
+	color:white !important;
 }
 
 .marked {
@@ -883,8 +908,8 @@ input[type=password]{
 /* ---------------------------- editor.html ---------------------------- */
 /* --------------------------------------------------------------------- */
 
-#editor input,
-#editor textarea {
+#annotationEditor input,
+#annotationEditor textarea {
 
 	margin: 2px 0;
 	padding: 10px 14px;
@@ -892,13 +917,13 @@ input[type=password]{
 	line-height: 150%;
 }
 
-#editor input {
+#annotationEditor input {
 
 	width: 100%;
 	background-color: hsl(0, 0%, 95%);
 }
 
-#editor textarea {
+#annotationEditor textarea {
 
 	width: 100%;
 	min-height: 25px;
@@ -908,21 +933,21 @@ input[type=password]{
 	overflow: hidden;
 }
 
-#editor input:focus,
-#editor textarea:focus {
+#annotationEditor input:focus,
+#annotationEditor textarea:focus {
 
 	-webkit-box-shadow: inset 2px 2px 0px 0px hsl(0, 0%, 85%);;
 	   -moz-box-shadow: inset 2px 2px 0px 0px hsl(0, 0%, 85%);;
 	        box-shadow: inset 2px 2px 0px 0px hsl(0, 0%, 85%);;
 }
 
-#editor .metaData {
+#annotationEditor .metaData {
 
 	margin-top: 15px;
 	margin-left: 5px;
 }
 
-#settings input {
+#userSettings input {
 
 	margin: 2px 0;
 	padding: 10px 14px;
@@ -1008,7 +1033,7 @@ input[type=password]{
 /* ----------------------------- login.html ---------------------------- */
 /* --------------------------------------------------------------------- */
 
-#login {
+#userLogin {
 	display: grid;
 	grid-template-columns: 1fr;
 	grid-template-rows: 75vh;
@@ -1016,7 +1041,7 @@ input[type=password]{
 	justify-items: center;
 }
 
-#login .loginContainer {
+#userLogin .loginContainer {
 
 	background-color: white;
 
@@ -1024,13 +1049,13 @@ input[type=password]{
 	grid-template-columns: 400px 125px;
 }
 
-#login .loginContainer .loginForm  {
+#userLogin .loginContainer .loginForm  {
 
 	padding: 100px 50px 50px 50px;
 }
 
-#login .loginContainer .loginForm input[type=text],
-#login .loginContainer .loginForm input[type=password] {
+#userLogin .loginContainer .loginForm input[type=text],
+#userLogin .loginContainer .loginForm input[type=password] {
 
 	margin: 2px 0;
 	padding: 6px 10px;
@@ -1041,21 +1066,21 @@ input[type=password]{
 	background-color: hsl(0, 0%, 95%);
 }
 
-#login .loginContainer .loginForm input[type=text]:focus,
-#login .loginContainer .loginForm input[type=password]:focus {
+#userLogin .loginContainer .loginForm input[type=text]:focus,
+#userLogin .loginContainer .loginForm input[type=password]:focus {
 
 	-webkit-box-shadow: inset 2px 2px 0px 0px hsl(0, 0%, 85%);
 	   -moz-box-shadow: inset 2px 2px 0px 0px hsl(0, 0%, 85%);
 	        box-shadow: inset 2px 2px 0px 0px hsl(0, 0%, 85%);
 }
 
-#login .loginContainer .loginFormOptions {
+#userLogin .loginContainer .loginFormOptions {
 
 	padding: 0 25px 25px 0;
 	text-align: right;
 }
 
-#login .loginContainer .loginAccent {
+#userLogin .loginContainer .loginAccent {
 
 	background-color: hsla(220, 100%, 90%, 0.95);
 }

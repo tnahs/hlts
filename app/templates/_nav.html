@@ -21,19 +21,19 @@
 
 <nav>
 
-	<menu>
+	<mainMenu>
 
-		<a class="{{ current('main.dashboard') }}"" href="{{ url_for('main.dashboard') }}">{{ icon("dashboard") }}</a>
-		<a class="{{ current('main.dashboard') }}"" href="{{ url_for('main.dashboard') }}">dashboard</a>
-		<a class="{{ current('main.index') }}"" href="{{ url_for('main.index', mode='default')}}">index</a>
-		<a class="{{ current('main.recent') }}"" href="{{ url_for('main.recent', mode='default') }}">recent</a>
-		<a class="{{ current('main.add') }}"" href="{{ url_for('main.add') }}">{{ icon("add") }}</a>
-		<a class="{{ current('main.trash') }}"" href="{{ url_for('main.trash') }}">{{ icon("deleted") }}</a>
-		<a class="{{ current('user.settings') }}"" href="{{ url_for('user.settings', mode='default') }}">{{ icon("settings") }}</a>
+		<a class="{{ current('main.dashboard') }}" href="{{ url_for('main.dashboard') }}">{{ icon("dashboard") }}</a>
+		<a class="{{ current('main.dashboard') }}" href="{{ url_for('main.dashboard') }}">dashboard</a>
+		<a class="{{ current('main.index') }}" href="{{ url_for('main.index', mode='default')}}">index</a>
+		<a class="{{ current('main.recent') }}" href="{{ url_for('main.recent', mode='default') }}">recent</a>
+		<a class="{{ current('main.add') }}" href="{{ url_for('main.add') }}">{{ icon("add") }}</a>
+		<a class="{{ current('main.tools') }}" href="{{ url_for('main.tools') }}">{{ icon("tools") }}</a>
+		<a class="{{ current('main.trash') }}" href="{{ url_for('main.trash') }}">{{ icon("trash") }}</a>
 
-	</menu>
+	</mainMenu>
 
-	<search>
+	<searchMenu>
 
 		{{ icon("search") }}
 
@@ -47,7 +47,16 @@
 			<input type="text" name="search" value="{{ search }}"/>
 		</form>
 
-	</search>
+	</searchMenu>
+
+	<userMenu>
+
+		{% set display_name = current_user.fullname if current_user.fullname else current_user.username %}
+
+		<div class="text upper faded">{{ display_name }}</div>
+		<a href="{{ url_for('user.settings') }}">{{ icon("settings") }}</a>
+
+	</userMenu>
 
 	<flash>
 

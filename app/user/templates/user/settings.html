@@ -1,96 +1,87 @@
 {% extends "_index.html" %}
 
+
+{% macro setting_form_field(field, label=false) -%}
+
+    {% if label %}
+        <div class="text upper faded">{{ field.label }}</div>
+    {% endif %}
+
+    <div>{{ field }}</div>
+
+{%- endmacro %}
+
+
 {% block section %}
 
-	<div id="settings">
+    <form method="POST" action="{{ url_for('user.settings') }}">
 
-		{% if request.view_args['mode'] == 'main' %}
+        <div class="block floating">
 
-			<div class="block bleeding">
+            <div class="label">user settings</div>
 
-				<div class="label">misc settings</div>
+            <div class="content">
 
-				<div class="content">
+                <button class="link button" type="submit">update</button>
 
-					<form method="POST" action="{{ url_for('user.settings', mode='main') }}">
+            </div>
 
-						{{ settings_form.csrf_token }}
+        </div>
 
-						{{ settings_form.theme_index.label }} ⋅ {{ settings_form.theme_index }}<br>
-						{{ settings_form.results_per_page.label }} ⋅ {{ settings_form.results_per_page }}<br>
-						{{ settings_form.recent_days.label }} ⋅ {{ settings_form.recent_days }}<br>
+        <div id="userSettings">
 
-						<br>
+            <div class="block bleeding">
 
-						{{ USER_AGENT.browser }}<br>
-						{{ USER_AGENT.platform }}<br>
-						{{ USER_AGENT.version }}<br>
-						{{ USER_AGENT.language }}<br>
+                {{ user_form.csrf_token }}
 
-						<br>
+                <div class="label">login</div>
 
-						<button class="link button" type="submit" name="general">update</button>
+                <div class="content">
 
-					</form>
+                    {{ setting_form_field(user_form.username) }}
+                    {{ setting_form_field(user_form.fullname) }}
+                    {{ setting_form_field(user_form.email) }}
 
-				</div>
+                </div>
 
-			</div>
+                <div class="label">miscellaneous</div>
 
-		{% elif request.view_args['mode'] == 'login' %}
+                <div class="content">
 
-			<div class="block bleeding">
+                    {{ setting_form_field(user_form.results_per_page, label=true) }}
+                    {{ setting_form_field(user_form.recent_days, label=true) }}
 
-				<div class="label">login info</div>
+                </div>
 
-				<div class="content">
+                {% if current_user.is_admin %}
 
-					<form method="POST" action="{{ url_for('user.settings', mode='user') }}">
+                    <div class="label">admin info</div>
 
-						{{ user_form.csrf_token }}
+                    <div class="content">
 
-						{{ user_form.username.label }} ⋅ {{ user_form.username(placeholder="username") }}<br>
-						{{ user_form.password.label }} ⋅ {{ user_form.password(placeholder="password") }}<br>
-						{{ user_form.password_change.label }} ⋅ {{ user_form.password_change(placeholder="change password") }}<br>
-						{{ user_form.password_confirm.label }} ⋅ {{ user_form.password_confirm(placeholder="confirm password") }}<br>
+                        <div class="text upper">{{ USER_AGENT.browser }}</div>
+                        <div class="text upper">{{ USER_AGENT.platform }}</div>
+                        <div class="text upper">{{ USER_AGENT.version }}</div>
+                        <div class="text upper">{{ USER_AGENT.language }}</div>
 
-						<br>
+                    </div>
 
-						<button class="link button" type="submit" name="user">update</button>
+                {% endif %}
 
-					</form>
+            </div>
 
-				</div>
+        </div>
 
-			</div>
+    </form>
 
-		{% elif request.view_args['mode'] == 'tools' %}
+    <div class="block floating">
 
-			<div class="block bleeding">
+        <div class="content">
 
-				<div class="label">export / restore</div>
+            <a class="link button accent" href="{{ url_for('user.logout') }}">logout</a>
 
-				<div class="content">
+        </div>
 
-					<a class="link button settings" href="{{ url_for('io.export_to_json') }}">export to json</a>
-					<a class="link button settings" href="{{ url_for('io.restore_from_json') }}">restore from json</a>
-
-				</div>
-
-			</div>
-
-		{% endif %}
-
-		<div class="block floating">
-
-			<div class="content">
-
-				<a class="link button settings" href="{{ url_for('user.logout') }}">logout</a>
-
-			</div>
-
-		</div>
-
-	</div>
+    </div>
 
 {% endblock %}

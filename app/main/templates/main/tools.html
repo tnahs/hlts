@@ -1,0 +1,19 @@
+{% extends "_index.html" %}
+
+
+{% block section %}
+
+    <div class="block floating">
+
+        <div class="label">export / restore</div>
+
+        <div class="content">
+
+            <a class="link button settings" href="{{ url_for('io.export_to_json') }}">export to json</a>
+            <a class="link button settings" href="{{ url_for('io.restore_from_json') }}">restore from json</a>
+
+        </div>
+
+    </div>
+
+    {% endblock %}

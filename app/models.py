@@ -146,7 +146,9 @@ class User(UserMixin, db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer(), primary_key=True)
-    username = db.Column(db.String(), unique=True)
+    username = db.Column(db.String(), nullable=False, unique=True)
+    fullname = db.Column(db.String())
+    email = db.Column(db.String(), nullable=False, unique=True)
     password = db.Column(db.String())
 
     admin = db.Column(db.Boolean, default=AppDefaults.ADMIN)
@@ -159,10 +161,12 @@ class User(UserMixin, db.Model):
     token = db.Column(db.String(), unique=True, index=True)
     token_expiration = db.Column(db.DateTime)
 
-    def __init__(self, username, password, admin):
+    def __init__(self, username, email, password, admin, fullname=None):
 
         self.username = username
-        self.password = self._hash_password(password)
+        self.fullname = fullname
+        self.email = email
+        self.password = self.init_password(password)
         self.admin = admin
 
     def __repr__(self):
@@ -170,32 +174,20 @@ class User(UserMixin, db.Model):
         return '<User id:{0} user:{1}>'.format(self.id, self.username)
 
     @staticmethod
-    def _hash_password(password):
+    def init_password(password):
         return bcrypt.generate_password_hash(password)
 
     def check_password(self, password):
         return bcrypt.check_password_hash(self.password, password)
 
-    def change_password(self, password, password_confirm):
+    # def change_username(self, username):
 
-        if len(password) < 5:
-            return False
+    #     if len(username) < 3:
+    #         return False
 
-        if password != password_confirm:
-            return False
+    #     self.username = username
 
-        self.password = self._hash_password(password)
-
-        return True
-
-    def change_username(self, username):
-
-        if len(username) < 3:
-            return False
-
-        self.username = username
-
-        return True
+    #     return True
 
     def generate_token(self):
         return binascii.hexlify(os.urandom(20)).decode()

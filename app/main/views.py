@@ -607,6 +607,20 @@ def edit_collections(page=1, in_request=None):
 
 """
 
+tools
+
+"""
+
+
+@main.route("/tools")
+@login_required
+def tools():
+
+    return render_template("main/tools.html")
+
+
+"""
+
 AJAX routes
 
 """
