@@ -5,9 +5,9 @@
 
 {% block section %}
 
-    <div class="block floating">
+    <div class="block blockFloating">
 
-        <div class="title">
+        <div class="blockTitle">
 
             <div class="text upper">{{ request.endpoint }}</div>
 
@@ -15,9 +15,9 @@
 
     </div>
 
-    <div class="block invisible">
+    <div class="block blockPagination">
 
-        <div class="content">
+        <div class="blockContent">
 
             {{ pagination(results) }}
 
@@ -25,9 +25,9 @@
 
     </div>
 
-    <div class="block bleeding">
+    <div class="block blockBleeding">
 
-        <div class="content">
+        <div class="blockContent">
 
             <div id="bulkEditor">
 

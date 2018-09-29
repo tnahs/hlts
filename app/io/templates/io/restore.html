@@ -2,11 +2,11 @@
 
 {% block section %}
 
-    <div class="block floating">
+    <div class="block blockFloating">
 
-        <span class="label">restore from json</span>
+        <span class="blockLabel">restore from json</span>
 
-        <div class="content">
+        <div class="blockContent">
 
             <span class="text upper warning">warning: this will delete all current annotations!</span>
 
@@ -14,9 +14,9 @@
 
     </div>
 
-    <div class="block bleeding">
+    <div class="block blockBleeding">
 
-        <div class="content">
+        <div class="blockContent">
 
             <form method="POST" action="{{ url_for('io.restore_from_json') }}" enctype=multipart/form-data>
 

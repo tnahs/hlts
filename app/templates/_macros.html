@@ -1,12 +1,56 @@
 {% macro no_results(message) -%}
 
-    <div class="block floating">
+    <div class="block blockFloating">
 
-        <div class="content">
+        <div class="blockContent">
 
             <div class="text upper">{{ message }}</div>
 
         </div>
+
+    </div>
+
+{%- endmacro %}
+
+
+{% macro flash() -%}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+        {% if messages %}
+
+            {% for category, message in messages %}
+
+                <div class="flashContainer {{ category }}">
+
+                    <div class="flashMessage">{{ message }}</div>
+
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    {% endwith %}
+
+{%- endmacro %}
+
+
+{% macro render_form_field(field, label=false, custom_classes=[]) -%}
+
+    {% set classes = custom_classes if custom_classes else [] %}
+    {% set classes = classes + ["fieldError"] if field.errors else classes %}
+    {% set classes = classes | join(" ") %}
+
+    <div class="formField">
+
+        {% if label %}
+
+            <div class="fieldLabel text upper faded">{{ field.label.text }}:</div>
+
+        {% endif %}
+
+        {{ field(class_=classes) }}
 
     </div>
 
@@ -19,7 +63,7 @@
 
         <div class="matches">
 
-            <div class="matchInfo">
+            <div class="matchInfo dropShadowSmall">
 
                 {{ results.total }} match{% if results.total != 1 %}es{% endif %}
 
@@ -27,7 +71,7 @@
 
         </div>
 
-        <div class="pages">
+        <div class="pages dropShadowSmall">
 
             {%- for page in pages %}
 
@@ -50,15 +94,48 @@
 {%- endmacro %}
 
 
-{% macro attribution_from_source_obj(item) -%}
+{% macro attribution_from_source_obj(source) -%}
 
     {# Renders source from serialize() output. #}
 
-    {% if item.name %}{{ item.name }}{% endif %}
+    {% if source.name %}
 
-    {% if (item.name and item.author.name) %} ⋅ {% endif %}
+        {{ source.name }}
 
-    {% if item.author.name %}{{ item.author.name }}{% endif %}
+    {% else %}
+
+        {{ SOURCE_NONE.NAME }}
+
+    {% endif %}
+
+    {% if (source.name and source.author.name) or not (source.name and source.author.name) %} ⋅ {% endif %}
+
+    {% if source.author.name %}
+
+        {{ source.author.name }}
+
+    {% else %}
+
+        {{ AUTHOR_NONE.NAME }}
+
+    {% endif %}
+
+{%- endmacro %}
+
+
+{% macro attribution_from_author_obj(author) -%}
+
+    {# Renders source from serialize() output. #}
+
+    {% if author.name %}
+
+        {{ author.name }}
+
+    {% else %}
+
+        {{ AUTHOR_NONE.NAME }}
+
+    {% endif %}
 
 {%- endmacro %}
 
@@ -71,9 +148,13 @@
 
         <a href="{{ url_for('main.source', in_request=annotation.source_id) }}">{{ annotation.source.name }}</a>
 
+    {% else %}
+
+        {{ SOURCE_NONE }}
+
     {% endif %}
 
-    {% if (annotation.source.name and annotation.source.author) %}
+    {% if (annotation.source.name and annotation.source.author.name) %}
 
         ⋅ {# dot separator #}
 
@@ -203,9 +284,6 @@
     {% for annotation in results.items %}
 
         {{ render_base_annotation(annotation) }}
-
-        <br>
-        <br>
 
     {% endfor %}
 

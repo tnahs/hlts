@@ -1,7 +1,9 @@
+{% from "_macros.html" import flash, render_form_field %}
+
 {% extends "_index.html" %}
 
-{% block body %}
 
+{% block body %}
 
 	<body>
 
@@ -15,10 +17,12 @@
 
 					<div class="loginForm">
 
+						<loginFlash> {{ flash() }} </loginFlash>
+
 						{{ login_form.csrf_token }}
 
-						{{ login_form.username }}
-						{{ login_form.password }}
+						{{ render_form_field(login_form.username) }}
+						{{ render_form_field(login_form.password) }}
 
 						<br>
 						<br>

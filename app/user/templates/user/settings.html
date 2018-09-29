@@ -1,26 +1,17 @@
+{% from "_macros.html" import render_form_field %}
+
 {% extends "_index.html" %}
-
-
-{% macro setting_form_field(field, label=false) -%}
-
-    {% if label %}
-        <div class="text upper faded">{{ field.label }}</div>
-    {% endif %}
-
-    <div>{{ field }}</div>
-
-{%- endmacro %}
 
 
 {% block section %}
 
     <form method="POST" action="{{ url_for('user.settings') }}">
 
-        <div class="block floating">
+        <div class="block blockFloating">
 
-            <div class="label">user settings</div>
+            <div class="blockLabel">user settings</div>
 
-            <div class="content">
+            <div class="blockContent">
 
                 <button class="link button" type="submit">update</button>
 
@@ -30,34 +21,34 @@
 
         <div id="userSettings">
 
-            <div class="block bleeding">
+            <div class="block blockBleeding">
 
                 {{ user_form.csrf_token }}
 
-                <div class="label">login</div>
+                <div class="blockLabel">login</div>
 
-                <div class="content">
+                <div class="blockContent">
 
-                    {{ setting_form_field(user_form.username) }}
-                    {{ setting_form_field(user_form.fullname) }}
-                    {{ setting_form_field(user_form.email) }}
+                    {{ render_form_field(user_form.username) }}
+                    {{ render_form_field(user_form.fullname) }}
+                    {{ render_form_field(user_form.email) }}
 
                 </div>
 
-                <div class="label">miscellaneous</div>
+                <div class="blockLabel">miscellaneous</div>
 
-                <div class="content">
+                <div class="blockContent">
 
-                    {{ setting_form_field(user_form.results_per_page, label=true) }}
-                    {{ setting_form_field(user_form.recent_days, label=true) }}
+                    {{ render_form_field(user_form.results_per_page, label=true) }}
+                    {{ render_form_field(user_form.recent_days, label=true) }}
 
                 </div>
 
                 {% if current_user.is_admin %}
 
-                    <div class="label">admin info</div>
+                    <div class="blockLabel">admin info</div>
 
-                    <div class="content">
+                    <div class="blockContent">
 
                         <div class="text upper">{{ USER_AGENT.browser }}</div>
                         <div class="text upper">{{ USER_AGENT.platform }}</div>
@@ -74,9 +65,9 @@
 
     </form>
 
-    <div class="block floating">
+    <div class="block blockFloating">
 
-        <div class="content">
+        <div class="blockContent">
 
             <a class="link button accent" href="{{ url_for('user.logout') }}">logout</a>
 

@@ -5,38 +5,96 @@ import click
 from os import getenv
 
 from app import db
-from app.models import User
+from app.models import User, Annotation
 from sqlalchemy.exc import IntegrityError
 
 
 def register_cli(app):
 
     @app.cli.command()
-    def init_db():
+    def commands():
+        click.echo(" \
+            \n All available commands: \
+            \n -------------------------------------------------------- \
+            \n - init_db             Create all tables. \
+            \n - drop_db             Drop all tables. \
+            \n - create_user         Create single user. \
+            \n - delete_user         Delete single user. \
+            \n - edit_user           Edit single user. \
+            \n - reset_users         Erase annoataions. \
+            \n - erase_annotations   Erase users & re-create users. \
+            \n - reset_all           Drop databases & re-create users.\
+            \n -------------------------------------------------------- \
+            \n ")
+
+    def run_init_db():
 
         try:
             db.create_all()
-            click.echo("Database Initiated!")
+            click.echo("Database initiated!")
 
         except:
             click.echo("Unexpected error: {0}".format(sys.exc_info()[0]))
 
-    @app.cli.command()
-    def drop_db():
+    def run_drop_db():
 
         if click.confirm("\nWARNING! Drop all databases?", abort=True):
 
             try:
                 db.drop_all()
-                click.echo("Database Erased!")
+                click.echo("Database erased!")
 
             except:
                 click.echo("Unexpected error: {0}".format(sys.exc_info()[0]))
 
+    def run_create_users():
+
+        # Create default user
+        user = User(username=getenv("DEFAULT_APPUSER_USERNAME"),
+                    email=getenv("DEFAULT_APPUSER_EMAIL"),
+                    password=getenv("DEFAULT_APPUSER_PASSWORD"),
+                    admin=False)
+
+        try:
+            db.session.add(user)
+            db.session.commit()
+
+        except:
+            click.echo("Unexpected error: {0}.".format(sys.exc_info()[0]))
+
+        else:
+            click.echo("\nCreated Default User!")
+            click.echo("<Username: {0.username}> <Admin: {0.is_admin}>".format(user))
+
+        # Create admin user
+        user = User(username=getenv("ADMIN_APPUSER_USERNAME"),
+                    email=getenv("ADMIN_APPUSER_EMAIL"),
+                    password=getenv("ADMIN_APPUSER_PASSWORD"),
+                    admin=True)
+
+        try:
+            db.session.add(user)
+            db.session.commit()
+
+        except:
+            click.echo("Unexpected error: {0}.".format(sys.exc_info()[0]))
+
+        else:
+            click.echo("\nCreated Admin User!")
+            click.echo("<Username: {0.username}> <Admin: {0.is_admin}>".format(user))
+
+    @app.cli.command()
+    def init_db():
+        run_init_db()
+
+    @app.cli.command()
+    def drop_db():
+        run_drop_db()
+
     @app.cli.command()
     def create_user():
 
-        click.echo("\nCreating User...")
+        click.echo("\nCreate user...")
 
         username = click.prompt("Username")
         password = click.prompt("Password", hide_input=True, confirmation_prompt=True)
@@ -44,8 +102,9 @@ def register_cli(app):
 
         user = User(username=username, password=password, admin=admin)
 
+        db.session.add(user)
+
         try:
-            db.session.add(user)
             db.session.commit()
 
         except IntegrityError:
@@ -59,145 +118,121 @@ def register_cli(app):
             click.echo("<Username: {0.username}> <Admin: {0.is_admin}>".format(user))
 
     @app.cli.command()
-    def edit_user():
+    def delete_user():
 
-        click.echo("\nEditing User...")
+        click.echo("\nDelete user...")
 
         username = click.prompt("Username")
 
         user = User.query.filter_by(username=username).first()
 
-        if click.confirm("Change Username?"):
-            new_username = click.prompt("New Username")
-            user.username = new_username
+        if user and click.confirm("User exists! Delete user?", abort=True):
 
-        if click.confirm("Change Email?"):
-            new_email = click.prompt("New Email")
-            user.email = new_email
+            db.session.delete(user)
 
-        if click.confirm("Change Password?"):
-            new_password = click.prompt("New Password", hide_input=True, confirmation_prompt=True)
-            user.password = user.init_password(new_password)
+            try:
+                db.session.commit()
 
-        if click.confirm("Change Admin Status?"):
-            new_admin_status = click.prompt("New Admin Status?", type=bool)
-            user.admin = new_admin_status
+            except:
+                click.echo("Unexpected error: {0}.".format(sys.exc_info()[0]))
 
-        try:
-            db.session.commit()
-
-        except:
-            click.echo("Unexpected error: {0}.".format(sys.exc_info()[0]))
+            else:
+                click.echo("\nDeleted user!")
 
         else:
-            click.echo("\nUpdated User!")
-            click.echo("<Username: {0.username}> <Admin: {0.is_admin}>".format(user))
+
+            click.echo("User does not exist!")
 
     @app.cli.command()
-    def revert_user():
+    def edit_user():
+
+        click.echo("\nEdit User...")
+
+        username = click.prompt("Username")
+
+        user = User.query.filter_by(username=username).first()
+
+        if user and click.confirm("User exists! Edit user?", abort=True):
+
+            if click.confirm("Change Username?"):
+                new_username = click.prompt("New Username")
+                user.username = new_username
+
+            if click.confirm("Change Email?"):
+                new_email = click.prompt("New Email")
+                user.email = new_email
+
+            if click.confirm("Change Password?"):
+                new_password = click.prompt("New Password", hide_input=True, confirmation_prompt=True)
+                user.password = user.init_password(new_password)
+
+            if click.confirm("Change Admin Status?"):
+                new_admin_status = click.prompt("New Admin Status?", type=bool)
+                user.admin = new_admin_status
+
+            try:
+                db.session.commit()
+
+            except:
+                click.echo("Unexpected error: {0}.".format(sys.exc_info()[0]))
+
+            else:
+                click.echo("\nUpdated User!")
+                click.echo("<Username: {0.username}> <Admin: {0.is_admin}>".format(user))
+
+        else:
+
+            click.echo("User does not exist!")
+
+    @app.cli.command()
+    def reset_users():
 
         if click.confirm("\nWARNING! Reset users to default?", abort=True):
 
             click.echo("\nResetting users...")
 
             # Remove all users
-
-            for user in User.query.all():
-                db.session.delete(user)
-
-            db.session.commit()
-
-            # Create Default user
-
-            user = User(username=getenv("DEFAULT_APPUSER_USERNAME"),
-                        email=getenv("DEFAULT_APPUSER_EMAIL"),
-                        password=getenv("DEFAULT_APPUSER_PASSWORD"),
-                        admin=False)
-
             try:
-                db.session.add(user)
-                db.session.commit()
+                User.query.delete()
 
             except:
                 click.echo("Unexpected error: {0}.".format(sys.exc_info()[0]))
 
             else:
-                click.echo("\nCreated Default User!")
-                click.echo("<Username: {0.username}> <Admin: {0.is_admin}>".format(user))
+                click.echo("\nRemoved all users!")
 
-            # Create Admin user
-
-            user = User(username=getenv("ADMIN_APPUSER_USERNAME"),
-                        email=getenv("ADMIN_APPUSER_EMAIL"),
-                        password=getenv("ADMIN_APPUSER_PASSWORD"),
-                        admin=True)
-
-            try:
-                db.session.add(user)
-                db.session.commit()
-
-            except:
-                click.echo("Unexpected error: {0}.".format(sys.exc_info()[0]))
-
-            else:
-                click.echo("\nCreated Admin User!")
-                click.echo("<Username: {0.username}> <Admin: {0.is_admin}>".format(user))
+            # Create users
+            run_create_users()
 
     @app.cli.command()
-    def quick_reset():
+    def erase_annotations():
 
-        if click.confirm("\nWARNING! Perform quick reset?", abort=True):
+        if click.confirm("\nWARNING! Reset annotations?", abort=True):
+
+            click.echo("\nResetting annotations...")
+
+            # Remove all annotations
+            try:
+                Annotation.query.delete()
+
+            except:
+                click.echo("Unexpected error: {0}.".format(sys.exc_info()[0]))
+
+            else:
+                click.echo("\nRemoved all users!")
+
+    @app.cli.command()
+    def reset_all():
+
+        if click.confirm("\nWARNING! Perform full reset?", abort=True):
+
+            click.echo("\nPerforming full reset...")
 
             # Drop DBs
-
-            try:
-                db.drop_all()
-                click.echo("Database Erased!")
-
-            except:
-                click.echo("Unexpected error: {0}".format(sys.exc_info()[0]))
+            run_drop_db()
 
             # Create DBs
+            run_init_db()
 
-            try:
-                db.create_all()
-                click.echo("Database Initiated!")
-
-            except:
-                click.echo("Unexpected error: {0}".format(sys.exc_info()[0]))
-
-            # Create Default user
-
-            user = User(username=getenv("DEFAULT_APPUSER_USERNAME"),
-                        email=getenv("DEFAULT_APPUSER_EMAIL"),
-                        password=getenv("DEFAULT_APPUSER_PASSWORD"),
-                        admin=False)
-
-            try:
-                db.session.add(user)
-                db.session.commit()
-
-            except:
-                click.echo("Unexpected error: {0}.".format(sys.exc_info()[0]))
-
-            else:
-                click.echo("\nCreated Default User!")
-                click.echo("<Username: {0.username}> <Admin: {0.is_admin}>".format(user))
-
-            # Create Admin user
-
-            user = User(username=getenv("ADMIN_APPUSER_USERNAME"),
-                        email=getenv("ADMIN_APPUSER_EMAIL"),
-                        password=getenv("ADMIN_APPUSER_PASSWORD"),
-                        admin=True)
-
-            try:
-                db.session.add(user)
-                db.session.commit()
-
-            except:
-                click.echo("Unexpected error: {0}.".format(sys.exc_info()[0]))
-
-            else:
-                click.echo("\nCreated Admin User!")
-                click.echo("<Username: {0.username}> <Admin: {0.is_admin}>".format(user))
+            # Create users
+            run_create_users()

@@ -12,10 +12,10 @@ ORIGIN = "user"
 SOURCE_PREFIX = "SRC-"
 SOURCE_NONE = {
     "ID": "SRC-NONE",
-    "LABEL": "NO SOURCE"
+    "NAME": "no source"
 }
 AUTHOR_PREFIX = "AUT-"
 AUTHOR_NONE = {
     "ID": "AUT-NONE",
-    "LABEL": "NO AUTHOR"
+    "NAME": "no author"
 }

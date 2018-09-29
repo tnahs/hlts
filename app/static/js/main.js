@@ -3,28 +3,37 @@
 window.addEventListener("load", function(){
 
     /* -------------------------------------------------------------------- */
-    /* Close flash window ------------------------------------------------- */
+    /* Close mainFlash ------------------------------------------------- */
 
-    const flashWindow = document.querySelector("flash .window");
+    const mainFlash = document.querySelector("mainFlash .flashContainer");
 
-    if (flashWindow) {
+    if (mainFlash) {
 
         const main = document.querySelector("main");
-        const flashClose = document.querySelector("flash .close");
 
         const rootStyles = window.getComputedStyle(document.body);
         const navMenuHeight = rootStyles.getPropertyValue("--navMenuHeight");
-        const navFlashHeight = rootStyles.getPropertyValue("--navFlashHeight");
+        const flashContainerHeight = rootStyles.getPropertyValue("--flashContainerHeight");
         const navMenuHeightInt = parseInt(navMenuHeight.slice(0, -2));
-        const navFlashHeightInt = parseInt(navFlashHeight.slice(0, -2));
+        const flashContainerHeightInt = parseInt(flashContainerHeight.slice(0, -2));
 
-        main.style.paddingTop =  `${navMenuHeightInt + navFlashHeightInt}px`;
+        main.style.paddingTop =  `${navMenuHeightInt + flashContainerHeightInt}px`;
 
-        flashClose.addEventListener("click", function() {
+        mainFlash.addEventListener("click", function() {
 
-            flashWindow.remove()
+            mainFlash.remove()
 
             main.style.paddingTop = `${navMenuHeightInt}px`;
+        });
+    }
+
+    const loginFlash = document.querySelector("loginFlash .flashContainer");
+
+    if (loginFlash) {
+
+        loginFlash.addEventListener("click", function() {
+
+            loginFlash.remove()
         });
     }
 

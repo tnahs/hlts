@@ -1,3 +1,6 @@
+{% from "_macros.html" import flash %}
+
+
 {% macro current(page) -%}
 
 	{% if request.endpoint == page %} current {% endif %}
@@ -6,15 +9,15 @@
 
 {% macro icon(name) -%}
 
-	{% set class_ = name ~ 'Icon' %}
+	{% set classname = name ~ "Icon" %}
 
-	{% if request.endpoint.split('.')[-1] == name %}
-		{% set filename = 'images/icon_' ~ name ~ '_current.png' %}
+	{% if request.endpoint.split(".")[-1] == name %}
+		{% set filename = "images/icon_" ~ name ~ "_current.png" %}
 	{% else %}
-		{% set filename = 'images/icon_' ~ name ~ '.png' %}
+		{% set filename = "images/icon_" ~ name ~ ".png" %}
 	{% endif %}
 
-	<img class="{{ class_ }}" src="{{ url_for('static', filename=filename) }}"/>
+	<img class="{{ classname }}" src="{{ url_for('static', filename=filename) }}"/>
 
 {% endmacro %}
 
@@ -24,7 +27,6 @@
 	<mainMenu>
 
 		<a class="{{ current('main.dashboard') }}" href="{{ url_for('main.dashboard') }}">{{ icon("dashboard") }}</a>
-		<a class="{{ current('main.dashboard') }}" href="{{ url_for('main.dashboard') }}">dashboard</a>
 		<a class="{{ current('main.index') }}" href="{{ url_for('main.index', mode='default')}}">index</a>
 		<a class="{{ current('main.recent') }}" href="{{ url_for('main.recent', mode='default') }}">recent</a>
 		<a class="{{ current('main.add') }}" href="{{ url_for('main.add') }}">{{ icon("add") }}</a>
@@ -35,16 +37,14 @@
 
 	<searchMenu>
 
+		{% set search = request.args.get('search') if request.endpoint == "main.search"  else "" %}
+
 		{{ icon("search") }}
 
-		{% if request.endpoint == "main.search" %}
-
-			{% set search = request.args.get('search') %}
-
-		{% endif %}
-
 		<form action="{{ url_for('main.search') }}" method="GET">
+
 			<input type="text" name="search" value="{{ search }}"/>
+
 		</form>
 
 	</searchMenu>
@@ -53,33 +53,13 @@
 
 		{% set display_name = current_user.fullname if current_user.fullname else current_user.username %}
 
-		<div class="text upper faded">{{ display_name }}</div>
-		<a href="{{ url_for('user.settings') }}">{{ icon("settings") }}</a>
+		<a class="userMenuButton" href="{{ url_for('user.settings') }}">
+			<span class="userMenuName">user: {{ display_name }}</span>
+			 <img class="userMenuIcon" src="{{ url_for('static', filename='images/icon_settings.png') }}"/>
+		</a>
 
 	</userMenu>
 
-	<flash>
-
-		{% with messages = get_flashed_messages(with_categories=true) %}
-
-			{% if messages %}
-
-				{% for category, message in messages %}
-
-						<div class="window {{ category }}">
-
-							<div class="message text upper">{{ message }}</div>
-
-							<a href="#" class="link button close">✕</a>
-
-						</div>
-
-				{% endfor %}
-
-			{% endif %}
-
-		{% endwith %}
-
-	</flash>
+	<mainFlash> {{ flash() }} </mainFlash>
 
 </nav>

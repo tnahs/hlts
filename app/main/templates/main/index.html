@@ -7,9 +7,9 @@
 
     {% for letter, items in results.items() | sort %}
 
-        <div class="label">{{ letter }}</div>
+        <div class="blockLabel">{{ letter }}</div>
 
-        <div class="content">
+        <div class="blockContent">
 
             {% for item in items %}
 
@@ -42,7 +42,9 @@
 
     {% else %}
 
-        <div class="block bleeding">
+        <div class="block blockPadding"></div>
+
+        <div class="block blockBleeding">
 
             {% if request.view_args['mode'] == 'sources' %}
 

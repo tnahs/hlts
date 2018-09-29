@@ -19,24 +19,21 @@ def login():
     if login_form.validate_on_submit():
 
         username = login_form.username.data
-        password = login_form.password.data
         remember = login_form.remember.data
 
         user = User.query.filter_by(username=username).first()
 
-        if user and user.check_password(password):
+        login_user(user, remember=remember)
 
-            login_user(user, remember=remember)
+        next_url = request.args.get('next', None)
 
-            next = request.args.get('next', None)
+        if next_url and is_safe_url(next_url):
 
-            if next and is_safe_url(next):
+            return redirect(next_url)
 
-                return redirect(next)
+        else:
 
-            else:
-
-                return redirect(home_url())
+            return redirect(home_url())
 
     return render_template('user/login.html', login_form=login_form)
 
@@ -54,15 +51,11 @@ def logout():
 @login_required
 def settings():
 
-    user_form = UserForm(obj=current_user)
+    user_form = UserForm(user=current_user, obj=current_user)
 
     if user_form.validate_on_submit():
 
-        current_user.username = user_form.username.data
-        current_user.email = user_form.email.data
-        current_user.fullname = user_form.fullname.data
-        current_user.results_per_page = user_form.results_per_page.data
-        current_user.recent_days = user_form.recent_days.data
+        user_form.populate_obj(current_user)
 
         db.session.commit()
 

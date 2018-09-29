@@ -171,7 +171,7 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
 
-        return '<User id:{0} user:{1}>'.format(self.id, self.username)
+        return u'<User id:{0} username:{1}>'.format(self.id, self.username)
 
     @staticmethod
     def init_password(password):
@@ -179,15 +179,6 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return bcrypt.check_password_hash(self.password, password)
-
-    # def change_username(self, username):
-
-    #     if len(username) < 3:
-    #         return False
-
-    #     self.username = username
-
-    #     return True
 
     def generate_token(self):
         return binascii.hexlify(os.urandom(20)).decode()
@@ -276,7 +267,7 @@ class Source(db.Model, ToDictMixin, PingedMixin):
 
     def __repr__(self):
 
-        return '<Source id:{0} name:{1} author:{2}>'.format(self.id, self.name, self.author)
+        return u'<Source id:{0} name:{1} author:{2}>'.format(self.id, self.name, self.author)
 
     def edit(self, source):
 
@@ -293,11 +284,11 @@ class Source(db.Model, ToDictMixin, PingedMixin):
 
         if not author_name:
             id = AppDefaults.AUTHOR_NONE['ID']
-            author = Author.query \
-                .filter_by(id=id).first()
+
+            author = Author.query.filter_by(id=id).first()
+
         else:
-            author = Author.query \
-                .filter_by(name=author_name).first()
+            author = Author.query.filter_by(name=author_name).first()
 
         if not author:
             author = Author(id, author_name)
@@ -359,7 +350,7 @@ class Author(db.Model, ToDictMixin, PingedMixin):
 
     def __repr__(self):
 
-        return '<Author id:{0} name:{1}>'.format(self.id, self.name)
+        return u'<Author id:{0} name:{1}>'.format(self.id, self.name)
 
     def ping(self):
         self.pinged = datetime.utcnow()
@@ -424,7 +415,7 @@ class Tag(db.Model, ToDictMixin, PingedMixin):
 
     def __repr__(self):
 
-        return '<Tag id:{0} name:{1}>'.format(self.id, self.name)
+        return u'<Tag id:{0} name:{1}>'.format(self.id, self.name)
 
     def edit(self, tag):
 
@@ -494,7 +485,7 @@ class Collection(db.Model, ToDictMixin, PingedMixin):
 
     def __repr__(self):
 
-        return '<Collection id:{0} name:{1}>'.format(self.id, self.name)
+        return u'<Collection id:{0} name:{1}>'.format(self.id, self.name)
 
     def edit(self, collection):
 
@@ -866,8 +857,9 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
 
         if not source_name and not author_name:
             id = AppDefaults.SOURCE_NONE['ID']
-            source = Source.query \
-                .filter_by(id=id).first()
+
+            source = Source.query.filter_by(id=id).first()
+
         else:
             source = Source.query \
                 .filter_by(name=source_name) \

@@ -20,7 +20,7 @@
 	--body-bg-color: hsl(0, 0%, 95%);
 
 	--navMenuHeight: 65px;
-	--navFlashHeight: 40px;
+	--flashContainerHeight: 40px;
 
 	/* body */
 	--body-bg-color: hsl(0, 0%, 95%);
@@ -98,7 +98,7 @@
 	--search-text-color-blur: hsl(0, 0%, 50%);
 
 	/* highlighting */
-	--highlight-bg-color: var(--accent-qart);;
+	--highlight-bg-color: var(--accent-qart);
 	--highlight-text-color: unset;
 	--mark-passage-bg-color: var(--accent-full);
 	--mark-passage-text-color: unset;
@@ -120,12 +120,9 @@
 	outline: none;
 }
 
-html, body {
-
-    height: 100%;
-}
-
 html {
+
+	overflow-y: scroll;
 
 	/* prevent font scaling in landscape */
 	-webkit-text-size-adjust: 100%;
@@ -148,9 +145,9 @@ nav {
 	transition: .3s;
 
 	display: grid;
+	grid-template-columns: max-content auto max-content;
 	grid-template-areas: "navMain navSearch navUser"
 						 "navflash navflash navflash";
-	grid-template-columns: max-content auto max-content;
 }
 
 	mainMenu {
@@ -162,7 +159,7 @@ nav {
 		background-color: hsla(0, 0%, 100%, .95);
 
 		display: grid;
-		grid-template-columns: repeat(7, max-content);
+		grid-template-columns: repeat(6, max-content);
 		grid-column-gap: 15px;
 		align-items: center;
 	}
@@ -248,56 +245,87 @@ nav {
 		grid-area: navUser;
 
 		display: grid;
-		grid-template-columns: repeat(2, max-content);
-		grid-column-gap: 5px;
 		align-items: center;
 
 		padding: 0 30px 0 30px;
 		background-color: hsla(220, 100%, 90%, 0.95);
-		background-color: white
 	}
 
-	userMenu img.settingsIcon {
+	userMenu .userMenuButton {
+
+		/* font block */
+		font-family: var(--sans-serif-condensed-font);
+		color: hsla(220, 100%, 75%, 1.00);
+		font-size: 11pt;
+		font-weight: 500;
+		letter-spacing: 1px;
+		line-height: 100%;
+		text-transform: uppercase;
+
+		display: grid;
+		grid-template-columns: repeat(2, max-content);
+		align-items: center;
+	}
+
+	userMenu .userMenuButton:hover {
+
+		color: white;
+	}
+
+	userMenu .userMenuButton .userMenuName {
+
+		/*  */
+	}
+
+	userMenu .userMenuButton img.userMenuIcon {
 
 		width: 50px;
 		height: 50px;
 	}
 
-	flash {
+	mainFlash {
 
 		grid-area: navflash;
+
+		cursor: pointer;
 
 		width: 100%;
 	}
 
-	flash .window {
+	mainFlash .flashContainer {
 
-		height: var(--navFlashHeight);
+		height: var(--flashContainerHeight);
 
 		display: grid;
 		grid-template-columns: 1fr max-content;
 		align-items: center;
 	}
 
-	flash .window.success {
+	mainFlash .flashContainer.success {
 
 		background-color: hsla(220, 100%, 75%, 1.00);
 	}
 
-	flash .window.warning {
+	mainFlash .flashContainer.warning {
 
-		background-color: hsla(0, 100%, 63%, 1.00);
+		background-color: hsl(0, 100%, 75%) !important;
 	}
 
-	flash .message {
+	mainFlash .flashMessage {
 
+		/* font block */
+		font-family: var(--sans-serif-condensed-font);
 		color: white;
+		font-size: 11pt;
+		font-weight: 400;
+		letter-spacing: 1px;
+		line-height: 100%;
+		text-transform: uppercase;
 
 		text-align: center;
-
 	}
 
-	flash .close {
+	mainFlash .flashClose {
 
 		color: white;
 
@@ -310,9 +338,8 @@ main {
 	grid-template-rows:
 		[mainHeader] minmax(0, max-content)
 		  [mainBody] 1fr
-		[mainFooter] minmax(300px, auto);
+		[mainFooter] minmax(300px, max-content);
 
-	min-height: 100%;
 	padding-top: var(--navMenuHeight);
 }
 
@@ -323,9 +350,7 @@ main {
 
 	section {
 
-
 		grid-row: mainBody;
-
 	}
 
 	footer {
@@ -333,6 +358,7 @@ main {
 		grid-row: mainFooter;
 
 		background-color: hsla(220, 100%, 90%, 0.95);
+		box-shadow: 0 50vh 0 50vh hsla(220, 100%, 90%, 0.95);
 	}
 
 .block {
@@ -346,39 +372,49 @@ main {
 	background-color: white;
 }
 
-	.block.floating {
+	.block.blockFloating {
 
 		margin: 25px;
 		padding: 0;
 
 	}
 
-	.block.bleeding {
+	.block.blockHeader {
+
+		margin: 25px 25px 0 25px;
+		padding: 0;
+	}
+
+	.block.blockBleeding {
 
 		margin: 0;
 		padding: 0;
 	}
 
-	.block.invisible {
+	.block.blockPagination {
 
-		margin: 0;
+		margin: 5px 0;
 		padding: 0;
+	}
 
+	.block.blockPadding {
+
+		margin-top: 25px;
 		background-color: unset;
 	}
 
-	.block > .content {
+	.block > .blockContent {
 
 		grid-column: blockContent;
 
 		padding: 25px;
 	}
 
-	.block > .title {
+	.block > .blockTitle {
 
 		grid-column: blockContent;
 
-		padding: 10px 25px 10px 25px;
+		padding: 25px;
 
 		/* font block */
 		font-family: var(--sans-serif-condensed-font);
@@ -392,7 +428,7 @@ main {
 		text-align: center;
 	}
 
-	.block > .label {
+	.block > .blockLabel {
 
 		grid-column: blockLabel;
 
@@ -412,7 +448,6 @@ main {
 
 		text-align: right;
 	}
-
 
 /* pagination ------------------------------------------------------------- */
 
@@ -436,7 +471,7 @@ main {
 
 		display: inline-block;
 		padding: 15px 19px;
-		background-color: white;
+		background-color: hsl(0, 0%, 95%);
 
 		/* font block */
 		font-family: var(--sans-serif-condensed-font);
@@ -553,7 +588,14 @@ a *:hover {
 
 .marked {
 
-	background-color: hsla(220, 100%, 90%, 1.00) !important;
+	background-color: hsla(220, 100%, 90%, 1.0) !important;
+	padding: 1px 4px 3px 4px;
+}
+
+mark {
+
+	background-color: hsla(220, 100%, 90%, .25) !important;
+	color: hsl(220, 100%, 70%) !important;
 	padding: 1px 4px 3px 4px;
 }
 
@@ -579,6 +621,11 @@ a *:hover {
 	display: block;
 
 	padding-bottom: 5px;
+}
+
+.text.dashboard:last-child {
+
+	padding-bottom: 0;
 }
 
 .dropShadowBig {
@@ -698,7 +745,7 @@ a *:hover {
 	/* font block */
 	font-family: var(--sans-serif-font);
 	color: var(--metadata-text-color);
-	font-size: 10pt;
+	font-size: 10.5pt;
 	font-weight: 400;
 	letter-spacing: unset;
 	line-height: 150%;
@@ -820,11 +867,6 @@ form *:hover::-webkit-input-placeholder {
 	color: var(--input-placeholder-hover-color);
 }
 
-button {
-
-	cursor: pointer;
-}
-
 input,
 textarea {
 
@@ -840,23 +882,77 @@ textarea {
 
 textarea {
 
+	resize: none;
+	overflow: hidden;
 	vertical-align: top;
 }
-
 
 input[type=password]{
 
 	letter-spacing: 2px;
 }
 
+.formField input,
+.formField textarea {
 
-/* --------------------------------------------------------------------- */
+	margin: 2px 0;
+	padding: 10px 14px;
+
+	width: 100%;
+
+	line-height: 150%;
+
+	background-color: hsl(0, 0%, 95%);
+}
+
+.formField input:focus,
+.formField textarea:focus {
+
+	-webkit-box-shadow: inset 2px 2px 0px 0px hsl(0, 0%, 85%);
+	   -moz-box-shadow: inset 2px 2px 0px 0px hsl(0, 0%, 85%);
+	        box-shadow: inset 2px 2px 0px 0px hsl(0, 0%, 85%);
+}
+
+.formField input.fieldError {
+
+	background-color: hsl(0, 100%, 90%) !important;
+	color: white !important;
+}
+
+.formField input.fieldError:focus {
+
+	-webkit-box-shadow: inset 2px 2px 0px 0px hsl(0, 100%, 85%) !important;
+	   -moz-box-shadow: inset 2px 2px 0px 0px hsl(0, 100%, 85%) !important;
+		    box-shadow: inset 2px 2px 0px 0px hsl(0, 100%, 85%) !important;
+}
+
+.formField input.fieldError::-webkit-input-placeholder {
+
+	color: white !important;
+}
+
+.formField .fieldLabel {
+
+	padding: 0 0 2px 3px;
+}
+
+.formField:not(:first-child) .fieldLabel {
+
+	padding-top: 5px;
+}
+
+/* ------------------------------- forms ------------------------------- */
+
+button {
+
+	cursor: pointer;
+}
+
 /* --------------------------------------------------------------------- */
 
 #bulkEditor form {
 
 	margin: 10px 0;
-
 }
 
 #bulkEditor input {
@@ -868,77 +964,18 @@ input[type=password]{
 	background-color: hsl(0, 0%, 95%);
 }
 
-#bulkEditor input:focus {
-
-	-webkit-box-shadow: inset 2px 2px 0px 0px hsl(0, 0%, 85%);
-	   -moz-box-shadow: inset 2px 2px 0px 0px hsl(0, 0%, 85%);
-	        box-shadow: inset 2px 2px 0px 0px hsl(0, 0%, 85%);
-}
-
-
-/* #bulkEditor input[type='checkbox'] {
-
-	height: 20px;
-	width: 20px;
-	position: relative;
-}
-
-#bulkEditor input[type='checkbox']:after {
-
-	background: hsl(0, 0%, 95%);
-	position: absolute;
-	pointer-events: none;
-	content: '';
-	height: 20px;
-	width: 20px;
-	transition: .2s;
-}
-
-#bulkEditor input[type='checkbox']:checked:after {
-
-	background-color: hsla(220, 100%, 95%, 1.00);
-
-	-webkit-box-shadow: inset 2px 2px 0px 0px hsl(0, 0%, 80%);
-	   -moz-box-shadow: inset 2px 2px 0px 0px hsl(0, 0%, 80%);
-	        box-shadow: inset 2px 2px 0px 0px hsl(0, 0%, 80%);
-
-} */
-
 /* --------------------------------------------------------------------- */
 /* ---------------------------- editor.html ---------------------------- */
 /* --------------------------------------------------------------------- */
 
-#annotationEditor input,
-#annotationEditor textarea {
+#annotationEditor textarea#passage {
 
-	margin: 2px 0;
-	padding: 10px 14px;
-
-	line-height: 150%;
+	min-height: 250px;
 }
 
-#annotationEditor input {
+#annotationEditor textarea#notes {
 
-	width: 100%;
-	background-color: hsl(0, 0%, 95%);
-}
-
-#annotationEditor textarea {
-
-	width: 100%;
-	min-height: 25px;
-	background-color: hsl(0, 0%, 95%);
-
-	resize: none;
-	overflow: hidden;
-}
-
-#annotationEditor input:focus,
-#annotationEditor textarea:focus {
-
-	-webkit-box-shadow: inset 2px 2px 0px 0px hsl(0, 0%, 85%);;
-	   -moz-box-shadow: inset 2px 2px 0px 0px hsl(0, 0%, 85%);;
-	        box-shadow: inset 2px 2px 0px 0px hsl(0, 0%, 85%);;
+	min-height: 100px;
 }
 
 #annotationEditor .metaData {
@@ -947,17 +984,8 @@ input[type=password]{
 	margin-left: 5px;
 }
 
-#userSettings input {
-
-	margin: 2px 0;
-	padding: 10px 14px;
-
-	line-height: 150%;
-
-	/* width: 100%; */
-	background-color: hsl(0, 0%, 95%);
-}
 /* --------------------------------------------------------------------- */
+
 
 .pill {
 
@@ -1066,14 +1094,6 @@ input[type=password]{
 	background-color: hsl(0, 0%, 95%);
 }
 
-#userLogin .loginContainer .loginForm input[type=text]:focus,
-#userLogin .loginContainer .loginForm input[type=password]:focus {
-
-	-webkit-box-shadow: inset 2px 2px 0px 0px hsl(0, 0%, 85%);
-	   -moz-box-shadow: inset 2px 2px 0px 0px hsl(0, 0%, 85%);
-	        box-shadow: inset 2px 2px 0px 0px hsl(0, 0%, 85%);
-}
-
 #userLogin .loginContainer .loginFormOptions {
 
 	padding: 0 25px 25px 0;
@@ -1086,10 +1106,56 @@ input[type=password]{
 }
 
 
+loginFlash {
+
+	width: 100%;
+	display: inline-block;
+
+	cursor: pointer;
+
+	margin: 2px 0;
+}
+
+loginFlash .flashContainer {
+
+	height: var(--flashContainerHeight);
+
+	display: grid;
+	grid-template-columns: 1fr max-content;
+	align-items: center;
+}
+
+loginFlash .flashContainer.warning {
+
+	background-color: hsl(0, 100%, 75%) !important;
+}
+
+loginFlash .flashMessage {
+
+	/* font block */
+	font-family: var(--sans-serif-condensed-font);
+	color: white;
+	font-size: 11pt;
+	font-weight: 400;
+	letter-spacing: 1px;
+	line-height: 100%;
+	text-transform: uppercase;
+
+	text-align: center;
+}
+
+loginFlash .flashClose {
+
+	color: white;
+
+	padding-right: 25px;
+}
+
 
 /* ---------------- */
 
-#error {
+#errorPage {
+
 	display: grid;
 	grid-template-columns: 1fr;
 	grid-template-rows: 50vh;
@@ -1097,7 +1163,7 @@ input[type=password]{
 	justify-items: center;
 }
 
-#error .errorContainer {
+#errorPage .errorContainer {
 
 	background-color: white;
 	min-width: 500px;
@@ -1107,4 +1173,24 @@ input[type=password]{
 	display: grid;
 	grid-template-rows: 75px max-content;
 	justify-items: center;
+}
+
+#noResults {
+
+	/* display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: 30vh;
+	align-items: center;
+	justify-items: center; */
+}
+
+#noResults .noResultsContainer {
+
+	background-color: white;
+	/* min-width: 500px; */
+	height: 100vh;
+
+	text-align: center;
+
+	/* padding: 50px; */
 }

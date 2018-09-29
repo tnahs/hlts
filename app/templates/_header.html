@@ -13,9 +13,11 @@
 
 {% if request.endpoint in ['main.index', 'main.tags', 'main.recent', 'main.collections'] %}
 
-	<div class="block floating">
+	<div class="block blockHeader">
 
-		<div class="content">
+		<div class="blockLabel">{{ request.endpoint.split(".")[-1] }}</div>
+
+		<div class="blockContent">
 
 			{% if request.endpoint == 'main.index' %}
 

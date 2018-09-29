@@ -1,3 +1,5 @@
+{% from "_macros.html" import render_form_field %}
+
 {% extends "_index.html" %}
 
 
@@ -8,11 +10,11 @@
 
     <form method="POST" action="{{ url_for('main.add') }}">
 
-        <div class="block floating">
+        <div class="block blockFloating">
 
-            <div class="label">new annotation</div>
+            <div class="blockLabel">new annotation</div>
 
-            <div class="content">
+            <div class="blockContent">
 
                 <button class="link button form" type="submit">add</button>
                      <a class="link button form" href="{{ HOME_URL }}">cancel</a>
@@ -22,18 +24,18 @@
 
         </div>
 
-        <div class="block bleeding">
+        <div class="block blockBleeding">
 
-            <div class="content">
+            <div class="blockContent">
 
                 <div id="annotationEditor">
 
                     {{ form_annotation.csrf_token }}
 
-                    {{ form_annotation.passage(class_="enableMarkdown") }}
-                    {{ form_source.name }}
-                    {{ form_author.name }}
-                    {{ form_annotation.notes(class_="enableMarkdown") }}
+                    {{ render_form_field(form_annotation.passage, custom_classes=["enableMarkdown"]) }}
+                    {{ render_form_field(form_source.name) }}
+                    {{ render_form_field(form_author.name) }}
+                    {{ render_form_field(form_annotation.notes, custom_classes=["enableMarkdown"]) }}
 
                     <medKit name='tag'></medKit>
                     {{ form_annotation.tags(id="tag-medKitData") }}
