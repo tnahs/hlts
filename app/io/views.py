@@ -3,52 +3,58 @@
 from app.io import io
 
 from app.tools import home_url
-from app.io.tools import ExportJSON, ImportJSON
+from app.io.tools import ExportUserData, RestoreUserData
+from app.io.forms import RestoreDataForm
 
 from flask import Response, redirect, url_for, request, flash, render_template
 from flask_login import login_required
 
 
-@io.route('/export_to_json')
+@io.route("/export_user_data")
 @login_required
-def export_to_json():
+def export_user_data():
 
-    export = ExportJSON()
+    export = ExportUserData()
 
-    export_to_json = Response(
-        export.annotations,
-        mimetype='text/json',
-        headers={'Content-disposition': 'attachment; filename={0}'.format(export.filename)}
+    data = Response(
+        export.data,
+        mimetype="text/json",
+        headers={
+            "Content-disposition":
+            "attachment; filename={0}".format(export.filename)}
     )
 
-    return export_to_json
+    return data
 
 
-@io.route('/restore_from_json', methods=['GET', 'POST'])
+@io.route("/restore_user_data", methods=["GET", "POST"])
 @login_required
-def restore_from_json():
+def restore_user_data():
 
-    if request.method == 'POST':
+    form_restore = RestoreDataForm()
 
-        confirmed = request.values.get('confirm')
+    if request.method == "POST":
 
-        if 'json' not in request.files:
+        data = request.files["hlts_file"]
 
-            flash('No json file selected!', 'warning')
+        restore = RestoreUserData()
 
-        elif confirmed:
-
-            file_ = request.files['json']
-
-            import_json = ImportJSON(file_)
-
-            import_json.restore_annotations()
+        try:
+            restore.validate(data)
+        except Exception as error:
+            flash(error.message, "warning")
+            return redirect(url_for("io.restore_user_data"))
 
         else:
-            flash('you must confirm before continuing!', 'warning')
 
-            return redirect(url_for('io.restore_from_json'))
+            try:
+                restore.execute()
+            except Exception as error:
+                flash(error.message, "warning")
+                return redirect(url_for("io.restore_user_data"))
 
-        return redirect(home_url())
+            else:
+                flash("restored user settings and {0} annotations".format(restore.annotation_count), "success")
+                return redirect(home_url())
 
-    return render_template("io/restore.html")
+    return render_template("io/restore.html", form_restore=form_restore)

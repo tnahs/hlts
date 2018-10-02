@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import sys
+
 from app.api import api
 
 from app import db
@@ -7,7 +9,7 @@ from app.models import Annotation, Tag, Collection, Source, Author
 from app.tools import SortIt
 from app.api.auth import basic_auth, token_auth
 
-from flask import jsonify, g, request
+from flask import jsonify, g, request, current_app
 
 
 @api.route('/new_token', methods=['POST'])
@@ -65,7 +67,7 @@ def pinned_collections():
 
 @api.route('/annotations', methods=['GET'])
 @token_auth.login_required
-def annotations():
+def annotations_all():
 
     query = Annotation.get_all()
 
@@ -76,7 +78,7 @@ def annotations():
 
 @api.route('/annotations/id/<string:in_request>', methods=['GET'])
 @token_auth.login_required
-def annotation(in_request):
+def annotations_by_id(in_request):
 
     query = Annotation.query_by_id(in_request)
 
@@ -88,7 +90,7 @@ def annotation(in_request):
 @api.route('/annotations/tag/<string:in_request>', methods=['GET'])
 @api.route('/annotations/tag/<string:in_request>/page/<int:page>', methods=['GET'])
 @token_auth.login_required
-def tag(in_request, page=1):
+def annotations_by_tag(in_request, page=1):
 
     query = Annotation.query_by_tag_name(in_request)
 
@@ -102,7 +104,7 @@ def tag(in_request, page=1):
 @api.route('/annotations/source/<string:in_request>', methods=['GET'])
 @api.route('/annotations/source/<string:in_request>/page/<int:page>', methods=['GET'])
 @token_auth.login_required
-def source(in_request, page=1):
+def annotations_by_source(in_request, page=1):
 
     query = Annotation.query_by_source_id(in_request)
 
@@ -116,7 +118,7 @@ def source(in_request, page=1):
 @api.route('/annotations/author/<string:in_request>', methods=['GET'])
 @api.route('/annotations/author/<string:in_request>/page/<int:page>', methods=['GET'])
 @token_auth.login_required
-def author(in_request, page=1):
+def annotations_by_author(in_request, page=1):
 
     query = Annotation.query_by_author_id(in_request)
 
@@ -130,7 +132,7 @@ def author(in_request, page=1):
 @api.route('/tags', methods=['GET'])
 @api.route('/tags/<string:mode>', methods=['GET'])
 @token_auth.login_required
-def tags(mode=None):
+def index_tags(mode=None):
 
     query = Tag.query.all()
     results = Tag.query_to_multiple_dict(query)
@@ -149,7 +151,7 @@ def tags(mode=None):
 @api.route('/collections', methods=['GET'])
 @api.route('/collections/<string:mode>', methods=['GET'])
 @token_auth.login_required
-def collections(mode=None):
+def index_collections(mode=None):
 
     query = Collection.query.all()
     results = Collection.query_to_multiple_dict(query)
@@ -168,7 +170,7 @@ def collections(mode=None):
 @api.route('/sources', methods=['GET'])
 @api.route('/sources/<string:mode>', methods=['GET'])
 @token_auth.login_required
-def sources(mode=None):
+def index_sources(mode=None):
 
     query = Source.query.all()
     results = Source.query_to_multiple_dict(query)
@@ -187,7 +189,7 @@ def sources(mode=None):
 @api.route('/authors', methods=['GET'])
 @api.route('/authors/<string:mode>', methods=['GET'])
 @token_auth.login_required
-def authors(mode=None):
+def index_authors(mode=None):
 
     query = Author.query.all()
     results = Author.query_to_multiple_dict(query)
@@ -203,55 +205,115 @@ def authors(mode=None):
     return jsonify(results)
 
 
-""" POST """
+"""
+
+POST
+
+import/add: Add annotation only if does not currently exist.
+
+import/refresh: Add annotation even if it exists but only if it is unprotected.
+
+responses:
+
+    - success:
+    - warning:
+    - error:
+
+"""
 
 
-@api.route('/new/annotation/single', methods=['POST'])
-def new_single_annotation():
-
-    annotation = request.get_json() or {}
-
-    importing = Annotation()
-    importing.deserialize(annotation)
-
-    db.session.add(importing)
-    db.session.commit()
-
-    response = jsonify(importing.serialize())
-    response.status_code = 201
-
-    return response
-
-
-@api.route('/new/annotation/multi', methods=['POST'])
-def new_multi_annotation():
+@api.route('/import/annotations/refresh', methods=['POST'])
+def import_annotations_refresh():
 
     annotations = request.get_json() or {}
 
-    imported = []
     for annotation in annotations:
+
+        if not annotation['id']:
+            annotation['id'] = None
+
+        existing = Annotation.query_by_id(annotation['id'])
+
+        if existing:
+
+            if existing.protected:
+
+                continue
+
+                # response = jsonify({"warning": "annotation exists and protected!"})
+                # response.status_code = 201
+                # return response
+
+            elif not existing.protected:
+
+                db.session.delete(existing)
+                db.session.commit()
 
         importing = Annotation()
         importing.deserialize(annotation)
 
-        db.session.add(importing)
-        db.session.commit()
+        try:
+            db.session.add(importing)
+            db.session.commit()
 
-        imported.append(importing.serialize())
+        except:
+            db.session.rollback()
+            current_app.logger.error(sys.exc_info())
+            # response = jsonify({"error": "unexpected error refreshing annotation!"})
+            # response.status_code = 500
+            # return response
 
-    response = jsonify(imported)
+        # else:
+        #     response = jsonify({"success": "annotation refreshed!"})
+        #     response.status_code = 201
+        #     return response
+
+    response = jsonify({"success": "great!"})
     response.status_code = 201
-
     return response
 
 
-""" PUT """
+@api.route('/import/annotations/add', methods=['POST'])
+def import_annotations_add():
 
+    annotations = request.get_json() or {}
 
-@api.route('/edit/annotation/<string:in_request>', methods=['PUT'])
-@token_auth.login_required
-def edit_annotation(in_request):
+    for annotation in annotations:
 
-    # TODO
+        if not annotation['id']:
+            annotation['id'] = None
 
-    return
+        existing = Annotation.query_by_id(annotation['id'])
+
+        if existing:
+
+            continue
+
+            # response = jsonify({"warning": "annotation exists! skipped!"})
+            # response.status_code = 201
+            # return response
+
+        elif not existing:
+
+            importing = Annotation()
+            importing.deserialize(annotation)
+
+            try:
+                db.session.add(importing)
+                db.session.commit()
+
+            except:
+                db.session.rollback()
+                current_app.logger.error(sys.exc_info())
+                # response = jsonify({"error": "unexpected error refreshing annotation!"})
+                # response.status_code = 500
+                # return response
+
+            # else:
+            #     response = jsonify({"success": "annotation refreshed!"})
+            #     response.status_code = 201
+            #     return response
+
+    response = jsonify({"success": "great!"})
+    response.status_code = 201
+    return response

@@ -9,8 +9,8 @@ from flask_login import current_user
 from sqlalchemy import or_, and_
 
 
-def annotation_view(endpoint, results, in_request=None, mode=None, page=None,
-    request_info=None, search_info=None, tfilter_show=False):
+def annotation_view(endpoint, results, in_request=None, mode=None,
+    page=None, request_info=None, search_info=None):
 
     """
 
@@ -37,23 +37,9 @@ def annotation_view(endpoint, results, in_request=None, mode=None, page=None,
 
     search_info:
 
-    tfilter_show:
-
-
     """
 
-    # TODO Can we handle passing data better?
-    if tfilter_show:
-        tfiltered = tfilter_annotations(results, endpoint, in_request, page, mode, display_limit=None)
-        results = tfiltered[0]  # results
-        tfilter = tfiltered[1]  # data
-
-    else:
-        tfilter = None
-
-    if request_info:
-
-        request_info = request_info.serialize()
+    request_info = request_info.serialize() if request_info else None
 
     # Paginate results
     results = results.paginate(page=page,
@@ -63,12 +49,25 @@ def annotation_view(endpoint, results, in_request=None, mode=None, page=None,
     pages = [url_for(endpoint, in_request=in_request, page=pg,
         mode=mode) for pg in results.iter_pages()]
 
-    return render_template("main/annotations.html", results=results,
-        in_request=in_request, page=page, pages=pages, request_info=request_info,
-        search_info=search_info, tfilter=tfilter)
+    return render_template("main/annotations.html",
+        results=results, in_request=in_request, page=page, pages=pages,
+        request_info=request_info, search_info=search_info)
 
 
 def tfilter_annotations(results, endpoint, in_request, page, mode, display_limit=40):
+
+    """
+    # Snippet was in annotation_view()
+    #
+    # TODO Can we handle passing data better?
+    if tfilter_show:
+        tfiltered = tfilter_annotations(results, endpoint, in_request, page, mode, display_limit=None)
+        results = tfiltered[0]  # results
+        tfilter = tfiltered[1]  # data
+
+    else:
+        tfilter = None
+    """
 
     all_tags_from_query = Annotation.get_tags_from_query(results)
 

@@ -14,30 +14,36 @@
 
     </div>
 
-    <div class="block blockBleeding">
+    <form method="POST" action="{{ url_for('io.restore_user_data') }}" enctype=multipart/form-data>
 
-        <div class="blockContent">
+        <div class="block blockBleeding">
 
-            <form method="POST" action="{{ url_for('io.restore_from_json') }}" enctype=multipart/form-data>
+            <div class="blockContent">
 
-                <input type="file" name="json">
+                {{ form_restore.csrf_token }}
 
-                <br>
-                <br>
-
-                <input type="checkbox" name="confirm"/> <span class="text upper">confirm</span>
+                {{ form_restore.confirm }} <span class="text upper">confirm</span>
 
                 <br>
                 <br>
 
-                <button class="link button" type="submit">restore</button>
+                {{ form_restore.hlts_file }}
 
-            </form>
+            </div>
 
         </div>
 
-    </div>
+        <div class="block blockFloating">
 
+            <div class="blockContent">
+
+                <button class="link button" type="submit">restore</button>
+
+            </div>
+
+        </div>
+
+    </form>
 
 
 

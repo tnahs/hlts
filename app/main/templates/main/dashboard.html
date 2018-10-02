@@ -12,9 +12,9 @@
 
         <div class="blockContent">
 
-            <div class="text upper dashboard">{{ dash.annotation_count }} annotations</div>
-            <div class="text upper dashboard">{{ dash.tag_count }} tags</div>
-            <div class="text upper dashboard">{{ dash.collection_count }} collections</div>
+            <a href="{{ url_for('main.all') }}" class="link button dashboard">{{ dash.annotation_count }} annotations</a>
+            <a href="{{ url_for('main.index', mode='tags') }}" class="link button dashboard">{{ dash.tag_count }} tags</a>
+            <a href="{{ url_for('main.index', mode='collections') }}" class="link button dashboard">{{ dash.collection_count }} collections</a>
 
         </div>
 

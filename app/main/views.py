@@ -264,8 +264,7 @@ def source(in_request, page=1):
     request_info = Source.query.filter_by(id=in_request).first()
 
     return annotation_view(endpoint="main.source",
-        in_request=in_request, results=results, page=page,
-        request_info=request_info, tfilter_show=True)
+        in_request=in_request, results=results, page=page, request_info=request_info)
 
 
 @main.route("/author/<string:in_request>")
@@ -278,8 +277,7 @@ def author(in_request, page=1):
     request_info = Author.query.filter_by(id=in_request).first()
 
     return annotation_view(endpoint="main.author",
-        in_request=in_request, results=results, page=page,
-        request_info=request_info, tfilter_show=True)
+        in_request=in_request, results=results, page=page, request_info=request_info)
 
 
 @main.route("/tag/<string:in_request>")
@@ -292,8 +290,7 @@ def tag(in_request, page=1):
     request_info = Tag.query.filter_by(name=in_request).first()
 
     return annotation_view(endpoint="main.tag",
-        in_request=in_request, results=results, page=page,
-        request_info=request_info, tfilter_show=True)
+        in_request=in_request, results=results, page=page, request_info=request_info)
 
 
 @main.route("/collection/<string:in_request>")
@@ -306,8 +303,7 @@ def collection(in_request, page=1):
     request_info = Collection.query.filter_by(name=in_request).first()
 
     return annotation_view(endpoint="main.collection",
-        in_request=in_request, results=results, page=page,
-        request_info=request_info, tfilter_show=True)
+        in_request=in_request, results=results, page=page, request_info=request_info)
 
 
 @main.route("/search/", methods=["POST", "GET"])
@@ -319,8 +315,8 @@ def search(page=1):
     results = search.query
     search_info = search.info
 
-    return annotation_view(endpoint="main.search",
-        search_info=search_info, results=results, page=page, tfilter_show=True)
+    return annotation_view(endpoint="main.search", search_info=search_info,
+        results=results, page=page)
 
 
 """
@@ -624,6 +620,13 @@ def tools():
 AJAX routes
 
 """
+
+
+@main.route("/ajax/user")
+@login_required
+def ajax_user_notable_items():
+
+    return jsonify(current_user.serialize())
 
 
 @main.route("/ajax/colors")

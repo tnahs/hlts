@@ -69,20 +69,52 @@ to do this because we're generating UUID's based on the source's attriubutes.
 """
 
 
-def generate_uuid(prefix=None):
-
-    id = str(uuid.uuid4())
-
-    if prefix:
-        id = "{0}{1}".format(prefix, id)
-
-    id = id.upper()
-
-    return id
+def generate_uuid(prefix=""):
+    """ Genrerate UUID with optional prefix
+    """
+    return "{0}{1}".format(prefix, str(uuid.uuid4())).upper()
 
 
 def normalize_name(string, space_replacement="-"):
+    """ Normalize name for Tags and Collections
+    """
     return string.replace(" ", space_replacement).lower()
+
+
+class PingedMixin(object):
+
+    @classmethod
+    def get_recently_pinged(cls, days):
+
+        today = datetime.utcnow()
+        recent = today - timedelta(days=days)
+
+        results = cls.query \
+            .filter(cls.pinged > recent) \
+            .order_by(cls.pinged.desc())
+
+        return results
+
+
+class RestoreMixin(object):
+    """ Restore classmethod for Tags and Collections
+    """
+
+    @classmethod
+    def restore(cls, items):
+        """ items: List(dict)
+        """
+
+        for item in items:
+
+            query = cls.query.filter_by(name=item["name"]).first()
+
+            if not query:
+                query = cls(name=item["name"])
+
+            query.edit(item)
+
+            db.session.add(query)
 
 
 class ToDictMixin(object):
@@ -124,412 +156,6 @@ class ToDictMixin(object):
         }
 
         return data
-
-
-class PingedMixin(object):
-
-    @classmethod
-    def get_recently_pinged(cls, days):
-
-        today = datetime.utcnow()
-        recent = today - timedelta(days=days)
-
-        results = cls.query \
-            .filter(cls.pinged > recent) \
-            .order_by(cls.pinged.desc())
-
-        return results
-
-
-class User(UserMixin, db.Model):
-
-    __tablename__ = 'users'
-
-    id = db.Column(db.Integer(), primary_key=True)
-    username = db.Column(db.String(), nullable=False, unique=True)
-    fullname = db.Column(db.String())
-    email = db.Column(db.String(), nullable=False, unique=True)
-    password = db.Column(db.String())
-
-    admin = db.Column(db.Boolean, default=AppDefaults.ADMIN)
-
-    theme_index = db.Column(db.Integer(), default=AppDefaults.THEME_INDEX)
-
-    results_per_page = db.Column(db.Integer(), default=AppDefaults.RESULTS_PER_PAGE)
-    recent_days = db.Column(db.Integer(), default=AppDefaults.RECENT_DAYS)
-
-    token = db.Column(db.String(), unique=True, index=True)
-    token_expiration = db.Column(db.DateTime)
-
-    def __init__(self, username, email, password, admin, fullname=None):
-
-        self.username = username
-        self.fullname = fullname
-        self.email = email
-        self.password = self.init_password(password)
-        self.admin = admin
-
-    def __repr__(self):
-
-        return u'<User id:{0} username:{1}>'.format(self.id, self.username)
-
-    @staticmethod
-    def init_password(password):
-        return bcrypt.generate_password_hash(password)
-
-    def check_password(self, password):
-        return bcrypt.check_password_hash(self.password, password)
-
-    def generate_token(self):
-        return binascii.hexlify(os.urandom(20)).decode()
-
-    def new_token(self, duration=600):
-
-        self.token = self.generate_token()
-        self.token_expiration = datetime.utcnow() + timedelta(seconds=duration)
-
-        return self.token
-
-    def revoke_token(self):
-        self.token_expiration = datetime.utcnow() - timedelta(seconds=1)
-
-    @property
-    def token_is_fresh(self):
-        return self.token_expiration > datetime.utcnow()
-
-    @property
-    def is_admin(self):
-        return self.admin
-
-    @property
-    def colors(self):
-
-        colors = []
-
-        colors.extend([t.serialize() for t in Tag.query.all() if t.color])
-        colors.extend([c.serialize() for c in Collection.query.all() if c.color])
-
-        return colors
-
-    @property
-    def pinned_tags(self):
-        return [t.serialize() for t in Tag.query.all() if t.pinned]
-
-    @property
-    def pinned_collections(self):
-        return [c.serialize() for c in Collection.query.all() if c.pinned]
-
-    @property
-    def theme(self):
-        """ Return the name of style sheet found in /static/css/themes.
-        """
-        return '{0}.css'.format(AppDefaults.THEME_CHOICES[self.theme_index][1])
-
-    def serialize(self):
-        """ Serialize user into a dictionary.
-        """
-        data = {
-            'id': self.id,
-            'username': self.username,
-            'admin': self.admin,
-            'results_per_page': self.results_per_page,
-            'recent_days': self.recent_days,
-            'colors': self.colors,
-            'pinned_tags': self.pinned_tags,
-            'pinned_collection': self.pinned_collections
-        }
-
-        return data
-
-
-class Source(db.Model, ToDictMixin, PingedMixin):
-
-    __tablename__ = 'sources'
-
-    id = db.Column(db.String(), primary_key=True)
-    name = db.Column(db.String(), index=True)
-    pinged = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
-    author_id = db.Column(db.String(), db.ForeignKey('authors.id'))
-
-    annotations = db.relationship('Annotation', backref='source', lazy='dynamic')
-
-    def __init__(self, id=None, source_name=None, author_name=None):
-
-        if id is not None:
-            self.id = id
-        else:
-            self.id = generate_uuid(AppDefaults.SOURCE_PREFIX)
-
-        self.name = source_name
-
-        self.refresh_author(author_name=author_name)
-
-    def __repr__(self):
-
-        return u'<Source id:{0} name:{1} author:{2}>'.format(self.id, self.name, self.author)
-
-    def edit(self, source):
-
-        self.name = source['name']
-
-        self.refresh_author(author_name=source['author_name'])
-
-    def ping(self):
-        self.pinged = datetime.utcnow()
-
-    def refresh_author(self, author_name=None):
-
-        id = None
-
-        if not author_name:
-            id = AppDefaults.AUTHOR_NONE['ID']
-
-            author = Author.query.filter_by(id=id).first()
-
-        else:
-            author = Author.query.filter_by(name=author_name).first()
-
-        if not author:
-            author = Author(id, author_name)
-
-            db.session.add(author)
-
-        # Ping to show in recently modified
-        author.ping()
-
-        self.author_id = author.id
-
-    @property
-    def frequency(self):
-        return self.annotations.count()
-
-    def serialize(self):
-        """ Serialize source into a dictionary
-        """
-        data = {
-            'id': self.id,
-            'name': self.name,
-            'author': self.author.name,
-            'pinged': self.pinged.isoformat(),
-            'frequency': self.frequency,
-        }
-
-        return data
-
-    @classmethod
-    def remove_orphans(cls, session):
-        """ Remove orphaned authors
-        """
-        session.query(Source) \
-            .filter(Source.annotations==None) \
-            .delete(synchronize_session=False)
-
-
-db.event.listen(db.session, 'before_commit', Source.remove_orphans)
-
-
-class Author(db.Model, ToDictMixin, PingedMixin):
-
-    __tablename__ = 'authors'
-
-    id = db.Column(db.String(), primary_key=True)
-    name = db.Column(db.String(), index=True)
-    pinged = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
-    sources = db.relationship('Source', backref='author', lazy='dynamic')
-
-    def __init__(self, id=None, author_name=None):
-
-        if id is not None:
-            self.id = id
-        else:
-            self.id = generate_uuid(AppDefaults.AUTHOR_PREFIX)
-
-        self.name = author_name
-
-    def __repr__(self):
-
-        return u'<Author id:{0} name:{1}>'.format(self.id, self.name)
-
-    def ping(self):
-        self.pinged = datetime.utcnow()
-
-    def edit(self, name):
-
-        self.name = name
-
-    @property
-    def frequency(self):
-        return Annotation.query \
-            .join(Source) \
-            .join(Author) \
-            .filter(Author.name == self.name) \
-            .count()
-
-    def serialize(self):
-        """ Serialize author into a dictionary
-        """
-        data = {
-            'id': self.id,
-            'name': self.name,
-            'sources': [source.name for source in self.sources],
-            'pinged': self.pinged,
-            'frequency': self.frequency
-        }
-
-        return data
-
-    @classmethod
-    def remove_orphans(cls, session):
-        """ Remove orphaned sources
-        """
-        session.query(Author) \
-            .filter(Author.sources==None) \
-            .delete(synchronize_session=False)
-
-
-db.event.listen(db.session, 'before_commit', Author.remove_orphans)
-
-
-annotation_tags = db.Table('annotation_tags',
-    db.Column('tag_id', db.Integer, db.ForeignKey('tags.id')),
-    db.Column('annotation_id', db.String(), db.ForeignKey('annotations.id'))
-)
-
-
-class Tag(db.Model, ToDictMixin, PingedMixin):
-
-    __tablename__ = 'tags'
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(), unique=True, nullable=False, index=True)
-    color = db.Column(db.String())
-    pinned = db.Column(db.Boolean, default=False)
-    description = db.Column(db.String())
-    pinged = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
-    def __init__(self, name):
-
-        self.name = normalize_name(name)
-
-    def __repr__(self):
-
-        return u'<Tag id:{0} name:{1}>'.format(self.id, self.name)
-
-    def edit(self, tag):
-
-        self.name = tag['name']
-        self.color = tag['color']
-        self.pinned = tag['pinned']
-        self.description = tag['description']
-
-    def ping(self):
-        self.pinged = datetime.utcnow()
-
-    @property
-    def frequency(self):
-        return self.annotations.count()
-
-    def serialize(self):
-        """ Serialize tag into a dictionary
-        """
-        data = {
-            'id': self.id,
-            'name': self.name,
-            'color': self.color,
-            'pinned': self.pinned,
-            'description': self.description,
-            'pinged': self.pinged.isoformat(),
-            'frequency': self.frequency
-        }
-
-        return data
-
-    @classmethod
-    def remove_orphans(cls, session):
-        """ Remove orphaned tags that are not pinned or have a color.
-        """
-        session.query(Tag) \
-            .filter(
-                ~Tag.annotations.any(),
-                Tag.color==None,
-                Tag.pinned==False,
-                Tag.description==None) \
-            .delete(synchronize_session=False)
-
-
-db.event.listen(db.session, 'before_commit', Tag.remove_orphans)
-
-
-annotation_collections = db.Table('annotation_collections',
-    db.Column('collection_id', db.Integer, db.ForeignKey('collections.id')),
-    db.Column('annotation_id', db.String(), db.ForeignKey('annotations.id'))
-)
-
-
-class Collection(db.Model, ToDictMixin, PingedMixin):
-
-    __tablename__ = 'collections'
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(), unique=True, nullable=False, index=True)
-    color = db.Column(db.String())
-    pinned = db.Column(db.Boolean, default=False)
-    description = db.Column(db.String())
-    pinged = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
-    def __init__(self, name):
-
-        self.name = name.lower()
-
-    def __repr__(self):
-
-        return u'<Collection id:{0} name:{1}>'.format(self.id, self.name)
-
-    def edit(self, collection):
-
-        self.name = collection['name']
-        self.color = collection['color']
-        self.pinned = collection['pinned']
-        self.description = collection['description']
-
-    def ping(self):
-        self.pinged = datetime.utcnow()
-
-    @property
-    def frequency(self):
-        return self.annotations.count()
-
-    def serialize(self):
-        """ Serialize collection into a dictionary
-        """
-        data = {
-            'id': self.id,
-            'name': self.name,
-            'color': self.color,
-            'pinned': self.pinned,
-            'description': self.description,
-            'pinged': self.pinged.isoformat(),
-            'frequency': self.frequency
-        }
-
-        return data
-
-    @classmethod
-    def remove_orphans(cls, session):
-        """ Remove orphaned collections that are not pinned or have a color.
-        """
-        session.query(Collection) \
-            .filter(
-                ~Collection.annotations.any(),
-                Collection.color==None,
-                Collection.pinned==False,
-                Collection.description==None) \
-            .delete(synchronize_session=False)
-
-
-db.event.listen(db.session, 'before_commit', Tag.remove_orphans)
 
 
 class AnnotationQueryMixin(object):
@@ -802,6 +428,435 @@ class AnnotationUtilsMixin(object):
         return untagged
 
 
+class User(db.Model, UserMixin):
+
+    __tablename__ = 'users'
+
+    id = db.Column(db.Integer(), primary_key=True)
+    username = db.Column(db.String(), nullable=False, unique=True)
+    fullname = db.Column(db.String())
+    email = db.Column(db.String(), nullable=False, unique=True)
+    password = db.Column(db.String())
+
+    admin = db.Column(db.Boolean, default=AppDefaults.ADMIN)
+
+    theme_index = db.Column(db.Integer(), default=AppDefaults.THEME_INDEX)
+
+    results_per_page = db.Column(db.Integer(), default=AppDefaults.RESULTS_PER_PAGE)
+    recent_days = db.Column(db.Integer(), default=AppDefaults.RECENT_DAYS)
+
+    token = db.Column(db.String(), unique=True, index=True)
+    token_expiration = db.Column(db.DateTime)
+
+    def __repr__(self):
+
+        return u'<User id:{0} username:{1}>'.format(self.id, self.username)
+
+    def set_password(self, raw_password):
+        self.password = bcrypt.generate_password_hash(raw_password)
+
+    def check_password(self, raw_password):
+        return bcrypt.check_password_hash(self.password, raw_password)
+
+    def generate_token(self):
+        return binascii.hexlify(os.urandom(20)).decode()
+
+    def new_token(self, duration=600):
+
+        self.token = self.generate_token()
+        self.token_expiration = datetime.utcnow() + timedelta(seconds=duration)
+
+        return self.token
+
+    def revoke_token(self):
+        self.token_expiration = datetime.utcnow() - timedelta(seconds=1)
+
+    @property
+    def token_is_fresh(self):
+        return self.token_expiration > datetime.utcnow()
+
+    @property
+    def is_admin(self):
+        return self.admin
+
+    @property
+    def tags(self):
+        return [t.serialize() for t in Tag.query.all()]
+
+    @property
+    def collections(self):
+        return [c.serialize() for c in Collection.query.all()]
+
+    @property
+    def colors(self):
+        return self.colored_tags + self.colored_collections
+
+    @property
+    def colored_tags(self):
+        return [t.serialize() for t in Tag.query.all() if t.color]
+
+    @property
+    def colored_collections(self):
+        return [c.serialize() for c in Collection.query.all() if c.color]
+
+    @property
+    def pinned_tags(self):
+        return [t.serialize() for t in Tag.query.all() if t.pinned]
+
+    @property
+    def pinned_collections(self):
+        return [c.serialize() for c in Collection.query.all() if c.pinned]
+
+    @property
+    def customized_tags(self):
+        return [t.serialize() for t in Tag.query.all() if t.color or t.pinned or t.description]
+
+    @property
+    def customized_collections(self):
+        return [c.serialize() for c in Collection.query.all() if c.color or c.pinned or c.description]
+
+    @property
+    def theme(self):
+        """ Return the name of style sheet found in /static/css/themes.
+        """
+        return '{0}.css'.format(AppDefaults.THEME_CHOICES[self.theme_index][1])
+
+    @property
+    def data(self):
+        """ Serialize and compile user settings and annotations into dictionary
+        """
+        query = Annotation.get_all()
+        annotations = Annotation.query_to_multiple_dict(query)
+
+        data = {
+            "user": self.serialize(),
+            "annotations": annotations
+        }
+
+        return data
+
+    def serialize(self):
+        """ Serialize user into a dictionary.
+        """
+        data = {
+            "username": self.username,
+            "fullname": self.fullname,
+            "email": self.email,
+            "settings": {
+                "theme_index": self.theme_index,
+                "results_per_page": self.results_per_page,
+                "recent_days": self.recent_days,
+            },
+            "custom": {
+                "tags": self.customized_tags,
+                "collections": self.customized_collections,
+            }
+        }
+
+        return data
+
+    def deserialize(self, data):
+        """ De-serialize user from a dictionary
+        """
+        self.fullname = data["fullname"]
+        self.theme_index = data["settings"]["theme_index"]
+        self.results_per_page = data["settings"]["results_per_page"]
+        self.recent_days = data["settings"]["recent_days"]
+
+        Tag.restore(data["custom"]["tags"])
+        Collection.restore(data["custom"]["collections"])
+
+
+class Source(db.Model, ToDictMixin, PingedMixin):
+
+    __tablename__ = 'sources'
+
+    id = db.Column(db.String(), primary_key=True)
+    name = db.Column(db.String(), index=True)
+    pinged = db.Column(db.DateTime, nullable=False, index=True, default=datetime.utcnow)
+
+    author_id = db.Column(db.String(), db.ForeignKey('authors.id'))
+
+    annotations = db.relationship('Annotation', backref='source', lazy='dynamic')
+
+    def __init__(self, id=None, source_name=None, author_name=None):
+
+        if id is not None:
+            self.id = id
+        else:
+            self.id = generate_uuid(AppDefaults.SOURCE_PREFIX)
+
+        self.name = source_name
+
+        self.refresh_author(author_name=author_name)
+
+    def __repr__(self):
+
+        return u'<Source id:{0} name:{1} author:{2}>'.format(self.id, self.name, self.author)
+
+    def edit(self, source):
+
+        self.name = source['name']
+
+        self.refresh_author(author_name=source['author_name'])
+
+    def ping(self):
+        self.pinged = datetime.utcnow()
+
+    def refresh_author(self, author_name=None):
+
+        id = None
+
+        if not author_name:
+            id = AppDefaults.AUTHOR_NONE['ID']
+
+            author = Author.query.filter_by(id=id).first()
+
+        else:
+            author = Author.query.filter_by(name=author_name).first()
+
+        if not author:
+            author = Author(id, author_name)
+
+            db.session.add(author)
+
+        # Ping to show in recently modified
+        author.ping()
+
+        self.author_id = author.id
+
+    @property
+    def frequency(self):
+        return self.annotations.count()
+
+    def serialize(self):
+        """ Serialize source into a dictionary
+        """
+        data = {
+            'id': self.id,
+            'name': self.name,
+            'author': self.author.name,
+            'pinged': self.pinged.isoformat(),
+            'frequency': self.frequency,
+        }
+
+        return data
+
+    @classmethod
+    def remove_orphans(cls, session):
+        """ Remove orphaned authors
+        """
+        session.query(Source) \
+            .filter(Source.annotations==None) \
+            .delete(synchronize_session=False)
+
+
+db.event.listen(db.session, 'before_commit', Source.remove_orphans)
+
+
+class Author(db.Model, ToDictMixin, PingedMixin):
+
+    __tablename__ = 'authors'
+
+    id = db.Column(db.String(), primary_key=True)
+    name = db.Column(db.String(), index=True)
+    pinged = db.Column(db.DateTime, nullable=False, index=True, default=datetime.utcnow)
+
+    sources = db.relationship('Source', backref='author', lazy='dynamic')
+
+    def __init__(self, id=None, author_name=None):
+
+        if id is not None:
+            self.id = id
+        else:
+            self.id = generate_uuid(AppDefaults.AUTHOR_PREFIX)
+
+        self.name = author_name
+
+    def __repr__(self):
+
+        return u'<Author id:{0} name:{1}>'.format(self.id, self.name)
+
+    def ping(self):
+        self.pinged = datetime.utcnow()
+
+    def edit(self, name):
+
+        self.name = name
+
+    @property
+    def frequency(self):
+        return Annotation.query \
+            .join(Source) \
+            .join(Author) \
+            .filter(Author.name == self.name) \
+            .count()
+
+    def serialize(self):
+        """ Serialize author into a dictionary
+        """
+        data = {
+            'id': self.id,
+            'name': self.name,
+            'sources': [source.name for source in self.sources],
+            'pinged': self.pinged,
+            'frequency': self.frequency
+        }
+
+        return data
+
+    @classmethod
+    def remove_orphans(cls, session):
+        """ Remove orphaned sources
+        """
+        session.query(Author) \
+            .filter(Author.sources==None) \
+            .delete(synchronize_session=False)
+
+
+db.event.listen(db.session, 'before_commit', Author.remove_orphans)
+
+
+annotation_tags = db.Table("annotation_tags",
+    db.Column("tag_id", db.Integer, db.ForeignKey("tags.id")),
+    db.Column("annotation_id", db.String(), db.ForeignKey("annotations.id"))
+)
+
+
+class Tag(db.Model, ToDictMixin, PingedMixin, RestoreMixin):
+
+    __tablename__ = "tags"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(), unique=True, nullable=False, index=True)
+    color = db.Column(db.String())
+    pinned = db.Column(db.Boolean, default=False)
+    description = db.Column(db.String())
+    pinged = db.Column(db.DateTime, nullable=False, index=True, default=datetime.utcnow)
+
+    def __init__(self, name):
+
+        self.name = normalize_name(name)
+
+    def __repr__(self):
+
+        return u"<Tag id:{0} name:{1}>".format(self.id, self.name)
+
+    def edit(self, tag):
+
+        self.name = tag["name"]
+        self.color = tag["color"]
+        self.pinned = tag["pinned"]
+        self.description = tag["description"]
+
+    def ping(self):
+        self.pinged = datetime.utcnow()
+
+    @property
+    def frequency(self):
+        return self.annotations.count()
+
+    def serialize(self):
+        """ Serialize tag into a dictionary
+        """
+        data = {
+            "id": self.id,
+            "name": self.name,
+            "color": self.color,
+            "pinned": self.pinned,
+            "description": self.description,
+            "pinged": self.pinged.isoformat(),
+            "frequency": self.frequency
+        }
+
+        return data
+
+    @classmethod
+    def remove_orphans(cls, session):
+        """ Remove orphaned tags that are not pinned or have a color.
+        """
+        session.query(Tag) \
+            .filter(
+                ~Tag.annotations.any(),
+                Tag.color==None,
+                Tag.pinned==False,
+                Tag.description==None) \
+            .delete(synchronize_session=False)
+
+
+db.event.listen(db.session, 'before_commit', Tag.remove_orphans)
+
+
+annotation_collections = db.Table('annotation_collections',
+    db.Column('collection_id', db.Integer, db.ForeignKey('collections.id')),
+    db.Column('annotation_id', db.String(), db.ForeignKey('annotations.id'))
+)
+
+
+class Collection(db.Model, ToDictMixin, PingedMixin, RestoreMixin):
+
+    __tablename__ = 'collections'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(), unique=True, nullable=False, index=True)
+    color = db.Column(db.String())
+    pinned = db.Column(db.Boolean, default=False)
+    description = db.Column(db.String())
+    pinged = db.Column(db.DateTime, nullable=False, index=True, default=datetime.utcnow)
+
+    def __init__(self, name):
+
+        self.name = normalize_name(name)
+
+    def __repr__(self):
+
+        return u'<Collection id:{0} name:{1}>'.format(self.id, self.name)
+
+    def edit(self, collection):
+
+        self.name = collection['name']
+        self.color = collection['color']
+        self.pinned = collection['pinned']
+        self.description = collection['description']
+
+    def ping(self):
+        self.pinged = datetime.utcnow()
+
+    @property
+    def frequency(self):
+        return self.annotations.count()
+
+    def serialize(self):
+        """ Serialize collection into a dictionary
+        """
+        data = {
+            'id': self.id,
+            'name': self.name,
+            'color': self.color,
+            'pinned': self.pinned,
+            'description': self.description,
+            'pinged': self.pinged.isoformat(),
+            'frequency': self.frequency
+        }
+
+        return data
+
+    @classmethod
+    def remove_orphans(cls, session):
+        """ Remove orphaned collections that are not pinned or have a color.
+        """
+        session.query(Collection) \
+            .filter(
+                ~Collection.annotations.any(),
+                Collection.color==None,
+                Collection.pinned==False,
+                Collection.description==None) \
+            .delete(synchronize_session=False)
+
+
+db.event.listen(db.session, 'before_commit', Tag.remove_orphans)
+
+
 class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMixin):
 
     __tablename__ = 'annotations'
@@ -819,8 +874,8 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
         secondary=annotation_collections,
         backref=db.backref("annotations", lazy="dynamic"))
 
-    created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    modified = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    created = db.Column(db.DateTime, nullable=False, index=True, default=datetime.utcnow)
+    modified = db.Column(db.DateTime, nullable=False, index=True, default=datetime.utcnow)
 
     origin = db.Column(db.String(), nullable=False, default=AppDefaults.ORIGIN)
     protected = db.Column(db.Boolean, nullable=False, default=True)
@@ -982,27 +1037,27 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
 
         return data
 
-    def deserialize(self, annotation):
+    def deserialize(self, data):
         """ De-serialize annotation from a dictionary
 
         Dates: Supports importing only ISO 8601 Format
         """
-        created = dateparser(annotation['created'])
-        modified = dateparser(annotation['modified'])
+        created = dateparser(data['created']) if data['created'] else None
+        modified = dateparser(data['modified']) if data['modified'] else None
 
-        self.id = annotation['id']
-        self.passage = annotation['passage']
-        self.notes = annotation['notes']
+        self.id = data['id']
+        self.passage = data['passage']
+        self.notes = data['notes']
         self.created = created
         self.modified = modified
-        self.protected = annotation['protected']
-        self.deleted = annotation['deleted']
-        self.origin = annotation['origin']
+        self.protected = data['protected']
+        self.deleted = data['deleted']
+        self.origin = data['origin']
 
         self.refresh_source(
-            source_name=annotation['source']['name'],
-            author_name=annotation['source']['author'])
+            source_name=data['source']['name'],
+            author_name=data['source']['author'])
 
-        self.refresh_tags(tags=annotation['tags'])
+        self.refresh_tags(tags=data['tags'])
 
-        self.refresh_collections(collections=annotation['collections'])
+        self.refresh_collections(collections=data['collections'])

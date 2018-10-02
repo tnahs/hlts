@@ -2,10 +2,12 @@
 
 import sys
 import click
-from os import getenv
+from os import getenv, path
 
 from app import db
 from app.models import User, Annotation
+
+from flask import json, current_app
 from sqlalchemy.exc import IntegrityError
 
 
@@ -52,8 +54,8 @@ def register_cli(app):
         # Create default user
         user = User(username=getenv("DEFAULT_APPUSER_USERNAME"),
                     email=getenv("DEFAULT_APPUSER_EMAIL"),
-                    password=getenv("DEFAULT_APPUSER_PASSWORD"),
                     admin=False)
+        user.set_password(getenv("DEFAULT_APPUSER_PASSWORD"))
 
         try:
             db.session.add(user)
@@ -69,8 +71,8 @@ def register_cli(app):
         # Create admin user
         user = User(username=getenv("ADMIN_APPUSER_USERNAME"),
                     email=getenv("ADMIN_APPUSER_EMAIL"),
-                    password=getenv("ADMIN_APPUSER_PASSWORD"),
                     admin=True)
+        user.set_password(getenv("ADMIN_APPUSER_PASSWORD"))
 
         try:
             db.session.add(user)
@@ -100,7 +102,8 @@ def register_cli(app):
         password = click.prompt("Password", hide_input=True, confirmation_prompt=True)
         admin = click.prompt("Admin?", type=bool, default=False)
 
-        user = User(username=username, password=password, admin=admin)
+        user = User(username=username, admin=admin)
+        user.set_password(password)
 
         db.session.add(user)
 
@@ -164,7 +167,7 @@ def register_cli(app):
 
             if click.confirm("Change Password?"):
                 new_password = click.prompt("New Password", hide_input=True, confirmation_prompt=True)
-                user.password = user.init_password(new_password)
+                user.set_password(new_password)
 
             if click.confirm("Change Admin Status?"):
                 new_admin_status = click.prompt("New Admin Status?", type=bool)
@@ -236,3 +239,22 @@ def register_cli(app):
 
             # Create users
             run_create_users()
+
+    @app.cli.command()
+    def init_welcome():
+
+        click.echo("\nAdding welcome annotations...")
+
+        welcome_json = path.join(current_app.root_path, "data", "welcome.json")
+
+        with open(welcome_json) as f:
+            welcome_annotations = json.load(f)
+
+        for annotation in welcome_annotations:
+
+            importing = Annotation()
+            importing.deserialize(annotation)
+
+            db.session.add(importing)
+
+        db.session.commit()
