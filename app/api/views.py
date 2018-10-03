@@ -209,15 +209,9 @@ def index_authors(mode=None):
 
 POST
 
-import/add: Add annotation only if does not currently exist.
+import add: Add annotation only if does not currently exist.
 
-import/refresh: Add annotation even if it exists but only if it is unprotected.
-
-responses:
-
-    - success:
-    - warning:
-    - error:
+import refresh: Delete and re-add annotation if exists but only if unprotected.
 
 """
 
@@ -225,7 +219,11 @@ responses:
 @api.route('/import/annotations/refresh', methods=['POST'])
 def import_annotations_refresh():
 
-    annotations = request.get_json() or {}
+    count_added = 0
+    count_protected = 0
+    count_errors = 0
+
+    annotations = request.get_json() or []
 
     for annotation in annotations:
 
@@ -238,11 +236,9 @@ def import_annotations_refresh():
 
             if existing.protected:
 
-                continue
+                count_protected += 1
 
-                # response = jsonify({"warning": "annotation exists and protected!"})
-                # response.status_code = 201
-                # return response
+                continue
 
             elif not existing.protected:
 
@@ -256,19 +252,20 @@ def import_annotations_refresh():
             db.session.add(importing)
             db.session.commit()
 
+            count_added += 1
+
         except:
             db.session.rollback()
             current_app.logger.error(sys.exc_info())
-            # response = jsonify({"error": "unexpected error refreshing annotation!"})
-            # response.status_code = 500
-            # return response
 
-        # else:
-        #     response = jsonify({"success": "annotation refreshed!"})
-        #     response.status_code = 201
-        #     return response
+            count_errors += 1
 
-    response = jsonify({"success": "great!"})
+    response = jsonify({
+        "added": count_added,
+        "protected (skipped)": count_protected,
+        "errors": count_errors
+    })
+
     response.status_code = 201
     return response
 
@@ -276,7 +273,11 @@ def import_annotations_refresh():
 @api.route('/import/annotations/add', methods=['POST'])
 def import_annotations_add():
 
-    annotations = request.get_json() or {}
+    count_added = 0
+    count_existing = 0
+    count_errors = 0
+
+    annotations = request.get_json() or []
 
     for annotation in annotations:
 
@@ -287,11 +288,9 @@ def import_annotations_add():
 
         if existing:
 
-            continue
+            count_existing += 1
 
-            # response = jsonify({"warning": "annotation exists! skipped!"})
-            # response.status_code = 201
-            # return response
+            continue
 
         elif not existing:
 
@@ -302,18 +301,19 @@ def import_annotations_add():
                 db.session.add(importing)
                 db.session.commit()
 
+                count_added += 1
+
             except:
                 db.session.rollback()
                 current_app.logger.error(sys.exc_info())
-                # response = jsonify({"error": "unexpected error refreshing annotation!"})
-                # response.status_code = 500
-                # return response
 
-            # else:
-            #     response = jsonify({"success": "annotation refreshed!"})
-            #     response.status_code = 201
-            #     return response
+                count_errors += 1
 
-    response = jsonify({"success": "great!"})
+    response = jsonify({
+        "added": count_added,
+        "existing (skipped)": count_existing,
+        "errors": count_errors
+    })
+
     response.status_code = 201
     return response

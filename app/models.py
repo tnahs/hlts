@@ -1019,15 +1019,15 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
         Dates: Exported as ISO 8601 Format
         """
         data = {
-            'id': self.id,
-            'passage': self.passage,
-            'notes': self.notes,
-            'source': {
-                'name': self.source.name,
-                'author': self.source.author.name,
+            "id": self.id,
+            "passage": self.passage,
+            "notes": self.notes,
+            "source": {
+                "name": self.source.name,
+                "author": self.source.author.name,
             },
-            'tags': [tag.name for tag in self.tags],
-            'collections': [collection.name for collection in self.collections],
+            "tags": [tag.name for tag in self.tags],
+            "collections": [collection.name for collection in self.collections],
             "created": self.created.isoformat(),
             "modified": self.modified.isoformat(),
             "origin": self.origin,
@@ -1042,22 +1042,22 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
 
         Dates: Supports importing only ISO 8601 Format
         """
-        created = dateparser(data['created']) if data['created'] else None
-        modified = dateparser(data['modified']) if data['modified'] else None
+        created = dateparser(data["created"]) if data["created"] else None
+        modified = dateparser(data["modified"]) if data["modified"] else None
 
-        self.id = data['id']
-        self.passage = data['passage']
-        self.notes = data['notes']
+        self.id = data["id"]
+        self.passage = data["passage"]
+        self.notes = data["notes"]
         self.created = created
         self.modified = modified
-        self.protected = data['protected']
-        self.deleted = data['deleted']
-        self.origin = data['origin']
+        self.protected = data["protected"]
+        self.deleted = data["deleted"]
+        self.origin = data["origin"]
 
         self.refresh_source(
-            source_name=data['source']['name'],
-            author_name=data['source']['author'])
+            source_name=data["source"]["name"],
+            author_name=data["source"]["author"])
 
-        self.refresh_tags(tags=data['tags'])
+        self.refresh_tags(tags=data["tags"])
 
-        self.refresh_collections(collections=data['collections'])
+        self.refresh_collections(collections=data["collections"])
