@@ -1,0 +1,77 @@
+{% from "_macros.html" import pagination, render_multiple_interactive_annotations with context %}
+
+{% extends "_index.html" %}
+
+
+{% block main %}
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script> var searchInfo = "{{ search_info | tojson }}"; </script>
+
+    {% if search_info.unsafe %}
+
+        {% if search_info.errors | length == 1 %}
+
+            {% set error_message = search_info.errors | join ~ "..." %}
+
+        {% else %}
+
+            {% set error_message = search_info.errors[:-1] | join(", ") ~ " and " ~ search_info.errors[-1] ~ "..." %}
+
+        {% endif %}
+
+        {{ no_results("error: " ~ error_message) }}
+
+    {% elif results.total == 0 %}
+
+        <div class="block blockBleeding">
+
+            <div class="blockTitle">
+
+                no matching annotations found...
+
+            </div>
+
+        </div>
+
+    {% else %}
+
+        <div class="block blockFloating">
+
+            <div class="blockTitle">
+
+                <div class="text upper">
+
+                    searching <span class="accent">{{ search_info.key }}</span>
+
+                    for <span class="accent">{{ search_info.terms | join(" " ~ search_info.bool ~ " ") }}</span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="block blockInvisible">
+
+            <div class="blockPagination">
+
+                {{ pagination(results) }}
+
+            </div>
+
+        </div>
+
+        <div class="block blockBleeding">
+
+            <div class="blockContent">
+
+                {{ render_multiple_interactive_annotations(results) }}
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+{% endblock %}

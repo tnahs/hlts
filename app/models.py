@@ -975,16 +975,16 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
 
     def save(self, annotation, source, author):
 
-        self.passage = annotation['passage']
-        self.notes = annotation['notes']
+        self.passage = annotation["passage"]
+        self.notes = annotation["notes"]
 
         self.refresh_source(
-            source_name=source['name'],
-            author_name=author['name'])
+            source_name=source["name"],
+            author_name=author["name"])
 
-        self.refresh_tags(tags=annotation['tags'])
+        self.refresh_tags(tags=annotation["tags"])
 
-        self.refresh_collections(collections=annotation['collections'])
+        self.refresh_collections(collections=annotation["collections"])
 
     def edit(self):
 
@@ -995,7 +995,7 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
 
         self.protected = True
         self.modified = datetime.utcnow()
-        self.passage = u'DUPLICATE\n\n{0}'.format(self.passage)
+        self.passage = u"DUPLICATE\n\n{0}".format(self.passage)
 
     def delete(self):
         """ soft delete
@@ -1032,7 +1032,7 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
             "modified": self.modified.isoformat(),
             "origin": self.origin,
             "protected": self.protected,
-            "deleted": self.deleted,
+            "deleted": self.deleted
         }
 
         return data

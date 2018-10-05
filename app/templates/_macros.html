@@ -1,6 +1,19 @@
+{% macro header_buttons(endpoint, modes) -%}
+
+	{% for mode in modes %}
+
+		{% set current = 'current' if request.view_args['mode'] == mode else '' %}
+
+		<a class="link button header {{ current }}" href='{{ url_for(endpoint, mode=mode) }}'>{{ mode }}</a>
+
+	{% endfor %}
+
+{%- endmacro %}
+
+
 {% macro no_results(message) -%}
 
-    <div class="block blockFloating">
+    <div class="block blockBleeding">
 
         <div class="blockContent">
 
@@ -59,11 +72,11 @@
 
 {% macro pagination(results) -%}
 
-    <div class="pagination">
+    <div class="paginationContainer">
 
-        <div class="matches">
+        <div class="paginationMatches">
 
-            <div class="matchInfo dropShadowSmall">
+            <div class="paginationInfo dropShadowSmall">
 
                 {{ results.total }} match{% if results.total != 1 %}es{% endif %}
 
@@ -71,17 +84,17 @@
 
         </div>
 
-        <div class="pages dropShadowSmall">
+        <div class="paginationPages">
 
             {%- for page in pages %}
 
                 {% if loop.index != results.page %}
 
-                    <a class="pageNumber" href='{{ page }}'>{{ loop.index }}</a>
+                    <a class="paginationPageNumber dropShadowSmall" href='{{ page }}'>{{ loop.index }}</a>
 
                 {% else %}
 
-                    <span class="pageNumber current">{{ loop.index }}</span>
+                    <span class="paginationPageNumber dropShadowSmall current">{{ loop.index }}</span>
 
                 {% endif %}
 
@@ -179,26 +192,29 @@
 
             {% if request.endpoint == 'main.trash' %}
 
-                <div class="link button pmTrigger"
-                     data="{{ annotation.id }}"
-                     message="restore annotation?"
-                     url="{{ url_for('main.restore_annotation') }}"
-                     action="restore">restore</div>
+                <div class="link button pmTrigger restoreAnnotation" action="restore"
+                    message="restore annotation?" url="{{ url_for('main.restore_annotation') }}"
+                    data="{{ annotation.id }}">restore</div>
 
-                <div class="link button pmTrigger"
-                     data="{{ annotation.id }}"
-                     message="kill annotation?"
-                     url="{{ url_for('main.kill_annotation') }}"
-                     action="kill">kill</div>
+                <div class="link button pmTrigger killAnnotation" action="kill"
+                    message="kill annotation?" url="{{ url_for('main.kill_annotation') }}"
+                    data="{{ annotation.id }}">kill</div>
 
             {% else %}
 
-                <a class="link button" href="{{ url_for('main.edit', in_request=annotation.id) }}">edit</a>
-                <div class="link button pmTrigger"
-                     data="{{ annotation.id }}"
-                     message="delete annotation?"
-                     url="{{ url_for('main.delete_annotation') }}"
-                     action="delete">delete</div>
+                <a class="link button editAnnotation" href="{{ url_for('main.edit', in_request=annotation.id) }}">edit</a>
+
+                <div class="link button pmTrigger duplicateAnnotation" action="duplicate"
+                    message="duplicate annotation?" url="{{ url_for('main.dashboard') }}"
+                    data="{{ annotation.id }}">duplicate</div>
+
+                <div class="link button pmTrigger shareAnnotation" action="share"
+                    message="share annotation?" url="{{ url_for('main.dashboard') }}"
+                    data="{{ annotation.id }}">share</div>
+
+                <div class="link button pmTrigger deleteAnnotation" action="delete"
+                    message="delete annotation?" url="{{ url_for('main.delete_annotation') }}"
+                    data="{{ annotation.id }}">delete</div>
 
             {% endif %}
 
@@ -226,17 +242,13 @@
 
     <div class="annotation">
 
-        <div class="markdown passage">{{ annotation.passage | markdown }}</div>
+        <div class="annotationPassage markdown">{{ annotation.passage | markdown }}</div>
 
-        <div class="metaData">
+        <div class="annotationMetaData">
 
-            {% if annotation.source %}
+            {% if annotation.source.name or annotation.source.author.name %}
 
-                <div class="attribution">
-
-                    {{ attribution_from_annotation_obj(annotation) }}
-
-                </div>
+                <div class="annotationAttribution">{{ attribution_from_annotation_obj(annotation) }}</div>
 
                 <br>
 
@@ -244,7 +256,7 @@
 
             {% if annotation.notes %}
 
-                <div class="notes">{{ annotation.notes | markdown }}</div>
+                <div class="annotationNotes markdown">{{ annotation.notes | markdown }}</div>
 
                 <br>
 
@@ -290,42 +302,38 @@
 {%- endmacro %}
 
 
-{% macro debug_bar() -%}
+{% macro tag_filter_ui(results) -%}
 
-	{% if DEBUG %}
+    <div class="block blockBleeding">
 
-		DEBUG TOOLBAR --------------------
-		<div>endpoint: {{ request.endpoint.split('.')[-1] }}</div>
-		<br>
-		<div>results: {{ results }}</div>
-		<br>
-		<div>in_request: {{ in_request }}</div>
-		<br>
-		<div>source: {% if source %}{{ source.name }}{% endif %}</div>
-		<br>
-		<div>author: {% if author %}{{ author.author }}{% endif %}</div>
-		<br>
-		<div>page: {{ page }}</div>
-		<br>
-		<div>pages: {{ pages }}</div>
-		<br>
-		<div>tagfilter: {{ tagfilter }}</div>
-		<br>
-		<div>tags: {{ tags }}</div>
-		<br>
-		<div>path: {{ request.path }}</div>
-		<br>
-		<div>url: {{ request.url }}</div>
-		<br>
-		<div>args:
-			{% for key, value in request.args.iteritems() %}
-				[{{ key }}: {{ value }}]
-			{% endfor %}
-		</div>
-		DEBUG TOOLBAR --------------------
-		<br>
-		<br>
+        <div class="blockLabel">tag filter</div>
 
-	{% endif %}
+        <div class="blockContent">
+
+            {% if tfilter.enabled %}
+
+                {% set search = request.args.get('search') %}
+
+                <a class="pill tag active" href="{{ url_for(request.endpoint, in_request=in_request, page=page, search=search) }}">clear filters</a>
+
+            {% endif %}
+
+            {% for tag in tfilter.data %}
+
+                {% if tag.enabled %}
+
+                    <a class="pill tag {{ tag.status }}" href="{{ tag.url }}" name="{{ tag.name }}">{{ tag.name }}</a>
+
+                {% else %}
+
+                    <div class="pill tag {{ tag.status }}" name="{{ tag.name }}">{{ tag.name }}</div>
+
+                {% endif %}
+
+            {% endfor %}
+
+        </div>
+
+    </div>
 
 {%- endmacro %}

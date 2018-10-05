@@ -9,7 +9,7 @@ from flask_login import current_user
 from sqlalchemy import or_, and_
 
 
-def annotation_view(endpoint, results, in_request=None, mode=None,
+def paginated_annotations(template, endpoint, results, in_request=None, mode=None,
     page=None, request_info=None, search_info=None):
 
     """
@@ -49,9 +49,8 @@ def annotation_view(endpoint, results, in_request=None, mode=None,
     pages = [url_for(endpoint, in_request=in_request, page=pg,
         mode=mode) for pg in results.iter_pages()]
 
-    return render_template("main/annotations.html",
-        results=results, in_request=in_request, page=page, pages=pages,
-        request_info=request_info, search_info=search_info)
+    return render_template(template, results=results, in_request=in_request,
+        page=page, pages=pages, request_info=request_info, search_info=search_info)
 
 
 def tfilter_annotations(results, endpoint, in_request, page, mode, display_limit=40):
@@ -61,7 +60,8 @@ def tfilter_annotations(results, endpoint, in_request, page, mode, display_limit
     #
     # TODO Can we handle passing data better?
     if tfilter_show:
-        tfiltered = tfilter_annotations(results, endpoint, in_request, page, mode, display_limit=None)
+        tfiltered = tfilter_annotations(results, endpoint,
+            in_request, page, mode, display_limit=None)
         results = tfiltered[0]  # results
         tfilter = tfiltered[1]  # data
 

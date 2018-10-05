@@ -19,8 +19,12 @@
 
 	--body-bg-color: hsl(0, 0%, 95%);
 
-	--navMenuHeight: 65px;
-	--flashContainerHeight: 40px;
+	--nav-menu-height: 65px;
+	--flash-container-height: 40px;
+
+	--annotation-metadata-text-color: hsl(0, 0%, 70%);
+
+	/* --------------------------------------- */
 
 	/* body */
 	--body-bg-color: hsl(0, 0%, 95%);
@@ -56,7 +60,6 @@
 	--flash-warning-text-color: var(--accent-warning);
 
 	/* annotation */
-	--metadata-text-color: hsl(0, 0%, 50%);
 	--metadata-text-hover-color: hsl(0, 0%, 80%);
 	--code-bg-color: hsl(0, 0%, 95%);
 	--code-text-color: hsl(0, 0%, 30%);
@@ -154,7 +157,7 @@ nav {
 
 		grid-area: navMain;
 
-		height: var(--navMenuHeight);
+		height: var(--nav-menu-height);
 		padding: 0 15px 0 30px;
 		background-color: hsla(0, 0%, 100%, .95);
 
@@ -294,7 +297,7 @@ nav {
 
 	mainFlash .flashContainer {
 
-		height: var(--flashContainerHeight);
+		height: var(--flash-container-height);
 
 		display: grid;
 		grid-template-columns: 1fr max-content;
@@ -334,32 +337,18 @@ nav {
 
 main {
 
-	display: grid;
-	grid-template-rows:
-		[mainHeader] minmax(0, max-content)
-		  [mainBody] 1fr
-		[mainFooter] minmax(300px, max-content);
-
-	padding-top: var(--navMenuHeight);
+	padding-top: var(--nav-menu-height);
 }
 
-	header {
+footer {
 
-		grid-row: mainHeader;
-	}
+	margin-top: 25px;
 
-	section {
+	min-height: 200px;
 
-		grid-row: mainBody;
-	}
-
-	footer {
-
-		grid-row: mainFooter;
-
-		background-color: hsla(220, 100%, 90%, 0.95);
-		box-shadow: 0 50vh 0 50vh hsla(220, 100%, 90%, 0.95);
-	}
+	background-color: hsla(220, 100%, 90%, 0.95);
+	box-shadow: 0 50vh 0 50vh hsla(220, 100%, 90%, 0.95);
+}
 
 .block {
 
@@ -372,17 +361,29 @@ main {
 	background-color: white;
 }
 
+	.block.blockHeader {
+
+		margin-top: 25px;
+		margin-left: 25px;
+		margin-bottom: 0;
+		margin-right: 25px;
+
+		padding: 0;
+	}
+
+	.block.blockInvisible {
+
+		margin: 0;
+		padding: 0;
+		background-color: unset;
+
+	}
+
 	.block.blockFloating {
 
 		margin: 25px;
 		padding: 0;
 
-	}
-
-	.block.blockHeader {
-
-		margin: 25px 25px 0 25px;
-		padding: 0;
 	}
 
 	.block.blockBleeding {
@@ -391,23 +392,22 @@ main {
 		padding: 0;
 	}
 
-	.block.blockPagination {
-
-		margin: 5px 0;
-		padding: 0;
-	}
-
-	.block.blockPadding {
-
-		margin-top: 25px;
-		background-color: unset;
-	}
-
 	.block > .blockContent {
 
 		grid-column: blockContent;
 
 		padding: 25px;
+	}
+
+	.block > .blockPagination {
+
+		grid-column: blockContent;
+
+		padding-top: 0;
+		padding-left: 40px;
+		padding-bottom: 25px;
+		padding-right: 40px;
+
 	}
 
 	.block > .blockTitle {
@@ -427,6 +427,18 @@ main {
 
 		text-align: center;
 	}
+
+		.blockTitle .titleDetailContainer {
+
+			margin: auto;
+			width: 75%;
+			padding-top: 15px;
+		}
+
+		.titleDetailContainer.titleDescription {
+
+			text-transform: none;
+		}
 
 	.block > .blockLabel {
 
@@ -451,44 +463,45 @@ main {
 
 /* pagination ------------------------------------------------------------- */
 
-.pagination {
+.paginationContainer {
+
 	display: grid;
 	grid-template-columns: repeat(2, auto);
 }
 
-	.pagination .pages  {
+.paginationContainer .paginationPages  {
 
-		justify-self: end;
-	}
+	justify-self: end;
+}
 
-	.pagination .matches  {
+.paginationContainer .paginationMatches  {
 
-		justify-self: start;
-	}
+	justify-self: start;
+}
 
-	.pagination .matches .matchInfo,
-	.pagination .pages .pageNumber {
+.paginationContainer .paginationMatches .paginationInfo,
+.paginationContainer .paginationPages .paginationPageNumber {
 
-		display: inline-block;
-		padding: 15px 19px;
-		background-color: hsl(0, 0%, 95%);
+	display: inline-block;
+	padding: 12px 16px;
+	background-color: white;
 
-		/* font block */
-		font-family: var(--sans-serif-condensed-font);
-		color: rgba(0, 0, 0, 0.5);
-		font-size: 11pt;
-		font-weight: 400;
-		letter-spacing: 1px;
-		line-height: 100%;
-		text-transform: uppercase;
-	}
+	/* font block */
+	font-family: var(--sans-serif-condensed-font);
+	color: rgba(0, 0, 0, 0.5);
+	font-size: 11pt;
+	font-weight: 400;
+	letter-spacing: 1px;
+	line-height: 100%;
+	text-transform: uppercase;
+}
 
-	.pagination .pages .pageNumber.current,
-	.pagination .pages .pageNumber:hover {
+.paginationContainer .paginationPages .paginationPageNumber.current,
+.paginationContainer .paginationPages .paginationPageNumber:hover {
 
-		color: white !important;
-		background-color: hsla(220, 100%, 85%, 1);
-	}
+	color: white !important;
+	background-color: hsla(220, 100%, 85%, 1);
+}
 
 
 /* globals ---------------------------------------------------------------- */
@@ -687,13 +700,18 @@ mark {
 
 	transition: .3s;
 
-	display: flex;
-	justify-content: space-between;
+	display: grid;
+	grid-column-gap: 10px;
+	grid-template-columns: repeat(3, max-content) auto;
+}
+
+.annotationContainer .annotationOptions .deleteAnnotation {
+	justify-self: end;
 }
 
 /* ------------------ passage ----------------- */
 
-.annotation .passage {
+.annotation .annotationPassage {
 
 	/* used to counteract line-height at top of passage */
 	margin-top: -4px;
@@ -710,18 +728,18 @@ mark {
 
 /* ----------------- metadata ----------------- */
 
-.annotation .metaData {
+.annotation .annotationMetaData {
 	margin: 10px 0 0 5px;
 }
 
-.annotation .metaData .attribution {
+.annotation .annotationMetaData .annotationAttribution {
 	display: inline-block;
 
 	margin-bottom: 6px;
 
 	/* font block */
 	font-family: var(--sans-serif-condensed-font);
-	color: var(--metadata-text-color);
+	color: var(--annotation-metadata-text-color);
 	font-size: 12pt;
 	font-weight: 400;
 	letter-spacing: 1px;
@@ -729,34 +747,28 @@ mark {
 	text-transform: uppercase;
 }
 
-.annotation .metaData .attribution a {
-	color: var(--metadata-text-color);
+.annotation .annotationMetaData .annotationAttribution a {
+	color: var(--annotation-metadata-text-color);
 }
 
-.annotation .metaData .attribution a:hover {
+.annotation .annotationMetaData .annotationAttribution a:hover {
 	color: hsla(220, 100%, 75%, 1.00);
 }
 
-.annotation .metaData .notes {
+.annotation .annotationMetaData .annotationNotes {
 	display: inline-block;
 
 	margin-bottom: 5px;
 
 	/* font block */
 	font-family: var(--sans-serif-font);
-	color: var(--metadata-text-color);
+	color: var(--annotation-metadata-text-color);
 	font-size: 10.5pt;
 	font-weight: 400;
 	letter-spacing: unset;
 	line-height: 150%;
 	text-transform: unset;
 }
-
-/* ------------------- tags ------------------- */
-
-
-
-
 
 /* --------------------------------------------------------------------- */
 /* ------------------------------ markdown ----------------------------- */
@@ -978,7 +990,7 @@ button {
 	min-height: 100px;
 }
 
-#annotationEditor .metaData {
+#annotationEditor .annotationMetaData {
 
 	margin-top: 15px;
 	margin-left: 5px;
@@ -1118,7 +1130,7 @@ loginFlash {
 
 loginFlash .flashContainer {
 
-	height: var(--flashContainerHeight);
+	height: var(--flash-container-height);
 
 	display: grid;
 	grid-template-columns: 1fr max-content;

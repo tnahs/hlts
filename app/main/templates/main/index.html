@@ -1,70 +1,114 @@
-{% from "_macros.html" import no_results, attribution_from_source_obj with context %}
+{% from "_macros.html" import header_buttons, no_results with context %}
 
 {% extends "_index.html" %}
 
 
-{% macro build_index(results, endpoint, link_by, classes) -%}
+{% macro generate_index(results, endpoint, link_by, classes) -%}
 
-    {% for letter, items in results.items() | sort %}
+    <div class="block blockBleeding">
 
-        <div class="blockLabel">{{ letter }}</div>
+        {% for letter, items in results.items() | sort %}
 
-        <div class="blockContent">
+            <div class="blockLabel">{{ letter }}</div>
 
-            {% for item in items %}
+            <div class="blockContent">
 
-                {% if link_by == 'name' %}
+                {% for item in items %}
 
-                    {% set url = url_for(endpoint, in_request=item.name) %}
+                    {% if link_by == 'name' %}
 
-                {% elif link_by == 'id' %}
+                        {% set url = url_for(endpoint, in_request=item.name) %}
 
-                    {% set url = url_for(endpoint, in_request=item.id) %}
+                    {% elif link_by == 'id' %}
 
-                {% endif %}
+                        {% set url = url_for(endpoint, in_request=item.id) %}
 
-                <a class="{{ classes | join(' ') }}" name="{{ item.name }}" href="{{ url }}">{{ item.name }} ⋅ {{ item.frequency }}</a>
+                    {% endif %}
 
-            {% endfor %}
+                    <a class="{{ classes | join(' ') }}" name="{{ item.name }}" href="{{ url }}">{{ item.name }} ⋅ {{ item.frequency }}</a>
 
-        </div>
+                {% endfor %}
 
-    {% endfor %}
+            </div>
+
+        {% endfor %}
+
+    </div>
 
 {%- endmacro %}
 
 
-{% block section %}
+{% block main %}
 
     {% if results | length == 0 %}
 
-        {{ no_results("nothing here...") }}
+        <div class="block blockBleeding">
+
+            <div class="blockTitle">
+
+                no annotations found...
+
+            </div>
+
+        </div>
 
     {% else %}
 
-        <div class="block blockPadding"></div>
+        <div class="block blockFloating">
+
+            <div class="blockLabel">index</div>
+
+            <div class="blockContent">
+
+                {{ header_buttons(endpoint="main.index", modes=["sources", "authors", "tags", "collections"]) }}
+
+            </div>
+
+        </div>
 
         <div class="block blockBleeding">
 
-            {% if request.view_args['mode'] == 'sources' %}
+            <div class="blockContent">
 
-                {{ build_index(results=results, endpoint='main.source', link_by='id', classes=['link', 'button', 'index']) }}
+                {% if request.view_args["mode"] == "sources" %}
 
-            {% elif request.view_args['mode'] == 'authors' %}
+                    <a class="link button" href="{{ url_for('main.edit_sources') }}">edit sources</a>
 
-                {{ build_index(results=results, endpoint='main.author', link_by='id', classes=['link', 'button', 'index']) }}
+                {% elif request.view_args["mode"] == "authors" %}
 
-            {% elif request.view_args['mode'] == 'tags' %}
+                    <a class="link button" href="{{ url_for('main.edit_authors') }}">edit authors</a>
 
-                {{ build_index(results=results, endpoint='main.tag', link_by='name', classes=['pill', 'tag']) }}
+                {% elif request.view_args["mode"] == "tags" %}
 
-            {% elif request.view_args['mode'] == 'collections' %}
+                    <a class="link button" href="{{ url_for('main.edit_tags') }}">edit tags</a>
 
-                {{ build_index(results=results, endpoint='main.collection', link_by='name', classes=['pill', 'collection']) }}
+                {% elif request.view_args["mode"] == "collections" %}
 
-            {% endif %}
+                    <a class="link button" href="{{ url_for('main.edit_collections') }}">edit collections</a>
+
+                {% endif %}
+
+            </div>
 
         </div>
+
+        {% if request.view_args["mode"] == "sources" %}
+
+            {{ generate_index(results=results, endpoint="main.source", link_by="id", classes=["link", "button", "index"]) }}
+
+        {% elif request.view_args["mode"] == "authors" %}
+
+            {{ generate_index(results=results, endpoint="main.author", link_by="id", classes=["link", "button", "index"]) }}
+
+        {% elif request.view_args["mode"] == "tags" %}
+
+            {{ generate_index(results=results, endpoint="main.tag", link_by="name", classes=["pill", "tag"]) }}
+
+        {% elif request.view_args["mode"] == "collections" %}
+
+            {{ generate_index(results=results, endpoint="main.collection", link_by="name", classes=["pill", "collection"]) }}
+
+        {% endif %}
 
     {% endif %}
 

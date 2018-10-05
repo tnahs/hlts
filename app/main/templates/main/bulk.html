@@ -3,7 +3,7 @@
 {% extends "_index.html" %}
 
 
-{% block section %}
+{% block main %}
 
     <div class="block blockFloating">
 
@@ -15,9 +15,9 @@
 
     </div>
 
-    <div class="block blockPagination">
+    <div class="block blockInvisible">
 
-        <div class="blockContent">
+        <div class="blockPagination">
 
             {{ pagination(results) }}
 

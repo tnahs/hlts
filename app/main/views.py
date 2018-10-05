@@ -11,7 +11,7 @@ from app.tools import home_url, SortIt
 
 from app.main import main
 from app.main.forms import AnnotationForm, SourceForm, AuthorForm
-from app.main.tools import SearchAnnotations, annotation_view
+from app.main.tools import SearchAnnotations, paginated_annotations
 
 from flask import render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_required, current_user
@@ -196,7 +196,7 @@ def recent(mode=None, page=1):
 
         return redirect(url_for("main.recent", mode="default"))
 
-    return annotation_view(endpoint="main.recent", results=results, page=page, mode=mode)
+    return paginated_annotations(template="main/recent.html", endpoint="main.recent", results=results, page=page, mode=mode)
 
 
 @main.route("/trash/")
@@ -206,19 +206,19 @@ def trash(page=1):
 
     results = Annotation.get_deleted()
 
-    return annotation_view(endpoint="main.trash", results=results, page=page)
+    return paginated_annotations(template="main/trash.html", endpoint="main.trash", results=results, page=page)
 
 
 @main.route("/empty_trash/")
 @login_required
-def deleted_empty():
+def empty_trash():
 
     for deleted in Annotation.get_deleted():
         db.session.delete(deleted)
 
     db.session.commit()
 
-    return redirect(url_for("main.deleted"))
+    return redirect(url_for("main.trash"))
 
 
 """
@@ -235,7 +235,7 @@ def all(page=1):
 
     results = Annotation.get_all()
 
-    return annotation_view(endpoint="main.all", results=results, page=page)
+    return paginated_annotations(template="main/all.html", endpoint="main.all", results=results, page=page)
 
 
 @main.route("/random/")
@@ -244,7 +244,7 @@ def rand():
 
     results = Annotation.get_random(count=5)
 
-    return annotation_view(endpoint="main.rand", results=results)
+    return paginated_annotations(template="main/rand.html", endpoint="main.rand", results=results)
 
 
 """
@@ -263,7 +263,7 @@ def source(in_request, page=1):
 
     request_info = Source.query.filter_by(id=in_request).first()
 
-    return annotation_view(endpoint="main.source",
+    return paginated_annotations(template="main/source.html", endpoint="main.source",
         in_request=in_request, results=results, page=page, request_info=request_info)
 
 
@@ -276,7 +276,7 @@ def author(in_request, page=1):
 
     request_info = Author.query.filter_by(id=in_request).first()
 
-    return annotation_view(endpoint="main.author",
+    return paginated_annotations(template="main/author.html", endpoint="main.author",
         in_request=in_request, results=results, page=page, request_info=request_info)
 
 
@@ -289,7 +289,7 @@ def tag(in_request, page=1):
 
     request_info = Tag.query.filter_by(name=in_request).first()
 
-    return annotation_view(endpoint="main.tag",
+    return paginated_annotations(template="main/tag.html", endpoint="main.tag",
         in_request=in_request, results=results, page=page, request_info=request_info)
 
 
@@ -302,7 +302,7 @@ def collection(in_request, page=1):
 
     request_info = Collection.query.filter_by(name=in_request).first()
 
-    return annotation_view(endpoint="main.collection",
+    return paginated_annotations(template="main/collection.html", endpoint="main.collection",
         in_request=in_request, results=results, page=page, request_info=request_info)
 
 
@@ -315,7 +315,7 @@ def search(page=1):
     results = search.query
     search_info = search.info
 
-    return annotation_view(endpoint="main.search", search_info=search_info,
+    return paginated_annotations(template="main/search.html", endpoint="main.search", search_info=search_info,
         results=results, page=page)
 
 
@@ -364,7 +364,7 @@ def edit(in_request):
 
     if annotation.deleted:
 
-        flash("annotation is deleted! retore before editing!", "warning")
+        flash("annotation is deleted! restore before editing!", "warning")
 
         return redirect(url_for("main.trash"))
 
@@ -495,7 +495,7 @@ def edit_sources(page=1, in_request=None):
 
     pages = [url_for("main.edit_sources", in_request=in_request, page=pg) for pg in results.iter_pages()]
 
-    return render_template("main/bulk_editor.html", results=results, in_request=in_request, page=page, pages=pages)
+    return render_template("main/bulk.html", results=results, in_request=in_request, page=page, pages=pages)
 
 
 @main.route("/edit/authors", methods=["POST", "GET"])
@@ -524,7 +524,7 @@ def edit_authors(page=1, in_request=None):
 
     pages = [url_for("main.edit_authors", in_request=in_request, page=pg) for pg in results.iter_pages()]
 
-    return render_template("main/bulk_editor.html", results=results, in_request=in_request, page=page, pages=pages)
+    return render_template("main/bulk.html", results=results, in_request=in_request, page=page, pages=pages)
 
 
 @main.route("/edit/tags", methods=["POST", "GET"])
@@ -561,7 +561,7 @@ def edit_tags(page=1, in_request=None):
 
     pages = [url_for("main.edit_tags", in_request=in_request, page=pg) for pg in results.iter_pages()]
 
-    return render_template("main/bulk_editor.html", results=results, in_request=in_request, page=page, pages=pages)
+    return render_template("main/bulk.html", results=results, in_request=in_request, page=page, pages=pages)
 
 
 @main.route("/edit/collections", methods=["POST", "GET"])
@@ -598,7 +598,7 @@ def edit_collections(page=1, in_request=None):
 
     pages = [url_for("main.edit_collections", in_request=in_request, page=pg) for pg in results.iter_pages()]
 
-    return render_template("main/bulk_editor.html", results=results, in_request=in_request, page=page, pages=pages)
+    return render_template("main/bulk.html", results=results, in_request=in_request, page=page, pages=pages)
 
 
 """

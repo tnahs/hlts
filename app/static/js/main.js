@@ -12,8 +12,8 @@ window.addEventListener("load", function(){
         const main = document.querySelector("main");
 
         const rootStyles = window.getComputedStyle(document.body);
-        const navMenuHeight = rootStyles.getPropertyValue("--navMenuHeight");
-        const flashContainerHeight = rootStyles.getPropertyValue("--flashContainerHeight");
+        const navMenuHeight = rootStyles.getPropertyValue("--nav-menu-height");
+        const flashContainerHeight = rootStyles.getPropertyValue("--flash-container-height");
         const navMenuHeightInt = parseInt(navMenuHeight.slice(0, -2));
         const flashContainerHeightInt = parseInt(flashContainerHeight.slice(0, -2));
 
@@ -90,41 +90,6 @@ window.addEventListener("load", function(){
 
                     pill.style.background = data.color;
                     pill.style.color = 'white';
-                }
-            }
-        }
-    }
-
-    /* -------------------------------------------------------------------- */
-    // Mark passages ------------------------------------------------------ */
-
-    markPassages(searchInfo);
-
-    function markPassages(searchInfo) {
-
-        if (!searchInfo["unsafe"]) {
-
-            if (searchInfo["key"] == "" || searchInfo["key"] == "passages") {
-
-                const markedClass = "marked";
-
-                const terms = searchInfo["terms"];
-                const passages = document.querySelectorAll(".passage");
-
-                for (let passage of passages) {
-
-                    for (let term of terms) {
-
-                        term = term.replace(searchInfo["wildcard_symbol"], "");
-
-                        const termRegExp = new RegExp(term, "gi");
-                        const thisMatch = "$&";
-
-                        const markup = `<span class="${markedClass}">${thisMatch}</span>`;
-                        const markedHTML = passage.innerHTML.replace(termRegExp, markup);
-
-                        passage.innerHTML = markedHTML;
-                    }
                 }
             }
         }
