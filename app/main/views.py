@@ -96,7 +96,11 @@ def dashboard():
         rng.seed(seed)
         random_annotation = rng.randint(1, annotation_count)
 
-        daily_annotation = all_annotations.offset(random_annotation).first()
+        try:
+            daily_annotation = all_annotations.offset(random_annotation).first()
+
+        except:
+            daily_annotation = None
 
     # Topic of the day with three entries
     if tag_count and annotation_count:
@@ -104,11 +108,16 @@ def dashboard():
         rng.seed(seed)
         random_tag = rng.randint(0, tag_count)
 
-        daily_topic = Tag.query.offset(random_tag).first()
+        try:
+            daily_topic = Tag.query.offset(random_tag).first()
 
-        daily_topic_annotations = daily_topic.annotations \
-            .order_by(func.random()) \
-            .paginate(page=1, per_page=3, error_out=False)
+            daily_topic_annotations = daily_topic.annotations \
+                .order_by(func.random()) \
+                .paginate(page=1, per_page=3, error_out=False)
+
+        except:
+            daily_topic = None
+            daily_topic_annotations = []
 
     dash = {
         "today": today,
