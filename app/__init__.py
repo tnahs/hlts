@@ -38,14 +38,14 @@ def create_app():
     from app.user import user
     from app.main import main
     from app.errors import errors
-    from app.io import io
+    from app.data import data
     from app.api import api
 
     # register blueprints
     app.register_blueprint(user)
     app.register_blueprint(main)
     app.register_blueprint(errors)
-    app.register_blueprint(io)
+    app.register_blueprint(data)
     app.register_blueprint(api, url_prefix="/api")
 
     from app.models import User

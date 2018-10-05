@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 
-from app.io import io
+from app.data import data
 
 from app.tools import home_url
-from app.io.tools import ExportUserData, RestoreUserData
-from app.io.forms import RestoreDataForm
+from app.data.tools import ExportUserData, RestoreUserData
+from app.data.forms import RestoreDataForm
 
 from flask import Response, redirect, url_for, request, flash, render_template
 from flask_login import login_required
 
 
-@io.route("/export_user_data")
+@data.route("/export_user_data")
 @login_required
 def export_user_data():
 
@@ -27,7 +27,7 @@ def export_user_data():
     return data
 
 
-@io.route("/restore_user_data", methods=["GET", "POST"])
+@data.route("/restore_user_data", methods=["GET", "POST"])
 @login_required
 def restore_user_data():
 

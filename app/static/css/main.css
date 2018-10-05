@@ -558,6 +558,10 @@ a *:hover {
 	padding-bottom: 5px;
 }
 
+*.link.button.dashboard:last-child {
+	padding-bottom: 0;
+}
+
 *.link.button.warning,
 *.link.button.warning:hover {
 
@@ -824,23 +828,24 @@ mark {
 .markdown ul { list-style: disc outside; }
 
 .markdown hr {
+
+	border: solid 1px hsl(0, 0%, 85%);
 	margin: 20px 0;
 }
 
 .markdown code {
-	padding: 2px 4px;
 
-	border-radius: 2px;
+	padding: 1px 5px;
 
 	box-decoration-break: clone;
 	-webkit-box-decoration-break: clone;
 
-	background-color: var(--code-bg-color);
+	background-color: hsla(220, 100%, 93%, 1.0);
 
 	/* font block */
 	font-family: var(--monospace-font);
 	color: var(--code-text-color);
-	font-size: 8.5pt;
+	font-size: 10pt;
 	font-weight: unset;
 	letter-spacing: unset;
 	line-height: inherit;

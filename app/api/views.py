@@ -7,31 +7,16 @@ from app.api import api
 from app import db
 from app.models import Annotation, Tag, Collection, Source, Author
 from app.tools import SortIt
-from app.api.auth import basic_auth, token_auth
+from app.api.auth import token_auth
 
 from flask import jsonify, g, request, current_app
 
 
-@api.route('/new_token', methods=['POST'])
-@basic_auth.login_required
-def new_token():
-
-    token = g.current_user.new_token()
-
-    db.session.commit()
-
-    return jsonify({'token': token})
-
-
-@api.route('/revoke_token', methods=['DELETE'])
+@api.route('/verify_api_token', methods=['POST'])
 @token_auth.login_required
-def revoke_token():
+def verify_api_token():
 
-    g.current_user.revoke_token()
-
-    db.session.commit()
-
-    return jsonify({'token': 'revoked'})
+    return jsonify({"result": "success"})
 
 
 """ GET """
@@ -217,6 +202,7 @@ import refresh: Delete and re-add annotation if exists but only if unprotected.
 
 
 @api.route('/import/annotations/refresh', methods=['POST'])
+@token_auth.login_required
 def import_annotations_refresh():
 
     count_added = 0
@@ -271,6 +257,7 @@ def import_annotations_refresh():
 
 
 @api.route('/import/annotations/add', methods=['POST'])
+@token_auth.login_required
 def import_annotations_add():
 
     count_added = 0

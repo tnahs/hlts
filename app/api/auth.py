@@ -12,11 +12,12 @@ token_auth = HTTPTokenAuth()
 
 
 @basic_auth.verify_password
-def verify_password(username, password):
+def verify_password(username, password):  # -> bool:
 
     user = User.query.filter_by(username=username).first()
 
     if user is None:
+
         return False
 
     g.current_user = user
@@ -31,11 +32,11 @@ def basic_auth_error():
 
 
 @token_auth.verify_token
-def verify_token(token):
+def verify_api_token(api_token):  # -> Union[User, None]:
 
-    user = User.query.filter_by(token=token).first()
+    user = User.query.filter_by(api_token=api_token).first()
 
-    if user and user.token_is_fresh:
+    if user:
 
         g.current_user = user
 
@@ -45,6 +46,6 @@ def verify_token(token):
 
 
 @token_auth.error_handler
-def token_auth_error():
+def api_token_auth_error():
 
     return error_response(401)

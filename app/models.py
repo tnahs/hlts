@@ -437,16 +437,18 @@ class User(db.Model, UserMixin):
     fullname = db.Column(db.String())
     email = db.Column(db.String(), nullable=False, unique=True)
     password = db.Column(db.String())
-
     admin = db.Column(db.Boolean, default=AppDefaults.ADMIN)
 
     theme_index = db.Column(db.Integer(), default=AppDefaults.THEME_INDEX)
-
     results_per_page = db.Column(db.Integer(), default=AppDefaults.RESULTS_PER_PAGE)
     recent_days = db.Column(db.Integer(), default=AppDefaults.RECENT_DAYS)
 
-    token = db.Column(db.String(), unique=True, index=True)
-    token_expiration = db.Column(db.DateTime)
+    api_token = db.Column(db.String(), unique=True, index=True)
+
+    def __init__(self, *args, **kwargs):
+        super(User, self).__init__(*args, **kwargs)
+
+        self.new_api_token()
 
     def __repr__(self):
 
@@ -458,22 +460,12 @@ class User(db.Model, UserMixin):
     def check_password(self, raw_password):
         return bcrypt.check_password_hash(self.password, raw_password)
 
-    def generate_token(self):
+    @staticmethod
+    def generate_api_token():
         return binascii.hexlify(os.urandom(20)).decode()
 
-    def new_token(self, duration=600):
-
-        self.token = self.generate_token()
-        self.token_expiration = datetime.utcnow() + timedelta(seconds=duration)
-
-        return self.token
-
-    def revoke_token(self):
-        self.token_expiration = datetime.utcnow() - timedelta(seconds=1)
-
-    @property
-    def token_is_fresh(self):
-        return self.token_expiration > datetime.utcnow()
+    def new_api_token(self):
+        self.api_token = self.generate_api_token()
 
     @property
     def is_admin(self):

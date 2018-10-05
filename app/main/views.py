@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import random
+import random as rng
 from datetime import datetime
 
 import app.defaults as AppDefaults
@@ -93,16 +93,16 @@ def dashboard():
     # Daily annotation
     if annotation_count:
 
-        random.seed(seed)
-        random_annotation = random.randint(1, annotation_count)
+        rng.seed(seed)
+        random_annotation = rng.randint(1, annotation_count)
 
         daily_annotation = all_annotations.offset(random_annotation).first()
 
     # Topic of the day with three entries
     if tag_count and annotation_count:
 
-        random.seed(seed)
-        random_tag = random.randint(0, tag_count)
+        rng.seed(seed)
+        random_tag = rng.randint(0, tag_count)
 
         daily_topic = Tag.query.offset(random_tag).first()
 
@@ -240,11 +240,11 @@ def all(page=1):
 
 @main.route("/random/")
 @login_required
-def rand():
+def random():
 
     results = Annotation.get_random(count=5)
 
-    return paginated_annotations(template="main/rand.html", endpoint="main.rand", results=results)
+    return paginated_annotations(template="main/random.html", endpoint="main.random", results=results)
 
 
 """

@@ -245,7 +245,7 @@ def register_cli(app):
 
         click.echo("\nAdding welcome annotations...")
 
-        welcome_json = path.join(current_app.root_path, "data", "welcome.json")
+        welcome_json = path.join(current_app.root_path, "init_data", "welcome.json")
 
         with open(welcome_json) as f:
             welcome_annotations = json.load(f)
