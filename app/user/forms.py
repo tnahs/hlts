@@ -62,7 +62,7 @@ class UserForm(FlaskForm):
     recent_days = IntegerField(
         validators=[InputRequired()],
         render_kw={'placeholder': 'recent days'})
-    api_token = StringField(render_kw={'readonly': True})
+    api_key = StringField(render_kw={'readonly': True})
     # theme_index = SelectField('theme', choices=AppDefaults.THEME_CHOICES)
 
     def __init__(self, user, *args, **kwargs):

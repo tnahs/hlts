@@ -68,22 +68,3 @@ class SortIt(object):
     @staticmethod
     def by_frequency(list_of_dictionaries, sort_key='frequency'):
         return sorted(list_of_dictionaries, key=lambda k: k[sort_key], reverse=True)
-
-
-def admin_only(func):
-    """
-    https://flask-login.readthedocs.io/en/latest/_modules/flask_login/utils.html#login_required
-
-    return current_app.login_manager.unauthorized()
-
-    """
-    @wraps(func)
-    def decorated_view(*args, **kwargs):
-        if current_app.login_manager._login_disabled:
-            return func(*args, **kwargs)
-        elif not current_user.is_authenticated:
-            return abort(401)
-        elif not current_user.is_admin:
-            return abort(401)
-        return func(*args, **kwargs)
-    return decorated_view

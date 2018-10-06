@@ -443,12 +443,12 @@ class User(db.Model, UserMixin):
     results_per_page = db.Column(db.Integer(), default=AppDefaults.RESULTS_PER_PAGE)
     recent_days = db.Column(db.Integer(), default=AppDefaults.RECENT_DAYS)
 
-    api_token = db.Column(db.String(), unique=True, index=True)
+    api_key = db.Column(db.String(), unique=True, index=True)
 
     def __init__(self, *args, **kwargs):
         super(User, self).__init__(*args, **kwargs)
 
-        self.new_api_token()
+        self.new_api_key()
 
     def __repr__(self):
 
@@ -461,11 +461,11 @@ class User(db.Model, UserMixin):
         return bcrypt.check_password_hash(self.password, raw_password)
 
     @staticmethod
-    def generate_api_token():
+    def generate_api_key():
         return binascii.hexlify(os.urandom(20)).decode()
 
-    def new_api_token(self):
-        self.api_token = self.generate_api_token()
+    def new_api_key(self):
+        self.api_key = self.generate_api_key()
 
     @property
     def is_admin(self):
