@@ -19,15 +19,15 @@
 
 						<loginFlash> {{ flash() }} </loginFlash>
 
-						{{ login_form.csrf_token }}
+						{{ form.csrf_token }}
 
-						{{ render_form_field(login_form.username) }}
-						{{ render_form_field(login_form.password) }}
+						{{ render_form_field(form.username) }}
+						{{ render_form_field(form.password) }}
 
 						<br>
 						<br>
 
-						{{ login_form.remember }} <span class="text upper faded">{{ login_form.remember.label }}</span><br>
+						{{ form.remember }} <span class="text upper faded">{{ form.remember.label }}</span><br>
 
 					</div>
 

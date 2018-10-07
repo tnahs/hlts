@@ -30,18 +30,18 @@
 
                 <div id="annotationEditor">
 
-                    {{ form_annotation.csrf_token }}
+                    {{ form.csrf_token }}
 
-                    {{ render_form_field(form_annotation.passage, custom_classes=["enableMarkdown"]) }}
-                    {{ render_form_field(form_source.name) }}
-                    {{ render_form_field(form_author.name) }}
-                    {{ render_form_field(form_annotation.notes, custom_classes=["enableMarkdown"]) }}
+                    {{ render_form_field(form.passage, custom_classes=["enableMarkdown"]) }}
+                    {{ render_form_field(form.source) }}
+                    {{ render_form_field(form.author) }}
+                    {{ render_form_field(form.notes, custom_classes=["enableMarkdown"]) }}
 
                     <medKit name='tag'></medKit>
-                    {{ form_annotation.tags(id="tag-medKitData") }}
+                    {{ form.tags(id="tag-medKitData") }}
 
                     <medKit name='collection'></medKit>
-                    {{ form_annotation.collections(id="collection-medKitData") }}
+                    {{ form.collections(id="collection-medKitData") }}
 
                 </div>
 

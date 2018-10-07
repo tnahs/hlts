@@ -72,19 +72,19 @@
 
                 {% if request.view_args["mode"] == "sources" %}
 
-                    <a class="link button" href="{{ url_for('main.edit_sources') }}">edit sources</a>
+                    <a class="link button" href="{{ url_for('main.bulk_edit_sources') }}">edit sources</a>
 
                 {% elif request.view_args["mode"] == "authors" %}
 
-                    <a class="link button" href="{{ url_for('main.edit_authors') }}">edit authors</a>
+                    <a class="link button" href="{{ url_for('main.bulk_edit_authors') }}">edit authors</a>
 
                 {% elif request.view_args["mode"] == "tags" %}
 
-                    <a class="link button" href="{{ url_for('main.edit_tags') }}">edit tags</a>
+                    <a class="link button" href="{{ url_for('main.bulk_edit_tags') }}">edit tags</a>
 
                 {% elif request.view_args["mode"] == "collections" %}
 
-                    <a class="link button" href="{{ url_for('main.edit_collections') }}">edit collections</a>
+                    <a class="link button" href="{{ url_for('main.bulk_edit_collections') }}">edit collections</a>
 
                 {% endif %}
 

@@ -4,8 +4,8 @@ from app.models import User
 
 from flask import flash
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, PasswordField, BooleanField
-from wtforms.validators import InputRequired, Email, Length, ValidationError
+from wtforms import StringField, PasswordField, BooleanField, HiddenField
+from wtforms.validators import InputRequired, ValidationError
 
 
 class LoginForm(FlaskForm):
@@ -22,121 +22,94 @@ class LoginForm(FlaskForm):
 
     def validate_username(self, field):
 
-        user = User.query.filter_by(username=field.data).first()
+        try:
+            self.user = User.check_user(field.data)
 
-        if not user:
-
-            flash("user does not exist!", "warning")
-
+        except ValueError as error:
+            flash(error, "warning")
             raise ValidationError()
-
-        else:
-
-            self.user = user
 
     def validate_password(self, field):
 
         if self.user:
 
-            if not self.user.check_password(field.data):
+            try:
+                self.user.check_password(field.data)
 
-                flash("invalid password!", "warning")
-
+            except ValueError as error:
+                flash(error, "warning")
                 raise ValidationError()
 
 
 class UserForm(FlaskForm):
 
+    id = HiddenField()
     username = StringField(
-        validators=[InputRequired(), Length(min=5, max=16)],
+        validators=[InputRequired()],
         render_kw={'placeholder': 'username'})
     fullname = StringField(
-        validators=[Length(min=0, max=32)],
         render_kw={'placeholder': 'full name'})
     email = StringField(
-        validators=[InputRequired(), Email()],
+        validators=[InputRequired()],
         render_kw={'placeholder': 'e-mail'})
-    results_per_page = IntegerField(
+    results_per_page = StringField(
         validators=[InputRequired()],
         render_kw={'placeholder': 'results per page'})
-    recent_days = IntegerField(
+    recent_days = StringField(
         validators=[InputRequired()],
         render_kw={'placeholder': 'recent days'})
     api_key = StringField(render_kw={'readonly': True})
     # theme_index = SelectField('theme', choices=AppDefaults.THEME_CHOICES)
 
-    def __init__(self, user, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(UserForm, self).__init__(*args, **kwargs)
 
-        self.user = user
+        user = kwargs.get("obj", None)
+
+        if user is not None:
+            self.user = user
 
     def validate_username(self, field):
 
-        if not field.validate(field.data):
+        try:
+            self.user.username = field.data
 
-            flash("username must be between 5-16 characters!", "warning")
-
+        except AssertionError as error:
+            flash(error, "warning")
             raise ValidationError()
-
-        if field.data != self.user.username:
-
-            user = User.query.filter_by(username=field.data).first()
-
-            if user is not None:
-
-                flash("username already taken!", "warning")
-
-                raise ValidationError()
-
-    def validate_email(self, field):
-
-        if not field.validate(field.data):
-
-            flash("invalid e-mail address!", "warning")
-
-        if field.data != self.user.email:
-
-            user = User.query.filter_by(email=field.data).first()
-
-            if user is not None:
-
-                flash("e-mail already taken!", "warning")
-
-                raise ValidationError()
 
     def validate_fullname(self, field):
 
-        if not field.validate(field.data):
+        try:
+            self.user.fullname = field.data
 
-            flash("fullname too long!", "warning")
+        except AssertionError as error:
+            flash(error, "warning")
+            raise ValidationError()
+
+    def validate_email(self, field):
+
+        try:
+            self.user.email = field.data
+
+        except AssertionError as error:
+            flash(error, "warning")
+            raise ValidationError()
 
     def validate_results_per_page(self, field):
 
-        if not field.validate(field.data):
+        try:
+            self.user.results_per_page = field.data
 
-            flash("results per page must be an integer!", "warning")
-
-        if field.data < 16 or field.data > 128:
-
-            flash("results per page: must be an an iteger between 16 and 128", "warning")
-
+        except AssertionError as error:
+            flash(error, "warning")
             raise ValidationError()
 
     def validate_recent_days(self, field):
 
-        if not field.validate(field.data):
+        try:
+            self.user.recent_days = field.data
 
-            flash("recent days must be an integer!", "warning")
-
-        if field.data < 1 or field.data > 90:
-
-            flash("recent days: must be an iteger between 1 and 90", "warning")
-
+        except AssertionError as error:
+            flash(error, "warning")
             raise ValidationError()
-
-
-class PasswordChangeForm(FlaskForm):
-
-    password = PasswordField(validators=[InputRequired()])
-    password_change = PasswordField()
-    password_confirm = PasswordField()

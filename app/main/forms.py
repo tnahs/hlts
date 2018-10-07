@@ -1,9 +1,13 @@
 #!/usr/bin/env python
 
+from app.models import Tag, Collection, Source, Author
+
+from flask import flash
 from flask_wtf import FlaskForm
-from wtforms import Field, StringField, TextAreaField, HiddenField
+from wtforms import Field, StringField, TextAreaField, BooleanField, \
+    HiddenField
 from wtforms.widgets import HiddenInput
-from wtforms.validators import InputRequired
+from wtforms.validators import InputRequired, ValidationError
 
 
 class PillBox(Field):
@@ -24,7 +28,7 @@ class PillBox(Field):
         https://wtforms.readthedocs.io/en/stable/fields.html#custom-fields
         """
         if valuelist:
-            self.data = [x.strip() for x in valuelist[0].split(' ')]
+            self.data = [x.strip() for x in valuelist[0].split(" ")]
         else:
             self.data = []
 
@@ -35,23 +39,97 @@ class AnnotationForm(FlaskForm):
     id = HiddenField()
     passage = TextAreaField(
         validators=[InputRequired()],
-        render_kw={'placeholder': 'passage'})
-    notes = TextAreaField(render_kw={'placeholder': 'notes'})
+        render_kw={"placeholder": "passage"})
+    source = StringField(render_kw={"placeholder": "source"})
+    author = StringField(render_kw={"placeholder": "author"})
+    notes = TextAreaField(render_kw={"placeholder": "notes"})
     tags = PillBox()
     collections = PillBox()
-    created = StringField(render_kw={'readonly': True})
-    modified = StringField(render_kw={'readonly': True})
-    origin = StringField(render_kw={'readonly': True})
-    protected = StringField(render_kw={'readonly': True})
+    created = StringField(render_kw={"readonly": True})
+    modified = StringField(render_kw={"readonly": True})
+    origin = StringField(render_kw={"readonly": True})
+    protected = StringField(render_kw={"readonly": True})
+
+    def __init__(self, *args, **kwargs):
+        super(AnnotationForm, self).__init__(*args, **kwargs)
+
+        annotation = kwargs.get("obj", None)
+
+        if annotation is not None:
+            self.source.data = annotation.source.name
+            self.author.data = annotation.source.author.name
 
 
 class SourceForm(FlaskForm):
-    """ source form
-    """
-    name = StringField('Source', render_kw={'placeholder': 'source'})
+    id = HiddenField()
+    name = StringField(render_kw={"placeholder": "name"})
+    author_name = StringField(render_kw={"placeholder": "author"})
+
+    def validate_name(self, field):
+
+        source = Source.query.get(self.id.data)
+
+        try:
+            source.validate_source(self.name.data, self.author_name.data)
+
+        except AssertionError as error:
+            flash(error, "warning")
+            raise ValidationError(self.id.data)
 
 
 class AuthorForm(FlaskForm):
-    """ author form
-    """
-    name = StringField('Author', render_kw={'placeholder': 'author'})
+    id = HiddenField()
+    name = StringField(render_kw={"placeholder": "name"})
+
+    def validate_name(self, field):
+
+        author = Author.query.get(self.id.data)
+
+        try:
+            author.name = field.data
+
+        except AssertionError as error:
+            flash(error, "warning")
+            raise ValidationError(self.id.data)
+
+
+class TagForm(FlaskForm):
+    id = HiddenField()
+    pinned = BooleanField()
+    name = StringField(
+        validators=[InputRequired()],
+        render_kw={"placeholder": "name"})
+    color = StringField(render_kw={"placeholder": "color"})
+    description = StringField(render_kw={"placeholder": "description"})
+
+    def validate_name(self, field):
+
+        tag = Tag.query.get(self.id.data)
+
+        try:
+            tag.name = field.data
+
+        except AssertionError as error:
+            flash(error, "warning")
+            raise ValidationError(self.id.data)
+
+
+class CollectionForm(FlaskForm):
+    id = HiddenField()
+    pinned = BooleanField()
+    name = StringField(
+        validators=[InputRequired()],
+        render_kw={"placeholder": "name"})
+    color = StringField(render_kw={"placeholder": "color"})
+    description = StringField(render_kw={"placeholder": "description"})
+
+    def validate_name(self, field):
+
+        collection = Collection.query.get(self.id.data)
+
+        try:
+            collection.name = field.data
+
+        except AssertionError as error:
+            flash(error, "warning")
+            raise ValidationError(self.id.data)

@@ -31,26 +31,26 @@
 
                 <div id="annotationEditor">
 
-                    {{ form_annotation.csrf_token }}
+                    {{ form.csrf_token }}
 
-                    {{ render_form_field(form_annotation.passage, custom_classes=["enableMarkdown"]) }}
-                    {{ render_form_field(form_source.name) }}
-                    {{ render_form_field(form_author.name) }}
-                    {{ render_form_field(form_annotation.notes, custom_classes=["enableMarkdown"]) }}
+                    {{ render_form_field(form.passage, custom_classes=["enableMarkdown"]) }}
+                    {{ render_form_field(form.source) }}
+                    {{ render_form_field(form.author) }}
+                    {{ render_form_field(form.notes, custom_classes=["enableMarkdown"]) }}
 
                     <medKit name='tag'></medKit>
-                    {{ form_annotation.tags(id="tag-medKitData") }}
+                    {{ form.tags(id="tag-medKitData") }}
 
                     <medKit name='collection'></medKit>
-                    {{ form_annotation.collections(id="collection-medKitData") }}
+                    {{ form.collections(id="collection-medKitData") }}
 
                     <div class="annotationMetaData text upper faded">
 
-                        {{ form_annotation.created.label }}: {{ form_annotation.created.data.strftime('%B %d, %Y') }}<br>
-                        {{ form_annotation.modified.label }}: {{ form_annotation.modified.data.strftime('%B %d, %Y') }}<br>
-                        {{ form_annotation.origin.label }}: {{ form_annotation.origin.data }}<br>
-                        {{ form_annotation.protected.label }}: {{ form_annotation.protected.data }}<br>
-                        {{ form_annotation.id.label }}: {{ form_annotation.id.data }}<br>
+                        {{ form.created.label }}: {{ form.created.data.strftime('%B %d, %Y') }}<br>
+                        {{ form.modified.label }}: {{ form.modified.data.strftime('%B %d, %Y') }}<br>
+                        {{ form.origin.label }}: {{ form.origin.data }}<br>
+                        {{ form.protected.label }}: {{ form.protected.data }}<br>
+                        {{ form.id.label }}: {{ form.id.data }}<br>
 
                     </div>
 

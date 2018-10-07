@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+import re
 import uuid
 import binascii
 from datetime import datetime, timedelta
@@ -14,6 +15,7 @@ from flask import url_for
 from flask_login import UserMixin
 from sqlalchemy import func
 from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.orm import validates
 
 
 """
@@ -21,50 +23,45 @@ from sqlalchemy.orm.exc import NoResultFound
 How Annotations Are Created!
 
 Annotations are connected to their Source with a one-to-many relationship.
-Sources are also connected to their Author with a one-to-many relationhip. When
-an Annotation Class is instanciated two things happen with respect to its
+Sources are also connected to their Author with a one-to-many relationhip.
+
+When the Annotation class is instanciated two things happen with respect to its
 source:
 
-First, in the Annotation Class, refresh_source() is run on the input
+First: In the Annotation class, Annotation.refresh_source() is run on the input
 "source" and "author". This first checks the Source database if the
 source exists by generating a UUID based on the input values of "source"
-and "author". If the source is
-found then the source is attached to the annotation. If not then a new Source object is
-generated and added to the Source database. This then triggers the second major step
-in the creating of a source.
+and "author". If the source is found then the source is attached to the
+annotation. If not then a new Source object is generated and added to the
+Source database.
 
-Within the Source Class the function refresh_author() is run on the newly instanciated
-Source and the same process occurs checking weather the author exists, attaching
-it to the Source if it does, and creating one if it doesn't.
+Next: Within the Source class the function refresh_author() is run on the newly
+instanciated Source and the same process occurs checking weather the author
+exists, attaching it to the Source if it does, and creating one if it doesn't.
 
-When an Annotation's source is edited refresh_source() must be called manually on the
-Annotation after its been queried from the database.
-
-...
-
-How Tags Are Handled!
-
-Annotations and Tags are connected by a many-to-many relationship. To instanchate
-an Annotation with tags, the tags supplied must be a list. This list must consist
-of all the tags the annotation has. There is no function to "append" tags. When an
-Annotation Class is instanciated refresh_tags() is run on the imput list of
-"tags". This first clears the current Annotation's tags. Then per tag, it checks
-if the tag exists, if it does, it attaches it to the Annotation, if not, it creates
-a new Tag entry and attaches it to the Annotation.
-
-When an Annotation's tags are edited refresh_tags() must be called manually on the
-Annotation after its been queried from the database.
+When an Annotation's source is edited refresh_source() must be called manually
+on the Annotation after its been queried from the database.
 
 ...
 
-Editing Sources! TODO
+How Tags (and Collections) Are Handled!
 
-If an annotations source is edited in annotation edit page, it edits just the
-one annotation's source possibly creating a new DB entry. Eventually we will
-need to add an "edit source" that changes the source's attributes for all annotations
-connected to this source. Trouble with this is that we need to loop through all the
-different annotations that have this source and re-link them to the new UUID. We want
-to do this because we're generating UUID's based on the source's attriubutes.
+Annotations and Tags are connected by a many-to-many relationship. when
+instanciate an Annotation with tags, the tags supplied must be a list
+containing all the annotation's tags. There is no function to "append" tags but
+rather a Annotation.refresh_tags() function. This first clears the current
+Annotation's tags, then per tag, it checks if the tag exists, if it does, it
+attaches it to the Annotation, if not, it creates a new Tag entry and attaches
+it to the Annotation.
+
+When an Annotation's tags are edited refresh_tags() must be called manually on
+the Annotation. This or Annotation.save() should be called.
+
+...
+
+TODO Editing Sources
+
+TODO Bulk Editing
 
 """
 
@@ -135,23 +132,23 @@ class ToDictMixin(object):
         results = query.paginate(page=page, per_page=per_page, error_out=False)
 
         data = {
-            'results': [
+            "results": [
                 item.serialize() for item in results.items
             ],
-            '_meta': {
-                'in_request': in_request,
-                'per_page': per_page,
-                'page': page,
-                'total_pages': results.pages,
-                'total_items': results.total
+            "_meta": {
+                "in_request": in_request,
+                "per_page": per_page,
+                "page": page,
+                "total_pages": results.pages,
+                "total_items": results.total
             },
-            '_links': {
-                'self': url_for(endpoint, in_request=in_request, page=page, **kwargs),
-                'pages': [
+            "_links": {
+                "self": url_for(endpoint, in_request=in_request, page=page, **kwargs),
+                "pages": [
                     url_for(endpoint, in_request=in_request, page=_page, **kwargs) for _page in results.iter_pages()
                 ],
-                'next': url_for(endpoint, in_request=in_request, page=page + 1, **kwargs) if results.has_next else None,
-                'prev': url_for(endpoint, in_request=in_request, page=page - 1, **kwargs) if results.has_prev else None
+                "next": url_for(endpoint, in_request=in_request, page=page + 1, **kwargs) if results.has_next else None,
+                "prev": url_for(endpoint, in_request=in_request, page=page - 1, **kwargs) if results.has_prev else None
             }
         }
 
@@ -430,7 +427,7 @@ class AnnotationUtilsMixin(object):
 
 class User(db.Model, UserMixin):
 
-    __tablename__ = 'users'
+    __tablename__ = "users"
 
     id = db.Column(db.Integer(), primary_key=True)
     username = db.Column(db.String(), nullable=False, unique=True)
@@ -452,13 +449,7 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
 
-        return u'<User id:{0} username:{1}>'.format(self.id, self.username)
-
-    def set_password(self, raw_password):
-        self.password = bcrypt.generate_password_hash(raw_password)
-
-    def check_password(self, raw_password):
-        return bcrypt.check_password_hash(self.password, raw_password)
+        return u"<User id:{0} username:{1}>".format(self.id, self.username)
 
     @staticmethod
     def generate_api_key():
@@ -466,6 +457,121 @@ class User(db.Model, UserMixin):
 
     def new_api_key(self):
         self.api_key = self.generate_api_key()
+
+    def set_password(self, raw_password):
+
+        min_length = 6
+        max_length = 32
+
+        if not min_length <= len(raw_password) <= max_length:
+            raise AssertionError(
+                """password must be
+                {0}-{1} characters""".format(min_length, max_length))
+
+        self.password = bcrypt.generate_password_hash(raw_password)
+
+    def check_password(self, raw_password):
+
+        if not bcrypt.check_password_hash(self.password, raw_password):
+            raise ValueError("invalid password")
+
+        return True
+
+    @staticmethod
+    def check_user(username):
+
+        user = User.query.filter_by(username=username).first()
+
+        if not user:
+            raise ValueError("user does not exist")
+
+        return user
+
+    @validates("username")
+    def validate_username(self, key, username):
+
+        min_length = 5
+        max_length = 16
+
+        if not min_length <= len(username) <= max_length:
+            raise AssertionError(
+                """username must be
+                {0}-{1} characters""".format(min_length, max_length))
+
+        if self.username != username:
+            if User.query.filter(User.username == username).first():
+                raise AssertionError("username is already in use")
+
+        return username
+
+    @validates("email")
+    def validate_email(self, key, email):
+
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+            raise AssertionError("invalid e-mail address")
+
+        if self.email != email:
+            if User.query.filter_by(email=email).first():
+                raise AssertionError("e-mail already taken")
+
+        return email
+
+    @validates("fullname")
+    def validate_fullname(self, key, fullname):
+
+        min_length = 0
+        max_length = 32
+
+        if not min_length <= len(fullname) <= max_length:
+            raise AssertionError(
+                """fullname must be less than
+                {0} characters""".format(max_length))
+
+        return fullname
+
+    @validates("results_per_page")
+    def validate_results_per_page(self, key, results_per_page):
+
+        min_length = 16
+        max_length = 128
+
+        try:
+            results_per_page = int(results_per_page)
+        except ValueError:
+            raise AssertionError("results per page must be an an integer")
+
+        if not min_length <= results_per_page <= max_length:
+            raise AssertionError(
+                """results per page must be an an
+                integer between {0} and {1}""".format(min_length, max_length))
+
+        return results_per_page
+
+    @validates("recent_days")
+    def validate_recent_days(self, key, recent_days):
+
+        min_length = 1
+        max_length = 90
+
+        try:
+            recent_days = int(recent_days)
+        except ValueError:
+            raise AssertionError("recent days must be an an integer")
+
+        if not min_length <= recent_days <= max_length:
+            raise AssertionError(
+                """recent days must be an iteger
+                between {0} and {1}""".format(min_length, max_length))
+
+        return recent_days
+
+    def edit(self, data):
+
+        self.username = data["username"]
+        self.fullname = data["fullname"]
+        self.email = data["email"]
+        self.results_per_page = data["results_per_page"]
+        self.recent_days = data["recent_days"]
 
     @property
     def is_admin(self):
@@ -511,7 +617,7 @@ class User(db.Model, UserMixin):
     def theme(self):
         """ Return the name of style sheet found in /static/css/themes.
         """
-        return '{0}.css'.format(AppDefaults.THEME_CHOICES[self.theme_index][1])
+        return "{0}.css".format(AppDefaults.THEME_CHOICES[self.theme_index][1])
 
     @property
     def data(self):
@@ -561,15 +667,15 @@ class User(db.Model, UserMixin):
 
 class Source(db.Model, ToDictMixin, PingedMixin):
 
-    __tablename__ = 'sources'
+    __tablename__ = "sources"
 
     id = db.Column(db.String(), primary_key=True)
     name = db.Column(db.String(), index=True)
     pinged = db.Column(db.DateTime, nullable=False, index=True, default=datetime.utcnow)
 
-    author_id = db.Column(db.String(), db.ForeignKey('authors.id'))
+    author_id = db.Column(db.String(), db.ForeignKey("authors.id"))
 
-    annotations = db.relationship('Annotation', backref='source', lazy='dynamic')
+    annotations = db.relationship("Annotation", backref="source", lazy="dynamic")
 
     def __init__(self, id=None, source_name=None, author_name=None):
 
@@ -584,13 +690,27 @@ class Source(db.Model, ToDictMixin, PingedMixin):
 
     def __repr__(self):
 
-        return u'<Source id:{0} name:{1} author:{2}>'.format(self.id, self.name, self.author)
+        return u"<Source id:{0} name:{1} author:{2}>".format(self.id, self.name, self.author)
 
-    def edit(self, source):
+    def validate_source(self, name, author_name):
 
-        self.name = source['name']
+        if self.name != name:
 
-        self.refresh_author(author_name=source['author_name'])
+            source = Source.query \
+                .filter_by(name=name) \
+                .join(Author) \
+                .filter(Author.name == author_name).first()
+
+            if source is not None:
+                raise AssertionError(
+                    "source/author combo '{0}/{1}'"
+                    " already exists".format(name, author_name))
+
+    def edit(self, data):
+
+        self.name = data["name"]
+
+        self.refresh_author(author_name=data["author_name"])
 
     def ping(self):
         self.pinged = datetime.utcnow()
@@ -600,7 +720,7 @@ class Source(db.Model, ToDictMixin, PingedMixin):
         id = None
 
         if not author_name:
-            id = AppDefaults.AUTHOR_NONE['ID']
+            id = AppDefaults.AUTHOR_NONE["ID"]
 
             author = Author.query.filter_by(id=id).first()
 
@@ -625,11 +745,11 @@ class Source(db.Model, ToDictMixin, PingedMixin):
         """ Serialize source into a dictionary
         """
         data = {
-            'id': self.id,
-            'name': self.name,
-            'author': self.author.name,
-            'pinged': self.pinged.isoformat(),
-            'frequency': self.frequency,
+            "id": self.id,
+            "name": self.name,
+            "author": self.author.name,
+            "pinged": self.pinged.isoformat(),
+            "frequency": self.frequency,
         }
 
         return data
@@ -643,18 +763,18 @@ class Source(db.Model, ToDictMixin, PingedMixin):
             .delete(synchronize_session=False)
 
 
-db.event.listen(db.session, 'before_commit', Source.remove_orphans)
+db.event.listen(db.session, "before_commit", Source.remove_orphans)
 
 
 class Author(db.Model, ToDictMixin, PingedMixin):
 
-    __tablename__ = 'authors'
+    __tablename__ = "authors"
 
     id = db.Column(db.String(), primary_key=True)
     name = db.Column(db.String(), index=True)
     pinged = db.Column(db.DateTime, nullable=False, index=True, default=datetime.utcnow)
 
-    sources = db.relationship('Source', backref='author', lazy='dynamic')
+    sources = db.relationship("Source", backref="author", lazy="dynamic")
 
     def __init__(self, id=None, author_name=None):
 
@@ -667,14 +787,23 @@ class Author(db.Model, ToDictMixin, PingedMixin):
 
     def __repr__(self):
 
-        return u'<Author id:{0} name:{1}>'.format(self.id, self.name)
+        return u"<Author id:{0} name:{1}>".format(self.id, self.name)
+
+    @validates("name")
+    def validate_name(self, key, name):
+
+        if self.name != name:
+            if Author.query.filter_by(name=name).first():
+                raise AssertionError("author '{0}' already exists".format(name))
+
+        return name
 
     def ping(self):
         self.pinged = datetime.utcnow()
 
-    def edit(self, name):
+    def edit(self, data):
 
-        self.name = name
+        self.name = data["name"]
 
     @property
     def frequency(self):
@@ -688,11 +817,11 @@ class Author(db.Model, ToDictMixin, PingedMixin):
         """ Serialize author into a dictionary
         """
         data = {
-            'id': self.id,
-            'name': self.name,
-            'sources': [source.name for source in self.sources],
-            'pinged': self.pinged,
-            'frequency': self.frequency
+            "id": self.id,
+            "name": self.name,
+            "sources": [source.name for source in self.sources],
+            "pinged": self.pinged,
+            "frequency": self.frequency
         }
 
         return data
@@ -706,7 +835,7 @@ class Author(db.Model, ToDictMixin, PingedMixin):
             .delete(synchronize_session=False)
 
 
-db.event.listen(db.session, 'before_commit', Author.remove_orphans)
+db.event.listen(db.session, "before_commit", Author.remove_orphans)
 
 
 annotation_tags = db.Table("annotation_tags",
@@ -721,9 +850,9 @@ class Tag(db.Model, ToDictMixin, PingedMixin, RestoreMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(), unique=True, nullable=False, index=True)
-    color = db.Column(db.String())
+    color = db.Column(db.String(), default="")
     pinned = db.Column(db.Boolean, default=False)
-    description = db.Column(db.String())
+    description = db.Column(db.String(), default="")
     pinged = db.Column(db.DateTime, nullable=False, index=True, default=datetime.utcnow)
 
     def __init__(self, name):
@@ -734,12 +863,27 @@ class Tag(db.Model, ToDictMixin, PingedMixin, RestoreMixin):
 
         return u"<Tag id:{0} name:{1}>".format(self.id, self.name)
 
-    def edit(self, tag):
+    @validates("name")
+    def validate_name(self, key, name):
 
-        self.name = tag["name"]
-        self.color = tag["color"]
-        self.pinned = tag["pinned"]
-        self.description = tag["description"]
+        min_length = 0
+        max_length = 32
+
+        if not min_length <= len(name) <= max_length:
+            raise AssertionError("tag must be less than {0} characters".format(max_length))
+
+        if self.name != name:
+            if Tag.query.filter(Tag.name == name).first():
+                raise AssertionError("tag '{0}' already exists".format(name))
+
+        return name
+
+    def edit(self, data):
+
+        self.name = data["name"]
+        self.color = data["color"]
+        self.pinned = data["pinned"]
+        self.description = data["description"]
 
     def ping(self):
         self.pinged = datetime.utcnow()
@@ -776,24 +920,24 @@ class Tag(db.Model, ToDictMixin, PingedMixin, RestoreMixin):
             .delete(synchronize_session=False)
 
 
-db.event.listen(db.session, 'before_commit', Tag.remove_orphans)
+db.event.listen(db.session, "before_commit", Tag.remove_orphans)
 
 
-annotation_collections = db.Table('annotation_collections',
-    db.Column('collection_id', db.Integer, db.ForeignKey('collections.id')),
-    db.Column('annotation_id', db.String(), db.ForeignKey('annotations.id'))
+annotation_collections = db.Table("annotation_collections",
+    db.Column("collection_id", db.Integer, db.ForeignKey("collections.id")),
+    db.Column("annotation_id", db.String(), db.ForeignKey("annotations.id"))
 )
 
 
 class Collection(db.Model, ToDictMixin, PingedMixin, RestoreMixin):
 
-    __tablename__ = 'collections'
+    __tablename__ = "collections"
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(), unique=True, nullable=False, index=True)
-    color = db.Column(db.String())
+    color = db.Column(db.String(), default="")
     pinned = db.Column(db.Boolean, default=False)
-    description = db.Column(db.String())
+    description = db.Column(db.String(), default="")
     pinged = db.Column(db.DateTime, nullable=False, index=True, default=datetime.utcnow)
 
     def __init__(self, name):
@@ -802,14 +946,29 @@ class Collection(db.Model, ToDictMixin, PingedMixin, RestoreMixin):
 
     def __repr__(self):
 
-        return u'<Collection id:{0} name:{1}>'.format(self.id, self.name)
+        return u"<Collection id:{0} name:{1}>".format(self.id, self.name)
 
-    def edit(self, collection):
+    @validates("name")
+    def validate_name(self, key, name):
 
-        self.name = collection['name']
-        self.color = collection['color']
-        self.pinned = collection['pinned']
-        self.description = collection['description']
+        min_length = 0
+        max_length = 32
+
+        if not min_length <= len(name) <= max_length:
+            raise AssertionError("collection must be less than {0} characters".format(max_length))
+
+        if self.name != name:
+            if Collection.query.filter(Collection.name == name).first():
+                raise AssertionError("collection '{0}' already exists".format(name))
+
+        return name
+
+    def edit(self, data):
+
+        self.name = data["name"]
+        self.color = data["color"]
+        self.pinned = data["pinned"]
+        self.description = data["description"]
 
     def ping(self):
         self.pinged = datetime.utcnow()
@@ -822,13 +981,13 @@ class Collection(db.Model, ToDictMixin, PingedMixin, RestoreMixin):
         """ Serialize collection into a dictionary
         """
         data = {
-            'id': self.id,
-            'name': self.name,
-            'color': self.color,
-            'pinned': self.pinned,
-            'description': self.description,
-            'pinged': self.pinged.isoformat(),
-            'frequency': self.frequency
+            "id": self.id,
+            "name": self.name,
+            "color": self.color,
+            "pinned": self.pinned,
+            "description": self.description,
+            "pinged": self.pinged.isoformat(),
+            "frequency": self.frequency
         }
 
         return data
@@ -846,16 +1005,16 @@ class Collection(db.Model, ToDictMixin, PingedMixin, RestoreMixin):
             .delete(synchronize_session=False)
 
 
-db.event.listen(db.session, 'before_commit', Tag.remove_orphans)
+db.event.listen(db.session, "before_commit", Tag.remove_orphans)
 
 
 class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMixin):
 
-    __tablename__ = 'annotations'
+    __tablename__ = "annotations"
 
     id = db.Column(db.String(), primary_key=True, default=generate_uuid)
 
-    source_id = db.Column(db.String(), db.ForeignKey('sources.id'))
+    source_id = db.Column(db.String(), db.ForeignKey("sources.id"))
 
     passage = db.Column(db.Text(), nullable=False)
     notes = db.Column(db.Text())
@@ -880,7 +1039,7 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
 
     def __repr__(self):
 
-        return u'<Annotation id:{0}>'.format(self.id)
+        return u"<Annotation id:{0}>".format(self.id)
 
     @property
     def is_deleted(self):
@@ -903,7 +1062,7 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
         id = None
 
         if not source_name and not author_name:
-            id = AppDefaults.SOURCE_NONE['ID']
+            id = AppDefaults.SOURCE_NONE["ID"]
 
             source = Source.query.filter_by(id=id).first()
 
@@ -965,18 +1124,18 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
 
             self.collections.append(collection)
 
-    def save(self, annotation, source, author):
+    def save(self, data):
 
-        self.passage = annotation["passage"]
-        self.notes = annotation["notes"]
+        self.passage = data["passage"]
+        self.notes = data["notes"]
 
         self.refresh_source(
-            source_name=source["name"],
-            author_name=author["name"])
+            source_name=data["source"],
+            author_name=data["author"])
 
-        self.refresh_tags(tags=annotation["tags"])
+        self.refresh_tags(tags=data["tags"])
 
-        self.refresh_collections(collections=annotation["collections"])
+        self.refresh_collections(collections=data["collections"])
 
     def edit(self):
 

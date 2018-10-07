@@ -1,0 +1,51 @@
+{% from "_macros.html" import pagination with context %}
+
+{% extends "_index.html" %}
+
+
+{% block main %}
+
+    <div class="block blockFloating">
+
+        <div class="blockTitle">edit collections</div>
+
+    </div>
+
+    <div class="block blockBleeding">
+
+        <div class="blockContent">
+
+            <div id="bulkEditor">
+
+                {% for collection in results %}
+
+                    <form method="POST" action="{{ url_for('main.bulk_edit_collections') }}">
+
+                        <button class="link button" type="submit">update</button>
+
+                        {{ form.csrf_token }}
+                        {{ form.id(value=collection.id) }}
+                        {{ form.pinned(checked=collection.pinned) }}
+                        {{ form.name(value=collection.name) }}
+                        {{ form.color(value=collection.color) }}
+                        {{ form.description(value=collection.description) }}
+
+                        <div class="pill collection" name="{{ collection.name }}">{{ collection.name }} ⋅ {{ collection.frequency }}</div>
+
+                        {% if form.errors %}
+                            {% if collection.id | string == form.errors["name"][0] %}
+                                ERROR!
+                            {% endif %}
+                        {% endif %}
+
+                    </form>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}

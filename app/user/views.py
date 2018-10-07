@@ -14,12 +14,12 @@ from flask_login import login_required, login_user, logout_user, current_user
 @user.route('/login/', methods=['GET', 'POST'])
 def login():
 
-    login_form = LoginForm()
+    form = LoginForm()
 
-    if login_form.validate_on_submit():
+    if form.validate_on_submit():
 
-        username = login_form.username.data
-        remember = login_form.remember.data
+        username = form.username.data
+        remember = form.remember.data
 
         user = User.query.filter_by(username=username).first()
 
@@ -35,7 +35,7 @@ def login():
 
             return redirect(home_url())
 
-    return render_template('user/login.html', login_form=login_form)
+    return render_template('user/login.html', form=form)
 
 
 @user.route('/logout')
@@ -51,12 +51,14 @@ def logout():
 @login_required
 def settings():
 
-    user_form = UserForm(user=current_user, obj=current_user)
+    form = UserForm(obj=current_user)
 
-    if user_form.validate_on_submit():
+    if form.validate_on_submit():
 
-        user_form.populate_obj(current_user)
+        user = User.query.get(form.id.data)
+
+        user.edit(form.data)
 
         db.session.commit()
 
-    return render_template('user/settings.html', user_form=user_form)
+    return render_template('user/settings.html', form=form)

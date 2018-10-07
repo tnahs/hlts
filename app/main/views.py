@@ -10,13 +10,13 @@ from app.models import Annotation, Source, Author, Tag, Collection
 from app.tools import home_url, SortIt
 
 from app.main import main
-from app.main.forms import AnnotationForm, SourceForm, AuthorForm
+from app.main.forms import AnnotationForm, SourceForm, AuthorForm, TagForm, \
+    CollectionForm
 from app.main.tools import SearchAnnotations, paginated_annotations
 
 from flask import render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_required, current_user
 from sqlalchemy import func
-from sqlalchemy.exc import IntegrityError
 
 
 """
@@ -339,30 +339,21 @@ Adding/editing annotations
 @login_required
 def add():
 
-    form_annotation = AnnotationForm()
-    form_source = SourceForm(prefix="source")
-    form_author = AuthorForm(prefix="author")
+    form = AnnotationForm()
 
-    if request.method == "POST":
+    if form.validate_on_submit():
 
-        if form_annotation.validate_on_submit():
+        annotation = Annotation()
+        annotation.save(form.data)
 
-            annotation = Annotation()
+        db.session.add(annotation)
+        db.session.commit()
 
-            annotation.save(
-                form_annotation.data,
-                form_source.data,
-                form_author.data)
+        flash("new annotation added!", "success")
 
-            db.session.add(annotation)
-            db.session.commit()
+        return redirect(url_for("main.recent", mode="added"))
 
-            flash("new annotation added!", "success")
-
-            return redirect(url_for("main.recent", mode="added"))
-
-    return render_template("main/add.html", form_annotation=form_annotation,
-        form_source=form_source, form_author=form_author)
+    return render_template("main/add.html", form=form)
 
 
 @main.route("/edit/<string:in_request>", methods=["POST", "GET"])
@@ -377,21 +368,14 @@ def edit(in_request):
 
         return redirect(url_for("main.trash"))
 
-    form_annotation = AnnotationForm(obj=annotation)
-    form_source = SourceForm(prefix="source", obj=annotation.source)
-    form_author = AuthorForm(prefix="author", obj=annotation.source.author)
-
     if request.method == "POST":
+
+        form = AnnotationForm()
 
         if "duplicate" in request.form:
 
             annotation = Annotation()
-
-            annotation.save(
-                form_annotation.data,
-                form_source.data,
-                form_author.data)
-
+            annotation.save(form.data)
             annotation.duplicate()
 
             db.session.add(annotation)
@@ -401,13 +385,9 @@ def edit(in_request):
 
             return redirect(url_for("main.edit", in_request=annotation.id))
 
-        if form_annotation.validate_on_submit():
+        if form.validate_on_submit():
 
-            annotation.save(
-                form_annotation.data,
-                form_source.data,
-                form_author.data)
-
+            annotation.save(form.data)
             annotation.edit()
 
             db.session.commit()
@@ -416,8 +396,9 @@ def edit(in_request):
 
             return redirect(url_for("main.recent", mode="edited"))
 
-    return render_template("main/edit.html", form_annotation=form_annotation,
-        form_source=form_source, form_author=form_author, id=in_request)
+    form = AnnotationForm(obj=annotation)
+
+    return render_template("main/edit.html", form=form, id=in_request)
 
 
 @main.route("/delete_annotation/", methods=["POST"])
@@ -478,136 +459,80 @@ Bulk editing
 """
 
 
-@main.route("/edit/sources", methods=["POST", "GET"])
-@main.route("/edit/sources/page/<int:page>", methods=["POST", "GET"])
-@login_required
-def edit_sources(page=1, in_request=None):
-
-    results = Source.query
-
-    if request.method == "POST":
-
-        form_data = request.form.copy()
-        form_data["pinned"] = True if request.form.get("pinned") else False
-
-        source = Source.query.get(form_data["id"])
-
-        source.edit(form_data)
-
-        db.session.commit()
-
-        results = Source.query
-
-    results = results.order_by(Source.name)
-
-    results = results.paginate(page=page, per_page=current_user.results_per_page, error_out=False)
-
-    pages = [url_for("main.edit_sources", in_request=in_request, page=pg) for pg in results.iter_pages()]
-
-    return render_template("main/bulk.html", results=results, in_request=in_request, page=page, pages=pages)
-
-
-@main.route("/edit/authors", methods=["POST", "GET"])
-@main.route("/edit/authors/page/<int:page>", methods=["POST", "GET"])
-@login_required
-def edit_authors(page=1, in_request=None):
-
-    results = Author.query
-
-    if request.method == "POST":
-
-        form_data = request.form.copy()
-        form_data["pinned"] = True if request.form.get("pinned") else False
-
-        author = Author.query.get(form_data["id"])
-
-        author.edit(form_data["name"])
-
-        db.session.commit()
-
-        results = Author.query
-
-    results = results.order_by(Author.name)
-
-    results = results.paginate(page=page, per_page=current_user.results_per_page, error_out=False)
-
-    pages = [url_for("main.edit_authors", in_request=in_request, page=pg) for pg in results.iter_pages()]
-
-    return render_template("main/bulk.html", results=results, in_request=in_request, page=page, pages=pages)
-
-
 @main.route("/edit/tags", methods=["POST", "GET"])
-@main.route("/edit/tags/page/<int:page>", methods=["POST", "GET"])
 @login_required
-def edit_tags(page=1, in_request=None):
+def bulk_edit_tags():
 
-    results = Tag.query
+    form = TagForm()
 
-    if request.method == "POST":
+    if form.validate_on_submit():
 
-        form_data = request.form.copy()
-        form_data["pinned"] = True if request.form.get("pinned") else False
+        tag = Tag.query.get(form.id.data)
 
-        tag = Tag.query.get(form_data["id"])
+        tag.edit(form.data)
 
-        try:
+        db.session.commit()
 
-            tag.edit(form_data)
+    results = Tag.query.order_by(Tag.pinned.desc(), Tag.name)
 
-            db.session.commit()
-
-            results = Tag.query
-
-        except IntegrityError:
-
-            flash("the tag '{0}' already exits!".format(request.form["name"]), "warning")
-
-            return redirect(url_for("main.edit_tags", page=page))
-
-    results = results.order_by(Tag.pinned.desc(), Tag.name)
-
-    results = results.paginate(page=page, per_page=current_user.results_per_page, error_out=False)
-
-    pages = [url_for("main.edit_tags", in_request=in_request, page=pg) for pg in results.iter_pages()]
-
-    return render_template("main/bulk.html", results=results, in_request=in_request, page=page, pages=pages)
+    return render_template("main/bulk_edit_tags.html", results=results, form=form)
 
 
 @main.route("/edit/collections", methods=["POST", "GET"])
-@main.route("/edit/collections/page/<int:page>", methods=["POST", "GET"])
 @login_required
-def edit_collections(page=1, in_request=None):
+def bulk_edit_collections():
 
-    results = Collection.query
+    form = CollectionForm()
 
-    if request.method == "POST":
+    if form.validate_on_submit():
 
-        form_data = request.form.copy()
-        form_data["pinned"] = True if request.form.get("pinned") else False
+        collection = Collection.query.get(form.id.data)
 
-        collection = Collection.query.get(form_data["id"])
+        collection.edit(form.data)
 
-        try:
+        db.session.commit()
 
-            collection.edit(form_data)
+    results = Collection.query.order_by(Collection.pinned.desc(), Collection.name)
 
-            db.session.commit()
+    return render_template("main/bulk_edit_collections.html", results=results, form=form)
 
-            results = Collection.query
 
-        except IntegrityError:
+@main.route("/edit/sources", methods=["POST", "GET"])
+@login_required
+def bulk_edit_sources():
 
-            flash("the collection '{0}' already exits!".format(request.form["name"]), "warning")
+    form = SourceForm()
 
-            return redirect(url_for("main.edit_collections", page=page))
+    if form.validate_on_submit():
 
-    results = results.order_by(Collection.pinned.desc(), Collection.name)
+        source = Source.query.get(form.id.data)
 
-    results = results.paginate(page=page, per_page=current_user.results_per_page, error_out=False)
+        source.edit(form.data)
 
-    pages = [url_for("main.edit_collections", in_request=in_request, page=pg) for pg in results.iter_pages()]
+        db.session.commit()
 
-    return render_template("main/bulk.html", results=results, in_request=in_request, page=page, pages=pages)
+    results = Source.query.order_by(Source.name)
+
+    return render_template("main/bulk_edit_sources.html", results=results, form=form)
+
+
+@main.route("/edit/authors", methods=["POST", "GET"])
+@login_required
+def bulk_edit_authors():
+
+    form = AuthorForm()
+
+    if form.validate_on_submit():
+
+        author = Author.query.get(form.id.data)
+
+        author.edit(form.data)
+
+        db.session.commit()
+
+    results = Author.query.order_by(Author.name)
+
+    return render_template("main/bulk_edit_authors.html", results=results, form=form)
 
 
 """

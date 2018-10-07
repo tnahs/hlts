@@ -9,7 +9,7 @@
 
         <div class="blockTitle">
 
-            collection : <a class="link button accent" href="{{ url_for('main.edit_collections') }}">{{ request.path.split('/')[-1] }}</a>
+            collection : <a class="link button accent" href="{{ url_for('main.bulk_edit_collections') }}">{{ request.path.split('/')[-1] }}</a>
 
             {% if request_info.description %}
 

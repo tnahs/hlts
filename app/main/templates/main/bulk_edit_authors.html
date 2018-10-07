@@ -1,0 +1,46 @@
+{% from "_macros.html" import pagination with context %}
+
+{% extends "_index.html" %}
+
+
+{% block main %}
+
+    <div class="block blockFloating">
+
+        <div class="blockTitle">edit authors</div>
+
+    </div>
+
+    <div class="block blockBleeding">
+
+        <div class="blockContent">
+
+            <div id="bulkEditor">
+
+                {% for author in results %}
+
+                    <form method="POST" action="{{ url_for('main.bulk_edit_authors') }}">
+
+                        <button class="link button" type="submit">update</button>
+
+                        {{ form.csrf_token }}
+                        {{ form.id(value=author.id) }}
+                        {{ form.name(value=author.name) }}
+
+                        {% if form.errors %}
+                            {% if author.id | string == form.errors["name"][0] %}
+                                ERROR!
+                            {% endif %}
+                        {% endif %}
+
+                    </form>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}

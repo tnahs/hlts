@@ -23,15 +23,16 @@
 
             <div class="block blockBleeding">
 
-                {{ user_form.csrf_token }}
+                {{ form.csrf_token }}
 
                 <div class="blockLabel">login</div>
 
                 <div class="blockContent">
 
-                    {{ render_form_field(user_form.username) }}
-                    {{ render_form_field(user_form.fullname) }}
-                    {{ render_form_field(user_form.email) }}
+                    {{ render_form_field(form.id) }}
+                    {{ render_form_field(form.username) }}
+                    {{ render_form_field(form.fullname) }}
+                    {{ render_form_field(form.email) }}
 
                 </div>
 
@@ -39,8 +40,8 @@
 
                 <div class="blockContent">
 
-                    {{ render_form_field(user_form.results_per_page, label=true) }}
-                    {{ render_form_field(user_form.recent_days, label=true) }}
+                    {{ render_form_field(form.results_per_page, label=true) }}
+                    {{ render_form_field(form.recent_days, label=true) }}
 
                 </div>
 
@@ -48,7 +49,7 @@
 
                 <div class="blockContent">
 
-                    <div class="text">{{ user_form.api_key.data }}</div>
+                    <div class="text">{{ form.api_key.data }}</div>
 
                 </div>
 

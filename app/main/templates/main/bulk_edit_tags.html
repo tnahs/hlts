@@ -1,0 +1,71 @@
+{% from "_macros.html" import pagination with context %}
+
+
+{% macro render_bulk_form_field(field, value, classes=[], label=false) -%}
+
+    {% set classes = classes | join(" ") %}
+
+    <div class="formField">
+
+        {% if label %}
+
+            <div class="fieldLabel text upper faded">{{ field.label.text }}:</div>
+
+        {% endif %}
+
+        {{ field(value=value, class_=classes) }}
+
+    </div>
+
+{%- endmacro %}
+
+
+{% extends "_index.html" %}
+
+
+{% block main %}
+
+    <div class="block blockFloating">
+
+        <div class="blockTitle">edit tags</div>
+
+    </div>
+
+    {% for tag in results %}
+
+        <form method="POST" action="{{ url_for('main.bulk_edit_tags') }}">
+
+            <div class="block blockFloating">
+
+                <div class="blockLabel">
+                    <button class="link button" type="submit">update</button>
+                </div>
+
+                <div class="blockContent">
+
+                    <div id="bulkEditor">
+
+                        {% if form.errors %}
+                            {% set error = ["fieldError"] if tag.id | string == form.errors["name"][0] else "" %}
+                        {% endif %}
+
+                        <div class="pill tag" name="{{ tag.name }}">{{ tag.name }} ⋅ {{ tag.frequency }}</div>
+
+                        {{ form.csrf_token }}
+                        {{ form.id(value=tag.id) }}
+                        {{ render_bulk_form_field(form.name, tag.name, error) }}
+                        {{ render_bulk_form_field(form.color, tag.color) }}
+                        {{ render_bulk_form_field(form.description, tag.description) }}
+                        {{ form.pinned.label }}: {{ form.pinned(checked=tag.pinned) }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    {% endfor %}
+
+{% endblock %}
