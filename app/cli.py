@@ -13,23 +13,6 @@ from sqlalchemy.exc import IntegrityError
 
 def register_cli(app):
 
-    @app.cli.command()
-    def commands():
-        click.echo(" \
-            \n All available commands: \
-            \n -------------------------------------------------------- \
-            \n - init_db             Create all tables. \
-            \n - drop_db             Drop all tables. \
-            \n - init_welcome        Create welcome annotations. \
-            \n - create_user         Create single user. \
-            \n - delete_user         Delete single user. \
-            \n - edit_user           Edit single user. \
-            \n - reset_users         Erase users & re-create users. \
-            \n - erase_annotations   Erase annoataions. \
-            \n - reset_all           Drop databases & re-create users.\
-            \n -------------------------------------------------------- \
-            \n ")
-
     def run_init_db():
 
         try:
@@ -86,34 +69,15 @@ def register_cli(app):
             click.echo("\nCreated Admin User!")
             click.echo("<Username: {0.username}> <Admin: {0.is_admin}>".format(user))
 
-    @app.cli.command()
+    @app.cli.command(help="Create all tables.")
     def init_db():
         run_init_db()
 
-    @app.cli.command()
+    @app.cli.command(help="Drop all tables.")
     def drop_db():
         run_drop_db()
 
-    @app.cli.command()
-    def init_welcome():
-
-        click.echo("\nAdding welcome annotations...")
-
-        welcome_json = path.join(current_app.root_path, "init_data", "welcome.json")
-
-        with open(welcome_json) as f:
-            welcome_annotations = json.load(f)
-
-        for annotation in welcome_annotations:
-
-            importing = Annotation()
-            importing.deserialize(annotation)
-
-            db.session.add(importing)
-
-        db.session.commit()
-
-    @app.cli.command()
+    @app.cli.command(help="Create single user.")
     def create_user():
 
         click.echo("\nCreate user...")
@@ -140,7 +104,7 @@ def register_cli(app):
             click.echo("\nCreated User!")
             click.echo("<Username: {0.username}> <Admin: {0.is_admin}>".format(user))
 
-    @app.cli.command()
+    @app.cli.command(help="Delete single user.")
     def delete_user():
 
         click.echo("\nDelete user...")
@@ -166,7 +130,7 @@ def register_cli(app):
 
             click.echo("User does not exist!")
 
-    @app.cli.command()
+    @app.cli.command(help="Edit single user.")
     def edit_user():
 
         click.echo("\nEdit User...")
@@ -207,7 +171,7 @@ def register_cli(app):
 
             click.echo("User does not exist!")
 
-    @app.cli.command()
+    @app.cli.command(help="Erase users & re-create users.")
     def reset_users():
 
         if click.confirm("\nWARNING! Reset users to default?", abort=True):
@@ -227,7 +191,7 @@ def register_cli(app):
             # Create users
             run_create_users()
 
-    @app.cli.command()
+    @app.cli.command(help="Erase annotations.")
     def erase_annotations():
 
         if click.confirm("\nWARNING! Reset annotations?", abort=True):
@@ -244,7 +208,7 @@ def register_cli(app):
             else:
                 click.echo("\nRemoved all users!")
 
-    @app.cli.command()
+    @app.cli.command(help="Drop databases & re-create users.")
     def reset_all():
 
         if click.confirm("\nWARNING! Perform full reset?", abort=True):
@@ -259,3 +223,22 @@ def register_cli(app):
 
             # Create users
             run_create_users()
+
+    @app.cli.command(help="Create welcome annotations.")
+    def init_welcome():
+
+        click.echo("\nAdding welcome annotations...")
+
+        welcome_json = path.join(current_app.root_path, "init_data", "welcome.json")
+
+        with open(welcome_json) as f:
+            welcome_annotations = json.load(f)
+
+        for annotation in welcome_annotations:
+
+            importing = Annotation()
+            importing.deserialize(annotation)
+
+            db.session.add(importing)
+
+        db.session.commit()

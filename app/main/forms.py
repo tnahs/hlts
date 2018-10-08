@@ -18,7 +18,7 @@ class PillBox(Field):
         and re-constituted as javascript Pill objects.
         """
         if self.data:
-            return u" ".join([x.name for x in self.data])
+            return u" ".join([p.name for p in self.data])
         else:
             return u""
 
@@ -28,7 +28,8 @@ class PillBox(Field):
         https://wtforms.readthedocs.io/en/stable/fields.html#custom-fields
         """
         if valuelist:
-            self.data = [x.strip() for x in valuelist[0].split(" ")]
+            self.data = valuelist[0].strip().split(" ")
+            self.data = [p.strip() for p in self.data]
         else:
             self.data = []
 
