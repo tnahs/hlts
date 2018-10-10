@@ -4,18 +4,19 @@ from logging import StreamHandler, Formatter, INFO, ERROR
 from logging.handlers import RotatingFileHandler, SMTPHandler
 
 from flask import Flask
-from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from flask_login import LoginManager
 from flask_misaka import Misaka
 from flask_bcrypt import Bcrypt
 
 from config import Config
 
 
-# init extensions
+db = SQLAlchemy()
+migrate = Migrate()
 login = LoginManager()
 bcrypt = Bcrypt()
-db = SQLAlchemy()
 md = Misaka(fenced_code=True, underline=True, highlight=True,
             space_headers=True, superscript=True, strikethrough=True,
             autolink=True, no_intra_emphasis=True, hard_wrap=True,
@@ -23,40 +24,35 @@ md = Misaka(fenced_code=True, underline=True, highlight=True,
             )
 
 
-def create_app():
+def create_app(config=Config):
 
     app = Flask(__name__)
 
-    app.config.from_object(Config)
+    app.config.from_object(config)
 
+    db.init_app(app)
+    migrate.init_app(app, db)
     login.init_app(app)
     bcrypt.init_app(app)
-    db.init_app(app)
     md.init_app(app)
 
-    # load blueprints
     from app.user import user
-    from app.main import main
-    from app.errors import errors
-    from app.data import data
-    from app.api import api
-
-    # register blueprints
     app.register_blueprint(user)
+
+    from app.main import main
     app.register_blueprint(main)
+
+    from app.errors import errors
     app.register_blueprint(errors)
+
+    from app.data import data
     app.register_blueprint(data)
+
+    from app.api import api
     app.register_blueprint(api, url_prefix="/api")
 
-    from app.models import User
-
-    # config flask-login
     login.login_view = "user.login"
     login.login_message = None
-
-    @login.user_loader
-    def load_user(id):
-        return User.query.get(int(id))
 
     """
 

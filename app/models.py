@@ -9,7 +9,7 @@ from dateutil.parser import parse as dateparser
 
 import app.defaults as AppDefaults
 
-from app import db, bcrypt
+from app import db, login, bcrypt
 
 from flask import url_for
 from flask_login import UserMixin
@@ -64,6 +64,11 @@ TODO Editing Sources
 TODO Bulk Editing
 
 """
+
+
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))
 
 
 def generate_uuid(prefix=""):
@@ -430,17 +435,17 @@ class User(db.Model, UserMixin):
     __tablename__ = "users"
 
     id = db.Column(db.Integer(), primary_key=True)
-    username = db.Column(db.String(), nullable=False, unique=True)
-    fullname = db.Column(db.String())
-    email = db.Column(db.String(), nullable=False, unique=True)
-    password = db.Column(db.String())
+    username = db.Column(db.String(32), nullable=False, unique=True)
+    fullname = db.Column(db.String(32))
+    email = db.Column(db.String(64), nullable=False, unique=True)
+    password = db.Column(db.String(32))
     admin = db.Column(db.Boolean, default=AppDefaults.ADMIN)
 
     theme_index = db.Column(db.Integer(), default=AppDefaults.THEME_INDEX)
     results_per_page = db.Column(db.Integer(), default=AppDefaults.RESULTS_PER_PAGE)
     recent_days = db.Column(db.Integer(), default=AppDefaults.RECENT_DAYS)
 
-    api_key = db.Column(db.String(), unique=True, index=True)
+    api_key = db.Column(db.String(64), unique=True, index=True)
 
     def __init__(self, *args, **kwargs):
         super(User, self).__init__(*args, **kwargs)
@@ -453,7 +458,7 @@ class User(db.Model, UserMixin):
 
     @staticmethod
     def generate_api_key():
-        return binascii.hexlify(os.urandom(20)).decode()
+        return binascii.hexlify(os.urandom(32)).decode()
 
     def new_api_key(self):
         self.api_key = self.generate_api_key()
@@ -490,8 +495,8 @@ class User(db.Model, UserMixin):
     @validates("username")
     def validate_username(self, key, username):
 
-        min_length = 5
-        max_length = 16
+        min_length = 4
+        max_length = 32
 
         if not min_length <= len(username) <= max_length:
             raise AssertionError(
@@ -500,21 +505,9 @@ class User(db.Model, UserMixin):
 
         if self.username != username:
             if User.query.filter(User.username == username).first():
-                raise AssertionError("username is already in use")
+                raise AssertionError("username already taken")
 
         return username
-
-    @validates("email")
-    def validate_email(self, key, email):
-
-        if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
-            raise AssertionError("invalid e-mail address")
-
-        if self.email != email:
-            if User.query.filter_by(email=email).first():
-                raise AssertionError("e-mail already taken")
-
-        return email
 
     @validates("fullname")
     def validate_fullname(self, key, fullname):
@@ -528,6 +521,26 @@ class User(db.Model, UserMixin):
                 {0} characters""".format(max_length))
 
         return fullname
+
+    @validates("email")
+    def validate_email(self, key, email):
+
+        min_length = 0
+        max_length = 64
+
+        if not min_length <= len(email) <= max_length:
+            raise AssertionError(
+                """e-mail must be
+                {0}-{1} characters""".format(min_length, max_length))
+
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+            raise AssertionError("invalid e-mail address")
+
+        if self.email != email:
+            if User.query.filter_by(email=email).first():
+                raise AssertionError("e-mail already taken")
+
+        return email
 
     @validates("results_per_page")
     def validate_results_per_page(self, key, results_per_page):
@@ -914,9 +927,9 @@ class Tag(db.Model, ToDictMixin, PingedMixin, RestoreMixin):
         session.query(Tag) \
             .filter(
                 ~Tag.annotations.any(),
-                Tag.color==None,
+                Tag.color=="",
                 Tag.pinned==False,
-                Tag.description==None) \
+                Tag.description=="") \
             .delete(synchronize_session=False)
 
 
@@ -999,9 +1012,9 @@ class Collection(db.Model, ToDictMixin, PingedMixin, RestoreMixin):
         session.query(Collection) \
             .filter(
                 ~Collection.annotations.any(),
-                Collection.color==None,
+                Collection.color=="",
                 Collection.pinned==False,
-                Collection.description==None) \
+                Collection.description=="") \
             .delete(synchronize_session=False)
 
 
@@ -1032,7 +1045,10 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
     protected = db.Column(db.Boolean, nullable=False, default=True)
     deleted = db.Column(db.Boolean, default=False)
 
-    def __init__(self, id=None):
+    attributes = db.Column(db.String())
+
+    def __init__(self, id=None, *args, **kwargs):
+        super(Annotation, self).__init__(*args, **kwargs)
 
         if id is not None:
             self.id = id
@@ -1040,10 +1056,6 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
     def __repr__(self):
 
         return u"<Annotation id:{0}>".format(self.id)
-
-    @property
-    def is_deleted(self):
-        return self.deleted
 
     @property
     def is_tagged(self):

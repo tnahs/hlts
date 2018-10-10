@@ -10,11 +10,6 @@
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}" />
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/petitModal.css') }}" />
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/medKit.css') }}" />
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/default.css') }}" />
-
-        {% if current_user.is_authenticated %}
-            <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/' ~ current_user.theme) }}" />
-        {% endif %}
 
     </head>
 

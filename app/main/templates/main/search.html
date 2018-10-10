@@ -5,8 +5,8 @@
 
 {% block main %}
 
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-    <script> var searchInfo = "{{ search_info | tojson }}"; </script>
+    <script src="{{ url_for('static', filename='js/search.js') }}"></script>
+    <script> var searchInfo = {{ search_info | tojson }}; </script>
 
     {% if search_info.unsafe %}
 
@@ -24,7 +24,7 @@
 
     {% elif results.total == 0 %}
 
-        <div class="block blockBleeding">
+        <div class="block blockFloating">
 
             <div class="blockTitle">
 

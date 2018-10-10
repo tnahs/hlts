@@ -2,6 +2,8 @@
 
 window.addEventListener("load", function(){
 
+    console.log(searchInfo)
+
     markPassages(searchInfo);
 
     function markPassages(searchInfo) {
@@ -13,7 +15,7 @@ window.addEventListener("load", function(){
                 const markedClass = "marked";
 
                 const terms = searchInfo["terms"];
-                const passages = document.querySelectorAll(".passage");
+                const passages = document.querySelectorAll(".annotationPassage");
 
                 for (let passage of passages) {
 

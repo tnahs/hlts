@@ -13,6 +13,8 @@ from sqlalchemy.exc import IntegrityError
 
 def register_cli(app):
 
+    """ Base Methods """
+
     def run_init_db():
 
         try:
@@ -24,7 +26,7 @@ def register_cli(app):
 
     def run_drop_db():
 
-        if click.confirm("\nWARNING! Drop all databases?", abort=True):
+        if click.confirm("WARNING! Drop all databases?", abort=True):
 
             try:
                 db.drop_all()
@@ -33,7 +35,7 @@ def register_cli(app):
             except:
                 click.echo("Unexpected error: {0}".format(sys.exc_info()[0]))
 
-    def run_create_users():
+    def run_create_default_users():
 
         # Create default user
         user = User(username=getenv("DEFAULT_APPUSER_USERNAME"),
@@ -45,11 +47,20 @@ def register_cli(app):
             db.session.add(user)
             db.session.commit()
 
+        except AssertionError as error:
+            db.session.rollback()
+            click.echo(error)
+
+        except IntegrityError as error:
+            db.session.rollback()
+            click.echo(error)
+
         except:
+            db.session.rollback()
             click.echo("Unexpected error: {0}.".format(sys.exc_info()[0]))
 
         else:
-            click.echo("\nCreated Default User!")
+            click.echo("Created Default User!")
             click.echo("<Username: {0.username}> <Admin: {0.is_admin}>".format(user))
 
         # Create admin user
@@ -62,31 +73,96 @@ def register_cli(app):
             db.session.add(user)
             db.session.commit()
 
+        except AssertionError as error:
+            db.session.rollback()
+            click.echo(error)
+
+        except IntegrityError as error:
+            db.session.rollback()
+            click.echo(error)
+
         except:
+            db.session.rollback()
             click.echo("Unexpected error: {0}.".format(sys.exc_info()[0]))
 
         else:
-            click.echo("\nCreated Admin User!")
+            click.echo("Created Admin User!")
             click.echo("<Username: {0.username}> <Admin: {0.is_admin}>".format(user))
 
-    @app.cli.command(help="Create all tables.")
+    def run_create_welcome():
+
+        welcome_json = path.join(current_app.root_path, "init", "welcome.json")
+
+        with open(welcome_json) as f:
+            welcome_annotations = json.load(f)
+
+        for annotation in welcome_annotations:
+
+            importing = Annotation()
+            importing.deserialize(annotation)
+
+            db.session.add(importing)
+
+        try:
+            db.session.commit()
+
+        except AssertionError as error:
+            db.session.rollback()
+            click.echo(error)
+
+        except IntegrityError as error:
+            db.session.rollback()
+            click.echo(error)
+
+        else:
+            click.echo("Added welcome annotations!")
+
+    """ CLI Methods """
+
+    @app.cli.command(
+        name="init_db",
+        help="Create all tables.")
     def init_db():
         run_init_db()
 
-    @app.cli.command(help="Drop all tables.")
+    @app.cli.command(
+        name="drop_db",
+        help="Drop all tables.")
     def drop_db():
         run_drop_db()
 
-    @app.cli.command(help="Create single user.")
+    @app.cli.command(
+        name="init_beta",
+        help="Create default users and welcome annotations.")
+    def init_beta():
+        run_create_default_users()
+        run_create_welcome()
+
+    @app.cli.command(
+        name="create_default_users",
+        help="Create default users.")
+    def create_default_users():
+        run_create_default_users()
+
+    @app.cli.command(
+        name="create_welcome",
+        help="Create welcome annotations.")
+    def create_welcome():
+        run_create_welcome()
+
+    @app.cli.command(
+        name="create_user",
+        help="Create single user.")
     def create_user():
 
-        click.echo("\nCreate user...")
+        click.echo("Create user...")
 
         username = click.prompt("Username")
         password = click.prompt("Password", hide_input=True, confirmation_prompt=True)
+        email = click.prompt("Email")
         admin = click.prompt("Admin?", type=bool, default=False)
 
-        user = User(username=username, admin=admin)
+        user = User(username=username, email=email, admin=admin)
         user.set_password(password)
 
         db.session.add(user)
@@ -94,20 +170,28 @@ def register_cli(app):
         try:
             db.session.commit()
 
-        except IntegrityError:
-            click.echo("Username already taken!")
+        except AssertionError as error:
+            db.session.rollback()
+            click.echo(error)
+
+        except IntegrityError as error:
+            db.session.rollback()
+            click.echo(error)
 
         except:
+            db.session.rollback()
             click.echo("Unexpected error: {0}.".format(sys.exc_info()[0]))
 
         else:
-            click.echo("\nCreated User!")
+            click.echo("Created User!")
             click.echo("<Username: {0.username}> <Admin: {0.is_admin}>".format(user))
 
-    @app.cli.command(help="Delete single user.")
+    @app.cli.command(
+        name="delete_user",
+        help="Delete single user.")
     def delete_user():
 
-        click.echo("\nDelete user...")
+        click.echo("Delete user...")
 
         username = click.prompt("Username")
 
@@ -120,20 +204,31 @@ def register_cli(app):
             try:
                 db.session.commit()
 
+            except AssertionError as error:
+                db.session.rollback()
+                click.echo(error)
+
+            except IntegrityError as error:
+                db.session.rollback()
+                click.echo(error)
+
             except:
+                db.session.rollback()
                 click.echo("Unexpected error: {0}.".format(sys.exc_info()[0]))
 
             else:
-                click.echo("\nDeleted user!")
+                click.echo("Deleted user!")
 
         else:
 
             click.echo("User does not exist!")
 
-    @app.cli.command(help="Edit single user.")
+    @app.cli.command(
+        name="edit_user",
+        help="Edit single user.")
     def edit_user():
 
-        click.echo("\nEdit User...")
+        click.echo("Edit User...")
 
         username = click.prompt("Username")
 
@@ -145,13 +240,13 @@ def register_cli(app):
                 new_username = click.prompt("New Username")
                 user.username = new_username
 
-            if click.confirm("Change Email?"):
-                new_email = click.prompt("New Email")
-                user.email = new_email
-
             if click.confirm("Change Password?"):
                 new_password = click.prompt("New Password", hide_input=True, confirmation_prompt=True)
                 user.set_password(new_password)
+
+            if click.confirm("Change Email?"):
+                new_email = click.prompt("New Email")
+                user.email = new_email
 
             if click.confirm("Change Admin Status?"):
                 new_admin_status = click.prompt("New Admin Status?", type=bool)
@@ -160,85 +255,92 @@ def register_cli(app):
             try:
                 db.session.commit()
 
+            except AssertionError as error:
+                db.session.rollback()
+                click.echo(error)
+
+            except IntegrityError as error:
+                db.session.rollback()
+                click.echo(error)
+
             except:
+                db.session.rollback()
                 click.echo("Unexpected error: {0}.".format(sys.exc_info()[0]))
 
             else:
-                click.echo("\nUpdated User!")
+                click.echo("Updated User!")
                 click.echo("<Username: {0.username}> <Admin: {0.is_admin}>".format(user))
 
         else:
 
             click.echo("User does not exist!")
 
-    @app.cli.command(help="Erase users & re-create users.")
-    def reset_users():
+    @app.cli.command(
+        name="generate_new_api_key",
+        help="Generate new token.")
+    def generate_new_api_key():
 
-        if click.confirm("\nWARNING! Reset users to default?", abort=True):
+        click.echo("Generate new API key...")
 
-            click.echo("\nResetting users...")
+        username = click.prompt("Username")
+
+        user = User.query.filter_by(username=username).first()
+
+        if user and click.confirm("User exists! Grant new API Key?", abort=True):
+
+            user.new_api_key()
+            click.echo("New API Key: {0}".format(user.api_key))
+
+        else:
+
+            click.echo("User does not exist!")
+
+    @app.cli.command(
+        name="reset_all_users",
+        help="Erase users & re-create users.")
+    def reset_all_users():
+
+        if click.confirm("WARNING! Reset users to default?", abort=True):
 
             # Remove all users
             try:
                 User.query.delete()
 
             except:
+                db.session.rollback()
                 click.echo("Unexpected error: {0}.".format(sys.exc_info()[0]))
 
             else:
-                click.echo("\nRemoved all users!")
+                click.echo("Removed all users!")
 
             # Create users
-            run_create_users()
+            run_create_default_users()
 
-    @app.cli.command(help="Erase annotations.")
-    def erase_annotations():
+    @app.cli.command(
+        name="erase_all_annotations",
+        help="Erase annotations.")
+    def erase_all_annotations():
 
-        if click.confirm("\nWARNING! Reset annotations?", abort=True):
-
-            click.echo("\nResetting annotations...")
+        if click.confirm("WARNING! Reset annotations?", abort=True):
 
             # Remove all annotations
             try:
                 Annotation.query.delete()
 
             except:
+                db.session.rollback()
                 click.echo("Unexpected error: {0}.".format(sys.exc_info()[0]))
 
             else:
-                click.echo("\nRemoved all users!")
+                click.echo("Removed all users!")
 
-    @app.cli.command(help="Drop databases & re-create users.")
-    def reset_all():
+    @app.cli.command(
+        name="reset_app",
+        help="Drop databases & re-create users.")
+    def reset_app():
 
-        if click.confirm("\nWARNING! Perform full reset?", abort=True):
+        if click.confirm("WARNING! Perform full reset?", abort=True):
 
-            click.echo("\nPerforming full reset...")
-
-            # Drop DBs
             run_drop_db()
-
-            # Create DBs
             run_init_db()
-
-            # Create users
-            run_create_users()
-
-    @app.cli.command(help="Create welcome annotations.")
-    def init_welcome():
-
-        click.echo("\nAdding welcome annotations...")
-
-        welcome_json = path.join(current_app.root_path, "init_data", "welcome.json")
-
-        with open(welcome_json) as f:
-            welcome_annotations = json.load(f)
-
-        for annotation in welcome_annotations:
-
-            importing = Annotation()
-            importing.deserialize(annotation)
-
-            db.session.add(importing)
-
-        db.session.commit()
+            run_create_default_users()
