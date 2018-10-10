@@ -23,12 +23,16 @@ class UserModelCase(unittest.TestCase):
 
     def test_user_class(self):
 
+        user1_username = "test_user_1"
+        user1_fullname = "Test User 1"
+        user1_email = "test_user_1@email.com"
+        user1_password = "test_password"
+
         user1 = User(
-            username="test_user_1",
-            fullname="Test User 1",
-            email="test_user_1@email.com",
-            admin=False)
-        user1.set_password("test_password")
+            username=user1_username,
+            fullname=user1_fullname,
+            email=user1_email)
+        user1.set_password(user1_password)
 
         db.session.add(user1)
         db.session.commit()
@@ -41,12 +45,12 @@ class UserModelCase(unittest.TestCase):
 
         """
 
-        self.assertEqual(user1.username, "test_user_1")
-        self.assertEqual(user1.fullname, "Test User 1")
-        self.assertEqual(user1.email, "test_user_1@email.com")
+        self.assertEqual(user1.username, user1_username)
+        self.assertEqual(user1.fullname, user1_fullname)
+        self.assertEqual(user1.email, user1_email)
         self.assertEqual(user1.admin, user1.is_admin)
 
-        self.assertTrue(user1.check_password("test_password"))
+        self.assertTrue(user1.check_password(user1_password))
         self.assertRaises(ValueError, user1.check_password, "wrong_password")
 
         # username
@@ -82,7 +86,7 @@ class UserModelCase(unittest.TestCase):
         # results_per_page
 
         def results_per_page_invalid():
-            user1.results_per_page = "invalid"
+            user1.results_per_page = "invalid_type"
         self.assertRaises(AssertionError, results_per_page_invalid)
 
         def results_per_page_small():
@@ -96,7 +100,7 @@ class UserModelCase(unittest.TestCase):
         # recent_days
 
         def recent_days_invalid():
-            user1.recent_days = "invalid"
+            user1.recent_days = "invalid_type"
         self.assertRaises(AssertionError, recent_days_invalid)
 
         def recent_days_small():
@@ -115,19 +119,26 @@ class UserModelCase(unittest.TestCase):
 
         """
 
+        user2_username = "test_user_2"
+        user2_fullname = "Test User 2"
+        user2_email = "test_user_2@email.com"
+        user2_password = "test_password"
+
         user2 = User(
-            username="test_user2",
-            email="test_user_2@email.com")
+            username=user2_username,
+            fullname=user2_fullname,
+            email=user2_email)
+        user2.set_password(user2_password)
 
         db.session.add(user2)
         db.session.commit()
 
         def conflict_name():
-            user2.username = "test_user_1"
+            user2.username = user1_username
         self.assertRaises(AssertionError, conflict_name)
 
         def conflict_email():
-            user2.email = "test_user_1@email.com"
+            user2.email = user1_email
         self.assertRaises(AssertionError, conflict_email)
 
         """
@@ -139,10 +150,10 @@ class UserModelCase(unittest.TestCase):
         """
 
         with self.assertRaises(AssertionError):
-            User(username="test_user_1")
+            User(username=user1_username)
 
         with self.assertRaises(AssertionError):
-            User(email="test_user_1@email.com")
+            User(email=user1_email)
 
     def test_annotation_class(self):
 
@@ -179,6 +190,8 @@ class UserModelCase(unittest.TestCase):
         self.assertEqual(annotation1.protected, True)
         self.assertEqual(annotation1.is_tagged, False)
         self.assertEqual(annotation1.in_collection, False)
+        self.assertEqual(annotation1.tags.all(), [])
+        self.assertEqual(annotation1.collections.all(), [])
 
         #
 

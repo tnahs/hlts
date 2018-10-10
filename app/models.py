@@ -438,7 +438,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(32), nullable=False, unique=True)
     fullname = db.Column(db.String(32))
     email = db.Column(db.String(64), nullable=False, unique=True)
-    password = db.Column(db.String(32))
+    password = db.Column(db.String(256))
     admin = db.Column(db.Boolean, default=AppDefaults.ADMIN)
 
     theme_index = db.Column(db.Integer(), default=AppDefaults.THEME_INDEX)

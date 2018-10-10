@@ -192,27 +192,27 @@
 
             {% if request.endpoint == 'main.trash' %}
 
-                <div class="link button pmTrigger restoreAnnotation" action="restore"
+                <div class="link button faded pmTrigger restoreAnnotation" action="restore"
                     message="restore annotation?" url="{{ url_for('main.restore_annotation') }}"
                     data="{{ annotation.id }}">restore</div>
 
-                <div class="link button pmTrigger killAnnotation" action="kill"
+                <div class="link button faded pmTrigger killAnnotation" action="kill"
                     message="kill annotation?" url="{{ url_for('main.kill_annotation') }}"
                     data="{{ annotation.id }}">kill</div>
 
             {% else %}
 
-                <a class="link button editAnnotation" href="{{ url_for('main.edit', in_request=annotation.id) }}">edit</a>
+                <a class="link button faded editAnnotation" href="{{ url_for('main.edit', in_request=annotation.id) }}">edit</a>
 
-                <div class="link button pmTrigger duplicateAnnotation" action="duplicate"
+                <div class="link button ghost pmDisabledTrigger duplicateAnnotation" action="duplicate"
                     message="duplicate annotation?" url="{{ url_for('main.dashboard') }}"
                     data="{{ annotation.id }}">duplicate</div>
 
-                <div class="link button pmTrigger shareAnnotation" action="share"
+                <div class="link button ghost pmDisabledTrigger shareAnnotation" action="share"
                     message="share annotation?" url="{{ url_for('main.dashboard') }}"
                     data="{{ annotation.id }}">share</div>
 
-                <div class="link button pmTrigger deleteAnnotation" action="delete"
+                <div class="link button faded pmTrigger deleteAnnotation" action="delete"
                     message="delete annotation?" url="{{ url_for('main.delete_annotation') }}"
                     data="{{ annotation.id }}">delete</div>
 

@@ -366,7 +366,7 @@ def edit(in_request):
 
         flash("annotation is deleted! restore before editing!", "warning")
 
-        return redirect(url_for("main.trash"))
+        return redirect(home_url())
 
     if request.method == "POST":
 

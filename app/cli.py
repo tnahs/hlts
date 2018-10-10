@@ -343,4 +343,3 @@ def register_cli(app):
 
             run_drop_db()
             run_init_db()
-            run_create_default_users()

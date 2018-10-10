@@ -2,11 +2,9 @@
 
 import re
 import string
-from functools import wraps
 from urlparse import urlparse, urljoin
 
-from flask import current_app, request, url_for, abort
-from flask_login import current_user
+from flask import request, url_for
 
 
 def land_url():

@@ -3,7 +3,10 @@
 # class User defaults
 ADMIN = False
 THEME_INDEX = 0
-THEME_CHOICES = [('0', 'default'), ('1', 'dark')]
+THEME_CHOICES = [
+    ('0', 'default'),
+    ('1', 'dark')
+]
 RESULTS_PER_PAGE = 25
 RECENT_DAYS = 30
 
