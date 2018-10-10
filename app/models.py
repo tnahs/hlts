@@ -416,7 +416,7 @@ class AnnotationUtilsMixin(object):
 
     @staticmethod
     def get_untagged_from_query(query):
-        """ Compile a dictionary of tags from query.
+        """ Compile a dictionary of untagged annotations from query.
         """
 
         untagged = []

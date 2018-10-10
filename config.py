@@ -6,7 +6,7 @@ import os
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
-class Config(object):
+class BaseConfig(object):
     SECRET_KEY = os.getenv("SECRET_KEY")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL") or \
@@ -20,7 +20,7 @@ class Config(object):
     LOGGING_MAIL_TLS = os.getenv("LOGGING_MAIL_TLS") is not None
 
 
-class TestingConfig(Config):
+class TestingConfig(BaseConfig):
     TESTING = True
     BCRYPT_LOG_ROUNDS = 4
     WTF_CSRF_ENABLED = False

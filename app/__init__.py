@@ -10,7 +10,7 @@ from flask_login import LoginManager
 from flask_misaka import Misaka
 from flask_bcrypt import Bcrypt
 
-from config import Config
+from config import BaseConfig
 
 
 db = SQLAlchemy()
@@ -24,7 +24,7 @@ md = Misaka(fenced_code=True, underline=True, highlight=True,
             )
 
 
-def create_app(config=Config):
+def create_app(config=BaseConfig):
 
     app = Flask(__name__)
 
