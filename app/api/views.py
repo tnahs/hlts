@@ -1,10 +1,7 @@
 #!/usr/bin/env python
 
-import sys
-
 from app.api import api
 
-from app import db
 from app.models import Annotation, Tag, Collection, Source, Author
 from app.tools import SortIt
 from app.api.tools import api_key_required, api_error_response, \
@@ -211,23 +208,24 @@ def async_import_annotations(mode=None):
     app = current_app._get_current_object()
 
     annotations = request.get_json() or []
-    count = len(annotations)
 
     if mode == "refresh":
-        run_async_import_annotations_refresh(app, annotations)
-        payload = {
-            "message": "refreshing {0} annotations...".format(count)
-        }
+
+        try:
+            run_async_import_annotations_refresh(app, annotations)
+        except:
+            api_error_response(500, "error refreshing annotations!")
 
     elif mode == "add":
-        run_async_import_annotations_add(app, annotations)
-        payload = {
-            "message": "adding {0} annotations...".format(count)
-        }
+
+        try:
+            run_async_import_annotations_add(app, annotations)
+        except:
+            api_error_response(500, "error adding annotations!")
 
     else:
-        return api_error_response(400, message="import mode not selected")
+        return api_error_response(400, message="import type not selected...")
 
-    response = jsonify(payload)
+    response = jsonify({"response": "success"})
     response.status_code = 201
     return response

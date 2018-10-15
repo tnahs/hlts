@@ -5,15 +5,15 @@
 # Default variables for hlts
 FLASK_APP="run.py"
 SECRET_KEY=$(openssl rand -base64 32)
-LOGGING_TO_STOUT="1"
+LOGGING_TO_STOUT="True"
 
 DEFAULT_LOGGING_MAIL_SERVER="smtp.googlemail.com"
-DEFAULT_LOGGING_MAIL_USERNAME="hlts.logging@gmail.com"
+DEFAULT_LOGGING_MAIL_USERNAME="hltsapp.logs@gmail.com"
 DEFAULT_LOGGING_MAIL_PORT="587"
 DEFAULT_LOGGING_MAIL_USE_TLS="True"
 
 DEFAULT_MAIL_SERVER="smtp.googlemail.com"
-DEFAULT_MAIL_USERNAME="set_app_email"
+DEFAULT_MAIL_USERNAME="hltsapp.mail@gmail.com"
 DEFAULT_MAIL_PORT="587"
 DEFAULT_MAIL_USE_TLS="True"
 DEFAULT_MAIL_USE_SSL="False"
@@ -67,9 +67,6 @@ if [ $? -eq 0 ]; then
 
     # Add Postgres DB
     heroku addons:add heroku-postgresql:hobby-dev --app $APP_NAME
-
-    # Add Redis
-    #  WIPASYNC
 
     echo
     echo "Setting config variables"

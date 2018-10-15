@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 
-import sys
 from functools import wraps
 
 from flask import g, request, jsonify
 from werkzeug.http import HTTP_STATUS_CODES
 
 from app import db
-from app.models import User, Annotation
 from app.tools import async_threaded
+from app.models import User, Annotation
 
 
 def api_key_required(func):
@@ -47,16 +46,9 @@ def api_error_response(status_code, message=None):
     return response
 
 
-@async_threaded
 def run_async_import_annotations_refresh(app, annotations):
 
-    # WIPASYNC
-
     with app.app_context():
-
-        count_added = 0
-        count_protected = 0
-        count_errors = 0
 
         for annotation in annotations:
 
@@ -68,8 +60,6 @@ def run_async_import_annotations_refresh(app, annotations):
             if existing:
 
                 if existing.protected:
-
-                    count_protected += 1
 
                     continue
 
@@ -85,33 +75,15 @@ def run_async_import_annotations_refresh(app, annotations):
                 db.session.add(importing)
                 db.session.commit()
 
-                count_added += 1
-
             except:
                 db.session.rollback()
-                app.logger.error(sys.exc_info())
-
-                count_errors += 1
-
-        reponse = {
-            "added": count_added,
-            "protected (skipped)": count_protected,
-            "errors": count_errors
-        }
-
-        app.logger.info(reponse)
+                # WIPASYNC log errors somehow...
 
 
 @async_threaded
 def run_async_import_annotations_add(app, annotations):
 
-    # WIPASYNC
-
     with app.app_context():
-
-        count_added = 0
-        count_existing = 0
-        count_errors = 0
 
         for annotation in annotations:
 
@@ -121,8 +93,6 @@ def run_async_import_annotations_add(app, annotations):
             existing = Annotation.query_by_id(annotation['id'])
 
             if existing:
-
-                count_existing += 1
 
                 continue
 
@@ -135,18 +105,6 @@ def run_async_import_annotations_add(app, annotations):
                     db.session.add(importing)
                     db.session.commit()
 
-                    count_added += 1
-
                 except:
                     db.session.rollback()
-                    app.logger.error(sys.exc_info())
-
-                    count_errors += 1
-
-        reponse = {
-            "added": count_added,
-            "existing (skipped)": count_existing,
-            "errors": count_errors
-        }
-
-        app.logger.info(reponse)
+                    # WIPASYNC log errors somehow...

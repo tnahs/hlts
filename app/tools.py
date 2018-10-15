@@ -6,7 +6,7 @@ from urlparse import urlparse, urljoin
 from functools import wraps
 from threading import Thread
 
-from flask import request, url_for
+from flask import request, url_for, current_app
 
 
 def land_url():
@@ -29,6 +29,17 @@ def async_threaded(func):
         thread = Thread(target=func, args=args, kwargs=kwargs)
         thread.start()
     return wrapper
+
+
+class ContextThread(Thread):
+    def __init__(self, *args, **kwargs):
+        super(ContextThread, self).__init__(*args, **kwargs)
+
+        self.app = current_app._get_current_object()
+
+    def run(self):
+        with self.app.app_context():
+            super(ContextThread, self).run()
 
 
 class SortIt(object):

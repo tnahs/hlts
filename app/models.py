@@ -436,7 +436,7 @@ class User(db.Model, UserMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(32), nullable=False, unique=True)
-    fullname = db.Column(db.String(32))
+    fullname = db.Column(db.String(32), nullable=False, default="")
     email = db.Column(db.String(64), nullable=False, unique=True)
     password = db.Column(db.String(256))
     is_admin = db.Column(db.Boolean, default=AppDefaults.IS_ADMIN)
