@@ -7,12 +7,12 @@ from app.api import api
 from app import db
 from app.models import Annotation, Tag, Collection, Source, Author
 from app.tools import SortIt
-from app.api.tools import api_key_required
-
+from app.api.tools import api_key_required, api_error_response, \
+    run_async_import_annotations_add, run_async_import_annotations_refresh
 from flask import jsonify, g, request, current_app
 
 
-@api.route('/verify_api_key', methods=['GET'])
+@api.route("/verify_api_key", methods=["GET"])
 @api_key_required
 def verify_api_key():
 
@@ -22,35 +22,35 @@ def verify_api_key():
 """ GET """
 
 
-@api.route('/user', methods=['GET'])
+@api.route("/user", methods=["GET"])
 @api_key_required
 def user():
 
     return jsonify(g.current_user.serialize())
 
 
-@api.route('/user/colors', methods=['GET'])
+@api.route("/user/colors", methods=["GET"])
 @api_key_required
 def colors():
 
     return jsonify(g.current_user.colors)
 
 
-@api.route('/user/pinned/tags', methods=['GET'])
+@api.route("/user/pinned/tags", methods=["GET"])
 @api_key_required
 def pinned_tags():
 
     return jsonify(g.current_user.pinned_tags)
 
 
-@api.route('/user/pinned/collections', methods=['GET'])
+@api.route("/user/pinned/collections", methods=["GET"])
 @api_key_required
 def pinned_collections():
 
     return jsonify(g.current_user.pinned_collections)
 
 
-@api.route('/annotations', methods=['GET'])
+@api.route("/annotations", methods=["GET"])
 @api_key_required
 def annotations_all():
 
@@ -61,7 +61,7 @@ def annotations_all():
     return jsonify(data)
 
 
-@api.route('/annotations/id/<string:in_request>', methods=['GET'])
+@api.route("/annotations/id/<string:in_request>", methods=["GET"])
 @api_key_required
 def annotations_by_id(in_request):
 
@@ -72,8 +72,8 @@ def annotations_by_id(in_request):
     return jsonify(data)
 
 
-@api.route('/annotations/tag/<string:in_request>', methods=['GET'])
-@api.route('/annotations/tag/<string:in_request>/page/<int:page>', methods=['GET'])
+@api.route("/annotations/tag/<string:in_request>", methods=["GET"])
+@api.route("/annotations/tag/<string:in_request>/page/<int:page>", methods=["GET"])
 @api_key_required
 def annotations_by_tag(in_request, page=1):
 
@@ -86,8 +86,8 @@ def annotations_by_tag(in_request, page=1):
     return jsonify(data)
 
 
-@api.route('/annotations/source/<string:in_request>', methods=['GET'])
-@api.route('/annotations/source/<string:in_request>/page/<int:page>', methods=['GET'])
+@api.route("/annotations/source/<string:in_request>", methods=["GET"])
+@api.route("/annotations/source/<string:in_request>/page/<int:page>", methods=["GET"])
 @api_key_required
 def annotations_by_source(in_request, page=1):
 
@@ -100,8 +100,8 @@ def annotations_by_source(in_request, page=1):
     return jsonify(data)
 
 
-@api.route('/annotations/author/<string:in_request>', methods=['GET'])
-@api.route('/annotations/author/<string:in_request>/page/<int:page>', methods=['GET'])
+@api.route("/annotations/author/<string:in_request>", methods=["GET"])
+@api.route("/annotations/author/<string:in_request>/page/<int:page>", methods=["GET"])
 @api_key_required
 def annotations_by_author(in_request, page=1):
 
@@ -114,76 +114,76 @@ def annotations_by_author(in_request, page=1):
     return jsonify(data)
 
 
-@api.route('/tags', methods=['GET'])
-@api.route('/tags/<string:mode>', methods=['GET'])
+@api.route("/tags", methods=["GET"])
+@api.route("/tags/<string:mode>", methods=["GET"])
 @api_key_required
 def index_tags(mode=None):
 
     query = Tag.query.all()
     results = Tag.query_to_multiple_dict(query)
 
-    if mode == 'alphabetic':
+    if mode == "alphabetic":
 
         results = SortIt.by_name(results)
 
-    elif mode == 'frequency':
+    elif mode == "frequency":
 
         results = SortIt.by_frequency(results)
 
     return jsonify(results)
 
 
-@api.route('/collections', methods=['GET'])
-@api.route('/collections/<string:mode>', methods=['GET'])
+@api.route("/collections", methods=["GET"])
+@api.route("/collections/<string:mode>", methods=["GET"])
 @api_key_required
 def index_collections(mode=None):
 
     query = Collection.query.all()
     results = Collection.query_to_multiple_dict(query)
 
-    if mode == 'alphabetic':
+    if mode == "alphabetic":
 
         results = SortIt.by_name(results)
 
-    elif mode == 'frequency':
+    elif mode == "frequency":
 
         results = SortIt.by_frequency(results)
 
     return jsonify(results)
 
 
-@api.route('/sources', methods=['GET'])
-@api.route('/sources/<string:mode>', methods=['GET'])
+@api.route("/sources", methods=["GET"])
+@api.route("/sources/<string:mode>", methods=["GET"])
 @api_key_required
 def index_sources(mode=None):
 
     query = Source.query.all()
     results = Source.query_to_multiple_dict(query)
 
-    if mode == 'alphabetic':
+    if mode == "alphabetic":
 
         results = SortIt.by_name(results)
 
-    elif mode == 'frequency':
+    elif mode == "frequency":
 
         results = SortIt.by_frequency(results)
 
     return jsonify(results)
 
 
-@api.route('/authors', methods=['GET'])
-@api.route('/authors/<string:mode>', methods=['GET'])
+@api.route("/authors", methods=["GET"])
+@api.route("/authors/<string:mode>", methods=["GET"])
 @api_key_required
 def index_authors(mode=None):
 
     query = Author.query.all()
     results = Author.query_to_multiple_dict(query)
 
-    if mode == 'alphabetic':
+    if mode == "alphabetic":
 
         results = SortIt.by_name(results)
 
-    elif mode == 'frequency':
+    elif mode == "frequency":
 
         results = SortIt.by_frequency(results)
 
@@ -201,107 +201,32 @@ import refresh: Delete and re-add annotation if exists but only if unprotected.
 """
 
 
-@api.route('/import/annotations/refresh', methods=['POST'])
+@api.route("/async/import/annotations", methods=["POST"])
+@api.route("/async/import/annotations/<string:mode>", methods=["POST"])
 @api_key_required
-def import_annotations_refresh():
+def async_import_annotations(mode=None):
 
-    count_added = 0
-    count_protected = 0
-    count_errors = 0
+    # WIPASYNC
+
+    app = current_app._get_current_object()
 
     annotations = request.get_json() or []
+    count = len(annotations)
 
-    for annotation in annotations:
+    if mode == "refresh":
+        run_async_import_annotations_refresh(app, annotations)
+        payload = {
+            "message": "refreshing {0} annotations...".format(count)
+        }
 
-        if not annotation['id']:
-            annotation['id'] = None
+    elif mode == "add":
+        run_async_import_annotations_add(app, annotations)
+        payload = {
+            "message": "adding {0} annotations...".format(count)
+        }
 
-        existing = Annotation.query_by_id(annotation['id'])
-
-        if existing:
-
-            if existing.protected:
-
-                count_protected += 1
-
-                continue
-
-            elif not existing.protected:
-
-                db.session.delete(existing)
-                db.session.commit()
-
-        importing = Annotation()
-        importing.deserialize(annotation)
-
-        try:
-            db.session.add(importing)
-            db.session.commit()
-
-            count_added += 1
-
-        except:
-            db.session.rollback()
-            current_app.logger.error(sys.exc_info())
-
-            count_errors += 1
-
-    payload = {
-        "added": count_added,
-        "protected (skipped)": count_protected,
-        "errors": count_errors
-    }
-
-    response = jsonify(payload)
-    response.status_code = 201
-    return response
-
-
-@api.route('/import/annotations/add', methods=['POST'])
-@api_key_required
-def import_annotations_add():
-
-    count_added = 0
-    count_existing = 0
-    count_errors = 0
-
-    annotations = request.get_json() or []
-
-    for annotation in annotations:
-
-        if not annotation['id']:
-            annotation['id'] = None
-
-        existing = Annotation.query_by_id(annotation['id'])
-
-        if existing:
-
-            count_existing += 1
-
-            continue
-
-        elif not existing:
-
-            importing = Annotation()
-            importing.deserialize(annotation)
-
-            try:
-                db.session.add(importing)
-                db.session.commit()
-
-                count_added += 1
-
-            except:
-                db.session.rollback()
-                current_app.logger.error(sys.exc_info())
-
-                count_errors += 1
-
-    payload = {
-        "added": count_added,
-        "existing (skipped)": count_existing,
-        "errors": count_errors
-    }
+    else:
+        return api_error_response(400, message="import mode not selected")
 
     response = jsonify(payload)
     response.status_code = 201

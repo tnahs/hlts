@@ -411,9 +411,10 @@ def delete_annotation():
 
     annotation = Annotation.query_by_id(id)
 
-    annotation.delete()
-
-    db.session.commit()
+    # FIXMEMODAL
+    if annotation:
+        annotation.delete()
+        db.session.commit()
 
     return jsonify({"result": "success"})
 
@@ -428,9 +429,10 @@ def restore_annotation():
 
     annotation = Annotation.query_by_id(id)
 
-    annotation.restore()
-
-    db.session.commit()
+    # FIXMEMODAL
+    if annotation:
+        annotation.restore()
+        db.session.commit()
 
     return jsonify({"result": "success"})
 
@@ -445,9 +447,10 @@ def kill_annotation():
 
     annotation = Annotation.query_by_id(id)
 
-    annotation.kill()
-
-    db.session.commit()
+    # FIXMEMODAL
+    if annotation:
+        annotation.kill()
+        db.session.commit()
 
     return jsonify({"result": "success"})
 
@@ -558,9 +561,16 @@ AJAX routes
 
 @main.route("/ajax/user")
 @login_required
-def ajax_user_notable_items():
+def ajax_user():
 
     return jsonify(current_user.serialize())
+
+
+@main.route("/ajax/user/data")
+@login_required
+def ajax_user_data():
+
+    return jsonify(current_user.data)
 
 
 @main.route("/ajax/colors")

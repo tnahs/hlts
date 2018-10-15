@@ -6,30 +6,41 @@ from app.tools import home_url
 from app.data.tools import ExportUserData, RestoreUserData
 from app.data.forms import RestoreDataForm
 
-from flask import Response, redirect, url_for, request, flash, render_template
-from flask_login import login_required
+from flask import redirect, url_for, request, flash, render_template, \
+    current_app
+from flask_login import login_required, current_user
 
 
-@data.route("/export_user_data")
+@data.route("/download_user_data")
 @login_required
-def export_user_data():
+def download_user_data():
 
     export = ExportUserData()
 
-    data = Response(
-        export.data,
-        mimetype="text/json",
-        headers={
-            "Content-disposition":
-            "attachment; filename={0}".format(export.filename)}
-    )
+    return export.download()
 
-    return data
+
+@data.route("/email_user_data")
+@login_required
+def email_user_data():
+
+    app = current_app._get_current_object()
+
+    export = ExportUserData(context=app)
+    export.email()
+
+    flash("e-mailed HLTS data to {0}!".format(current_user.email), "success")
+
+    return redirect(url_for("main.tools"))
 
 
 @data.route("/restore_user_data", methods=["GET", "POST"])
 @login_required
 def restore_user_data():
+
+    # WIPASYNC
+
+    app = current_app._get_current_object()
 
     form_restore = RestoreDataForm()
 
@@ -37,13 +48,13 @@ def restore_user_data():
 
         data = request.files["hlts_file"]
 
-        restore = RestoreUserData()
+        restore = RestoreUserData(context=app)
 
         try:
             restore.validate(data)
         except Exception as error:
             flash(error.message, "warning")
-            return redirect(url_for("io.restore_user_data"))
+            return redirect(url_for("data.restore_user_data"))
 
         else:
 
@@ -51,7 +62,7 @@ def restore_user_data():
                 restore.execute()
             except Exception as error:
                 flash(error.message, "warning")
-                return redirect(url_for("io.restore_user_data"))
+                return redirect(url_for("data.restore_user_data"))
 
             else:
                 flash("restored user settings and {0} annotations".format(restore.annotation_count), "success")

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # class User defaults
-ADMIN = False
+IS_ADMIN = False
 THEME_INDEX = 0
 THEME_CHOICES = [
     ('0', 'default'),

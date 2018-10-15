@@ -3,6 +3,8 @@
 import re
 import string
 from urlparse import urlparse, urljoin
+from functools import wraps
+from threading import Thread
 
 from flask import request, url_for
 
@@ -19,6 +21,14 @@ def is_safe_url(target):
     ref_url = urlparse(request.host_url)
     test_url = urlparse(urljoin(request.host_url, target))
     return test_url.scheme in ('http', 'https') and ref_url.netloc == test_url.netloc
+
+
+def async_threaded(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        thread = Thread(target=func, args=args, kwargs=kwargs)
+        thread.start()
+    return wrapper
 
 
 class SortIt(object):

@@ -434,16 +434,16 @@ class User(db.Model, UserMixin):
 
     __tablename__ = "users"
 
-    id = db.Column(db.Integer(), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(32), nullable=False, unique=True)
     fullname = db.Column(db.String(32))
     email = db.Column(db.String(64), nullable=False, unique=True)
     password = db.Column(db.String(256))
-    admin = db.Column(db.Boolean, default=AppDefaults.ADMIN)
+    is_admin = db.Column(db.Boolean, default=AppDefaults.IS_ADMIN)
 
-    theme_index = db.Column(db.Integer(), default=AppDefaults.THEME_INDEX)
-    results_per_page = db.Column(db.Integer(), default=AppDefaults.RESULTS_PER_PAGE)
-    recent_days = db.Column(db.Integer(), default=AppDefaults.RECENT_DAYS)
+    theme_index = db.Column(db.Integer, default=AppDefaults.THEME_INDEX)
+    results_per_page = db.Column(db.Integer, default=AppDefaults.RESULTS_PER_PAGE)
+    recent_days = db.Column(db.Integer, default=AppDefaults.RECENT_DAYS)
 
     api_key = db.Column(db.String(64), unique=True, index=True)
 
@@ -512,13 +512,15 @@ class User(db.Model, UserMixin):
     @validates("fullname")
     def validate_fullname(self, key, fullname):
 
-        min_length = 0
-        max_length = 32
+        if fullname is not None:
 
-        if not min_length <= len(fullname) <= max_length:
-            raise AssertionError(
-                """fullname must be less than
-                {0} characters""".format(max_length))
+            min_length = 0
+            max_length = 32
+
+            if not min_length <= len(fullname) <= max_length:
+                raise AssertionError(
+                    """fullname must be less than
+                    {0} characters""".format(max_length))
 
         return fullname
 
@@ -587,8 +589,8 @@ class User(db.Model, UserMixin):
         self.recent_days = data["recent_days"]
 
     @property
-    def is_admin(self):
-        return self.admin
+    def display_name(self):
+        return self.fullname if self.fullname else self.username
 
     @property
     def tags(self):
@@ -682,11 +684,11 @@ class Source(db.Model, ToDictMixin, PingedMixin):
 
     __tablename__ = "sources"
 
-    id = db.Column(db.String(), primary_key=True)
-    name = db.Column(db.String(), index=True)
+    id = db.Column(db.String(64), primary_key=True)
+    name = db.Column(db.Text, index=True)
     pinged = db.Column(db.DateTime, nullable=False, index=True, default=datetime.utcnow)
 
-    author_id = db.Column(db.String(), db.ForeignKey("authors.id"))
+    author_id = db.Column(db.String(64), db.ForeignKey("authors.id"))
 
     annotations = db.relationship("Annotation", backref="source", lazy="dynamic")
 
@@ -783,8 +785,8 @@ class Author(db.Model, ToDictMixin, PingedMixin):
 
     __tablename__ = "authors"
 
-    id = db.Column(db.String(), primary_key=True)
-    name = db.Column(db.String(), index=True)
+    id = db.Column(db.String(64), primary_key=True)
+    name = db.Column(db.Text, index=True)
     pinged = db.Column(db.DateTime, nullable=False, index=True, default=datetime.utcnow)
 
     sources = db.relationship("Source", backref="author", lazy="dynamic")
@@ -852,8 +854,9 @@ db.event.listen(db.session, "before_commit", Author.remove_orphans)
 
 
 annotation_tags = db.Table("annotation_tags",
-    db.Column("tag_id", db.Integer, db.ForeignKey("tags.id")),
-    db.Column("annotation_id", db.String(), db.ForeignKey("annotations.id"))
+    db.Column("tag_id", db.Integer, db.ForeignKey("tags.id"), nullable=False),
+    db.Column("annotation_id", db.String(64), db.ForeignKey("annotations.id"), nullable=False),
+    db.PrimaryKeyConstraint("tag_id", "annotation_id")
 )
 
 
@@ -862,10 +865,10 @@ class Tag(db.Model, ToDictMixin, PingedMixin, RestoreMixin):
     __tablename__ = "tags"
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(), unique=True, nullable=False, index=True)
-    color = db.Column(db.String(), default="")
+    name = db.Column(db.Text, unique=True, nullable=False, index=True)
+    color = db.Column(db.Text, default="")
     pinned = db.Column(db.Boolean, default=False)
-    description = db.Column(db.String(), default="")
+    description = db.Column(db.Text, default="")
     pinged = db.Column(db.DateTime, nullable=False, index=True, default=datetime.utcnow)
 
     def __init__(self, name):
@@ -937,8 +940,9 @@ db.event.listen(db.session, "before_commit", Tag.remove_orphans)
 
 
 annotation_collections = db.Table("annotation_collections",
-    db.Column("collection_id", db.Integer, db.ForeignKey("collections.id")),
-    db.Column("annotation_id", db.String(), db.ForeignKey("annotations.id"))
+    db.Column("collection_id", db.Integer, db.ForeignKey("collections.id"), nullable=False),
+    db.Column("annotation_id", db.String(64), db.ForeignKey("annotations.id"), nullable=False),
+    db.PrimaryKeyConstraint("collection_id", "annotation_id")
 )
 
 
@@ -947,10 +951,10 @@ class Collection(db.Model, ToDictMixin, PingedMixin, RestoreMixin):
     __tablename__ = "collections"
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(), unique=True, nullable=False, index=True)
-    color = db.Column(db.String(), default="")
+    name = db.Column(db.Text, unique=True, nullable=False, index=True)
+    color = db.Column(db.Text, default="")
     pinned = db.Column(db.Boolean, default=False)
-    description = db.Column(db.String(), default="")
+    description = db.Column(db.Text, default="")
     pinged = db.Column(db.DateTime, nullable=False, index=True, default=datetime.utcnow)
 
     def __init__(self, name):
@@ -1025,12 +1029,12 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
 
     __tablename__ = "annotations"
 
-    id = db.Column(db.String(), primary_key=True, default=generate_uuid)
+    id = db.Column(db.String(64), primary_key=True, default=generate_uuid)
 
-    source_id = db.Column(db.String(), db.ForeignKey("sources.id"))
+    source_id = db.Column(db.String(64), db.ForeignKey("sources.id"))
 
-    passage = db.Column(db.Text(), nullable=False)
-    notes = db.Column(db.Text())
+    passage = db.Column(db.Text, nullable=False)
+    notes = db.Column(db.Text)
     tags = db.relationship("Tag",
         secondary=annotation_tags,
         backref=db.backref("annotations", lazy="dynamic"))
@@ -1041,11 +1045,9 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
     created = db.Column(db.DateTime, nullable=False, index=True, default=datetime.utcnow)
     modified = db.Column(db.DateTime, nullable=False, index=True, default=datetime.utcnow)
 
-    origin = db.Column(db.String(), nullable=False, default=AppDefaults.ORIGIN)
+    origin = db.Column(db.String(64), nullable=False, default=AppDefaults.ORIGIN)
     protected = db.Column(db.Boolean, nullable=False, default=True)
     deleted = db.Column(db.Boolean, default=False)
-
-    attributes = db.Column(db.String())
 
     def __init__(self, id=None, *args, **kwargs):
         super(Annotation, self).__init__(*args, **kwargs)

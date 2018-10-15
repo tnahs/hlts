@@ -40,7 +40,7 @@ def register_cli(app):
         # Create default user
         user = User(username=getenv("DEFAULT_APPUSER_USERNAME"),
                     email=getenv("DEFAULT_APPUSER_EMAIL"),
-                    admin=False)
+                    is_admin=False)
         user.set_password(getenv("DEFAULT_APPUSER_PASSWORD"))
 
         try:
@@ -61,12 +61,12 @@ def register_cli(app):
 
         else:
             click.echo("Created Default User!")
-            click.echo("<Username: {0.username}> <Admin: {0.is_admin}>".format(user))
+            click.echo("<Username: {0.username}> <is admin: {0.is_admin}>".format(user))
 
         # Create admin user
         user = User(username=getenv("ADMIN_APPUSER_USERNAME"),
                     email=getenv("ADMIN_APPUSER_EMAIL"),
-                    admin=True)
+                    is_admin=True)
         user.set_password(getenv("ADMIN_APPUSER_PASSWORD"))
 
         try:
@@ -87,7 +87,7 @@ def register_cli(app):
 
         else:
             click.echo("Created Admin User!")
-            click.echo("<Username: {0.username}> <Admin: {0.is_admin}>".format(user))
+            click.echo("<Username: {0.username}> <is admin: {0.is_admin}>".format(user))
 
     def run_create_welcome():
 
@@ -160,9 +160,9 @@ def register_cli(app):
         username = click.prompt("Username")
         password = click.prompt("Password", hide_input=True, confirmation_prompt=True)
         email = click.prompt("Email")
-        admin = click.prompt("Admin?", type=bool, default=False)
+        is_admin = click.prompt("Admin?", type=bool, default=False)
 
-        user = User(username=username, email=email, admin=admin)
+        user = User(username=username, email=email, is_admin=is_admin)
         user.set_password(password)
 
         db.session.add(user)
@@ -184,7 +184,7 @@ def register_cli(app):
 
         else:
             click.echo("Created User!")
-            click.echo("<Username: {0.username}> <Admin: {0.is_admin}>".format(user))
+            click.echo("<Username: {0.username}> <is admin: {0.is_admin}>".format(user))
 
     @app.cli.command(
         name="delete_user",
@@ -250,7 +250,7 @@ def register_cli(app):
 
             if click.confirm("Change Admin Status?"):
                 new_admin_status = click.prompt("New Admin Status?", type=bool)
-                user.admin = new_admin_status
+                user.is_admin = new_admin_status
 
             try:
                 db.session.commit()
@@ -269,7 +269,7 @@ def register_cli(app):
 
             else:
                 click.echo("Updated User!")
-                click.echo("<Username: {0.username}> <Admin: {0.is_admin}>".format(user))
+                click.echo("<Username: {0.username}> <is admin: {0.is_admin}>".format(user))
 
         else:
 
@@ -303,8 +303,10 @@ def register_cli(app):
         if click.confirm("WARNING! Reset users to default?", abort=True):
 
             # Remove all users
+            User.query.delete()
+
             try:
-                User.query.delete()
+                db.session.commit()
 
             except:
                 db.session.rollback()
@@ -324,15 +326,17 @@ def register_cli(app):
         if click.confirm("WARNING! Reset annotations?", abort=True):
 
             # Remove all annotations
+            Annotation.query.delete()
+
             try:
-                Annotation.query.delete()
+                db.session.commit()
 
             except:
                 db.session.rollback()
                 click.echo("Unexpected error: {0}.".format(sys.exc_info()[0]))
 
             else:
-                click.echo("Removed all users!")
+                click.echo("Removed all annotations!")
 
     @app.cli.command(
         name="reset_app",

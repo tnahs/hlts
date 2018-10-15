@@ -3,26 +3,87 @@
 import json
 import sys
 from datetime import datetime
+import copy
+from StringIO import StringIO
 
-from app import db
+from app import db, mail
 from app.models import User, Annotation
+from app.tools import async_threaded
 
-from flask import current_app
+from flask import current_app, Response, render_template
 from flask_login import current_user
+from flask_mail import Message
 
 
 class ExportUserData(object):
 
-    @property
-    def filename(self):
+    def __init__(self, context=None):
 
-        date = datetime.now().strftime("%Y.%m.%d")
+        if context is not None:
+
+            self.app = context
+
+        self.date = datetime.now()
+
+    @property
+    def user_data(self):
+        return json.dumps(current_user.data, indent=4, separators=(",", ": "))
+
+    @property
+    def user_data_filename(self):
+
+        date = self.date.strftime("%Y.%m.%d")
 
         return "{0}_{1}.hlts".format(current_user.username, date)
 
     @property
-    def data(self):
-        return json.dumps(current_user.data, indent=4, separators=(",", ": "))
+    def user_data_attachment(self):
+
+        data = StringIO()
+        data.write(self.user_data)
+        data.seek(0)
+
+        return data.read()
+
+    def download(self):
+
+        response = Response(
+            self.user_data,
+            mimetype="text/json",
+            headers={
+                "Content-disposition":
+                "attachment; filename={0}".format(self.user_data_filename)}
+        )
+
+        return response
+
+    def email(self):
+
+        date = self.date.strftime("%B %d, %Y")
+        user = current_user.display_name
+
+        subject = "{0}'s HLTS data from {1}".format(user, date)
+        body = render_template("data/email.txt", user=user, date=date)
+
+        sender = ("The HLTS Team", current_app.config["MAIL_USERNAME"])
+        recipients = [current_user.email]
+
+        message = Message(
+            subject,
+            body=body,
+            sender=sender,
+            recipients=recipients)
+
+        message.attach(self.user_data_filename, "text/json", self.user_data_attachment)
+
+        self.send_user_data(message)
+
+    @async_threaded
+    def send_user_data(self, message):
+
+        with self.app.app_context():
+
+            mail.send(message)
 
 
 class RestoreUserData(object):
@@ -31,6 +92,10 @@ class RestoreUserData(object):
     serialized_annotations = None
     serialized_user = None
     annotation_count = 0
+
+    def __init__(self, context):
+
+        self.app = context
 
     def validate(self, data):
         """
@@ -82,8 +147,8 @@ class RestoreUserData(object):
 
                 self.annotation_count = len(self.serialized_annotations)
 
-                annotation = self.serialized_annotations[0]
-                annotation['id'] = None
+                annotation = copy.copy(self.serialized_annotations[0])
+                annotation["id"] = None
 
                 try:
                     check_annotation = Annotation()
@@ -164,17 +229,24 @@ class RestoreUserData(object):
             current_app.logger.error(sys.exc_info())
             raise Exception("unexpected error restoring user!")
 
+    @async_threaded
     def restore_user_annotations(self):
 
-        for annotation in self.serialized_annotations:
+        # WIPASYNC
 
-            importing = Annotation()
-            importing.deserialize(annotation)
-            db.session.add(importing)
+        with self.app.app_context():
 
-        try:
-            db.session.commit()
-        except:
-            db.session.rollback()
-            current_app.logger.error(sys.exc_info())
-            raise Exception("unexpected error restoring annotations!")
+            for annotation in self.serialized_annotations:
+
+                importing = Annotation()
+                importing.deserialize(annotation)
+
+                db.session.add(importing)
+
+                try:
+                    db.session.commit()
+
+                except:
+                    db.session.rollback()
+                    current_app.logger.error(sys.exc_info())
+                    raise Exception("unexpected error restoring annotations!")

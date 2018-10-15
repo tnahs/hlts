@@ -9,8 +9,9 @@
 
         <div class="blockContent">
 
-            <a class="link button settings" href="{{ url_for('data.export_user_data') }}">export data</a>
-            <a class="link button settings" href="{{ url_for('data.restore_user_data') }}">restore data</a>
+            <a class="link button settings" href="{{ url_for('data.download_user_data') }}">download data as .hlts</a>
+            <a class="link button settings" href="{{ url_for('data.email_user_data') }}">e-mail data as .hlts</a>
+            <a class="link button settings" href="{{ url_for('data.restore_user_data') }}">restore from .hlts file</a>
 
         </div>
 

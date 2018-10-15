@@ -10,7 +10,13 @@ LOGGING_TO_STOUT="1"
 DEFAULT_LOGGING_MAIL_SERVER="smtp.googlemail.com"
 DEFAULT_LOGGING_MAIL_USERNAME="hlts.logging@gmail.com"
 DEFAULT_LOGGING_MAIL_PORT="587"
-DEFAULT_LOGGING_MAIL_TLS="1"
+DEFAULT_LOGGING_MAIL_USE_TLS="True"
+
+DEFAULT_MAIL_SERVER="smtp.googlemail.com"
+DEFAULT_MAIL_USERNAME="set_app_email"
+DEFAULT_MAIL_PORT="587"
+DEFAULT_MAIL_USE_TLS="True"
+DEFAULT_MAIL_USE_SSL="False"
 
 echo
 echo "Accessing Heroku Login..."
@@ -27,17 +33,26 @@ if [ $? -eq 0 ]; then
 
     # Gather new app settings
     read -p "App Name: " APP_NAME
+
     read -p "Default User Username: " DEFAULT_APPUSER_USERNAME
     read -p "Default User E-mail: " DEFAULT_APPUSER_EMAIL
     read -p "Default User Password: " DEFAULT_APPUSER_PASSWORD
     read -p "Admin User Username: " ADMIN_APPUSER_USERNAME
     read -p "Admin User E-mail: " ADMIN_APPUSER_EMAIL
     read -p "Admin User Password: " -i ADMIN_APPUSER_PASSWORD
+
     read -e -p "Logging Mail Server: " -i $DEFAULT_LOGGING_MAIL_SERVER LOGGING_MAIL_SERVER
     read -e -p "Logging Mail Username: " -i $DEFAULT_LOGGING_MAIL_USERNAME LOGGING_MAIL_USERNAME
-    read -p "Logging Mail Password: " LOGGING_MAIL_PASSWORD
+    read -p    "Logging Mail Password: " LOGGING_MAIL_PASSWORD
     read -e -p "Logging Mail Port: " -i $DEFAULT_LOGGING_MAIL_PORT LOGGING_MAIL_PORT
-    read -e -p "Logging Mail TLS?: " -i $DEFAULT_LOGGING_MAIL_TLS  LOGGING_MAIL_TLS
+    read -e -p "Logging Mail Use TLS?: " -i $DEFAULT_LOGGING_MAIL_USE_TLS  LOGGING_MAIL_USE_TLS
+
+    read -e -p "Mail Server: " -i $DEFAULT_MAIL_SERVER MAIL_SERVER
+    read -e -p "Mail Username: " -i $DEFAULT_MAIL_USERNAME MAIL_USERNAME
+    read -p    "Mail Password: " MAIL_PASSWORD
+    read -e -p "Mail Port: " -i $DEFAULT_MAIL_PORT MAIL_PORT
+    read -e -p "Mail Use TLS?: " -i $DEFAULT_MAIL_USE_TLS MAIL_USE_TLS
+    read -e -p "Mail Use SSL?: " -i $DEFAULT_MAIL_USE_SSL MAIL_USE_SSL
 
     echo
     echo "Creating new Heroku app..."
@@ -53,6 +68,9 @@ if [ $? -eq 0 ]; then
     # Add Postgres DB
     heroku addons:add heroku-postgresql:hobby-dev --app $APP_NAME
 
+    # Add Redis
+    #  WIPASYNC
+
     echo
     echo "Setting config variables"
     echo
@@ -66,7 +84,13 @@ if [ $? -eq 0 ]; then
         LOGGING_MAIL_USERNAME=$LOGGING_MAIL_USERNAME \
         LOGGING_MAIL_PASSWORD=$LOGGING_MAIL_PASSWORD \
         LOGGING_MAIL_PORT=$LOGGING_MAIL_PORT \
-        LOGGING_MAIL_TLS=$LOGGING_MAIL_TLS \
+        LOGGING_MAIL_USE_TLS=$LOGGING_MAIL_USE_TLS \
+        MAIL_SERVER=$MAIL_SERVER \
+        MAIL_USERNAME=$MAIL_USERNAME \
+        MAIL_PASSWORD=$MAIL_PASSWORD \
+        MAIL_PORT=$MAIL_PORT \
+        MAIL_USE_TLS=$MAIL_USE_TLS \
+        MAIL_USE_SSL=$MAIL_USE_SSL \
         DEFAULT_APPUSER_USERNAME=$DEFAULT_APPUSER_USERNAME \
         DEFAULT_APPUSER_EMAIL=$DEFAULT_APPUSER_EMAIL \
         DEFAULT_APPUSER_PASSWORD=$DEFAULT_APPUSER_PASSWORD \
