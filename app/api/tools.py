@@ -2,6 +2,8 @@
 
 from functools import wraps
 
+from app.models import User
+
 from flask import g, request, jsonify
 from werkzeug.http import HTTP_STATUS_CODES
 
