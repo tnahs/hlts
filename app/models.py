@@ -1176,6 +1176,9 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
     def kill(self):
         """ delete
         """
+        self.source_id = None
+        self.tags = []
+        self.collections = []
         db.session.delete(self)
 
     def serialize(self):

@@ -6,6 +6,9 @@ from urlparse import urlparse, urljoin
 from functools import wraps
 from threading import Thread
 
+from app import db
+from app.models import Annotation
+
 from flask import request, url_for, current_app
 
 
@@ -40,6 +43,76 @@ class ContextThread(Thread):
     def run(self):
         with self.app.app_context():
             super(ContextThread, self).run()
+
+
+class AsyncImport(object):
+
+    # WIPASYNC
+
+    def __init__(self, context):
+
+        self.app = context
+
+    @async_threaded
+    def refresh(self, annotations):
+
+        with self.app.app_context():
+
+            for annotation in annotations:
+
+                if not annotation['id']:
+                    annotation['id'] = None
+
+                existing = Annotation.query_by_id(annotation['id'])
+
+                if existing:
+
+                    if existing.protected:
+
+                        continue
+
+                    elif not existing.protected:
+
+                        db.session.delete(existing)
+                        db.session.commit()
+
+                importing = Annotation()
+                importing.deserialize(annotation)
+
+                try:
+                    db.session.add(importing)
+                    db.session.commit()
+
+                except:
+                    db.session.rollback()
+
+    @async_threaded
+    def add(self, annotations):
+
+        with self.app.app_context():
+
+            for annotation in annotations:
+
+                if not annotation['id']:
+                    annotation['id'] = None
+
+                existing = Annotation.query_by_id(annotation['id'])
+
+                if existing:
+
+                    continue
+
+                elif not existing:
+
+                    importing = Annotation()
+                    importing.deserialize(annotation)
+
+                    try:
+                        db.session.add(importing)
+                        db.session.commit()
+
+                    except:
+                        db.session.rollback()
 
 
 class SortIt(object):

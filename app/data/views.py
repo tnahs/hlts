@@ -15,7 +15,9 @@ from flask_login import login_required, current_user
 @login_required
 def download_user_data():
 
-    export = ExportUserData()
+    app = current_app._get_current_object()
+
+    export = ExportUserData(user=current_user, context=app)
 
     return export.download()
 
@@ -26,7 +28,7 @@ def email_user_data():
 
     app = current_app._get_current_object()
 
-    export = ExportUserData(context=app)
+    export = ExportUserData(user=current_user, context=app)
     export.email()
 
     flash("e-mailed HLTS data to {0}!".format(current_user.email), "success")
@@ -48,7 +50,7 @@ def restore_user_data():
 
         data = request.files["hlts_file"]
 
-        restore = RestoreUserData(context=app)
+        restore = RestoreUserData(user=current_user, context=app)
 
         try:
             restore.validate(data)

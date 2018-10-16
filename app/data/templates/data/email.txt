@@ -2,7 +2,7 @@ Hey {{ user }}!
 
 Your requested data from HLTS as of {{ date }}.
 
-To restore from this .hlts file visit hlts/tools at {{ url_for("main.tools", _external=True) }} and select "Restore from .hlts file".
+To restore from this .hlts file visit {{ url_for("main.tools", _external=True) }} and select "Restore from .hlts file".
 
 Note: Restoring from an .hlts file will overwrite your current user settings, erase all your annotations and restore them with those found in the file. Please proceed with caution!
 

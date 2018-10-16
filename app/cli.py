@@ -326,7 +326,8 @@ def register_cli(app):
         if click.confirm("WARNING! Reset annotations?", abort=True):
 
             # Remove all annotations
-            Annotation.query.delete()
+            for annotation in Annotation.query.all():
+                annotation.kill()
 
             try:
                 db.session.commit()

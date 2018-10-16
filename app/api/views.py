@@ -3,9 +3,8 @@
 from app.api import api
 
 from app.models import Annotation, Tag, Collection, Source, Author
-from app.tools import SortIt
-from app.api.tools import api_key_required, api_error_response, \
-    run_async_import_annotations_add, run_async_import_annotations_refresh
+from app.tools import SortIt, AsyncImport
+from app.api.tools import api_key_required, api_error_response
 from flask import jsonify, g, request, current_app
 
 
@@ -209,19 +208,15 @@ def async_import_annotations(mode=None):
 
     annotations = request.get_json() or []
 
+    async_import = AsyncImport(context=app)
+
     if mode == "refresh":
 
-        try:
-            run_async_import_annotations_refresh(app, annotations)
-        except:
-            api_error_response(500, "error refreshing annotations!")
+        async_import.refresh(annotations)
 
     elif mode == "add":
 
-        try:
-            run_async_import_annotations_add(app, annotations)
-        except:
-            api_error_response(500, "error adding annotations!")
+        async_import.add(annotations)
 
     else:
         return api_error_response(400, message="import type not selected...")

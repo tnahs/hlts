@@ -13,28 +13,27 @@ from app.tools import async_threaded
 from flask import current_app, Response, render_template
 from flask_login import current_user
 from flask_mail import Message
+from werkzeug.datastructures import FileStorage
 
 
 class ExportUserData(object):
 
-    def __init__(self, context=None):
+    def __init__(self, user, context):
 
-        if context is not None:
-
-            self.app = context
-
+        self.user = user
+        self.app = context
         self.date = datetime.now()
 
     @property
     def user_data(self):
-        return json.dumps(current_user.data, indent=4, separators=(",", ": "))
+        return json.dumps(self.user.data, indent=4, separators=(",", ": "))
 
     @property
     def user_data_filename(self):
 
         date = self.date.strftime("%Y.%m.%d")
 
-        return "{0}_{1}.hlts".format(current_user.username, date)
+        return "{0}_{1}.hlts".format(self.user.username, date)
 
     @property
     def user_data_attachment(self):
@@ -60,13 +59,13 @@ class ExportUserData(object):
     def email(self):
 
         date = self.date.strftime("%B %d, %Y")
-        user = current_user.display_name
+        user = self.user.display_name
 
         subject = "{0}'s HLTS data from {1}".format(user, date)
         body = render_template("data/email.txt", user=user, date=date)
 
         sender = ("The HLTS Team", current_app.config["MAIL_USERNAME"])
-        recipients = [current_user.email]
+        recipients = [self.user.email]
 
         message = Message(
             subject,
@@ -93,8 +92,9 @@ class RestoreUserData(object):
     serialized_user = None
     annotation_count = 0
 
-    def __init__(self, context):
+    def __init__(self, user, context):
 
+        self.user = user
         self.app = context
 
     def validate(self, data):
@@ -109,14 +109,24 @@ class RestoreUserData(object):
 
         # Genuine .hlts file?
 
-        if not data.filename.endswith(".hlts"):
+        if isinstance(data, FileStorage):
 
-            raise Exception("not an .hlts file!")
+            if not data.filename.endswith(".hlts"):
+
+                raise Exception("not an .hlts file!")
 
         # Valid json file?
 
         try:
-            self.data = json.load(data)
+
+            if isinstance(data, FileStorage):
+                self.data = json.loads(data)
+            elif isinstance(data, str):
+                self.data = json.load(data)
+            elif isinstance(data, dict):
+                self.data = data
+            else:
+                raise Exception("unrecognized data type!")
 
         except ValueError as error:
             current_app.logger.error(error)
@@ -207,7 +217,9 @@ class RestoreUserData(object):
 
     def delete_user_annotations(self):
 
-        Annotation.query.delete()
+        # Remove all annotations
+        for annotation in Annotation.query.all():
+            annotation.kill()
 
         try:
             db.session.commit()
@@ -219,7 +231,7 @@ class RestoreUserData(object):
 
     def restore_user_settings(self):
 
-        current_user.deserialize(self.serialized_user)
+        self.user.deserialize(self.serialized_user)
 
         try:
             db.session.commit()
