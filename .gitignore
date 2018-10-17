@@ -7,4 +7,4 @@ Thumbs.db
 .Spotlight-V100
 .Trashes
 .env*
-*.sqlite
+*.sqlite*

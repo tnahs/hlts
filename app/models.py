@@ -140,14 +140,14 @@ class ToDictMixin(object):
             "results": [
                 item.serialize() for item in results.items
             ],
-            "_meta": {
+            "meta": {
                 "in_request": in_request,
                 "per_page": per_page,
                 "page": page,
                 "total_pages": results.pages,
                 "total_items": results.total
             },
-            "_links": {
+            "links": {
                 "self": url_for(endpoint, in_request=in_request, page=page, **kwargs),
                 "pages": [
                     url_for(endpoint, in_request=in_request, page=_page, **kwargs) for _page in results.iter_pages()
@@ -638,12 +638,22 @@ class User(db.Model, UserMixin):
     def data(self):
         """ Serialize and compile user settings and annotations into dictionary
         """
-        query = Annotation.get_all()
+        query = Annotation.query.all()
         annotations = Annotation.query_to_multiple_dict(query)
 
         data = {
             "user": self.serialize(),
-            "annotations": annotations
+            "annotations": annotations,
+            "meta": {
+                "export_date": datetime.utcnow().isoformat(),
+                "count": {
+                    "annotations": Annotation.query.count(),
+                    "sources": Source.query.count(),
+                    "authors": Author.query.count(),
+                    "tags": Tag.query.count(),
+                    "collections": Collection.query.count()
+                }
+            }
         }
 
         return data

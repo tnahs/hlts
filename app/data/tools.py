@@ -11,7 +11,6 @@ from app.models import User, Annotation
 from app.tools import async_threaded
 
 from flask import current_app, Response, render_template
-from flask_login import current_user
 from flask_mail import Message
 from werkzeug.datastructures import FileStorage
 
@@ -120,9 +119,9 @@ class RestoreUserData(object):
         try:
 
             if isinstance(data, FileStorage):
-                self.data = json.loads(data)
-            elif isinstance(data, str):
                 self.data = json.load(data)
+            elif isinstance(data, str):
+                self.data = json.loads(data)
             elif isinstance(data, dict):
                 self.data = data
             else:
