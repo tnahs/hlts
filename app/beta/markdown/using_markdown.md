@@ -2,7 +2,7 @@
 
 <br>
 
-HLTS comes pre-packaged with the ability to render Markdown. The following examples are the basics of how to use Markdown in HLTS as there are a few things specific to HLTS. The intent is to add some rich text formatting without resorting to HTML. Markdown adds a few very simple methods to **bold** _italicise_ and ==highlight== text while also providing more complex methods to format text. Most Annotations with not find themselves filled with complex Markdown but just these few simple modes of emphasis to highlight specifics within an annotation.
+HLTS comes pre-packaged with the ability to render Markdown. The following examples are the basics of how to use Markdown in HLTS as there are a few things specific to HLTS. The intent is to add some rich text formatting without resorting to HTML. Markdown adds a few very simple methods to **bold**  *italicize* _underline_ and ==highlight== text while also providing more complex methods to format text if necessary. Most Annotations with not find themselves filled with complex Markdown but just these few simple modes of emphasis to highlight specifics within an Annotation.
 
 >Markdown's syntax is intended for one purpose: to be used as a format for *writing* for the web.
 
@@ -10,8 +10,9 @@ HLTS comes pre-packaged with the ability to render Markdown. The following examp
 
 >For any markup that is not covered by Markdown's syntax, you simply use HTML itself. There's no need to preface it or delimit it to indicate that you're switching from Markdown to HTML; you just use the tags.
 
-> via. <https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet>
+via. <https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet>
 
+<br>
 
 #### Text styling
 
@@ -26,7 +27,7 @@ HLTS comes pre-packaged with the ability to render Markdown. The following examp
 Written as:
 
 ``` markdown
-_Text styling_
+#### Text styling
 
 1. **bold** : `Ctrl/Cmd + b`
 2. *italics* :  `Ctrl/Cmd + i`
@@ -51,7 +52,7 @@ _Text styling_
 Written as:
 
 ``` markdown
-_Ordered/Unordered Lists_
+#### Ordered/Unordered Lists
 
 1. Ordered list item
 2. Another item
