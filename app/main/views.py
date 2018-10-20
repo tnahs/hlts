@@ -138,6 +138,16 @@ def dashboard():
     return render_template("main/dashboard.html", dash=dash)
 
 
+@main.route("/all/")
+@main.route("/all/page/<int:page>")
+@login_required
+def all(page=1):
+
+    results = Annotation.get_all()
+
+    return paginated_annotations(template="main/all.html", endpoint="main.all", results=results, page=page)
+
+
 @main.route("/index/")
 @main.route("/index/<string:mode>")
 @login_required
@@ -232,19 +242,9 @@ def empty_trash():
 
 """
 
-WIP Menubar pages
+Misc pages
 
 """
-
-
-@main.route("/all/")
-@main.route("/all/page/<int:page>")
-@login_required
-def all(page=1):
-
-    results = Annotation.get_all()
-
-    return paginated_annotations(template="main/all.html", endpoint="main.all", results=results, page=page)
 
 
 @main.route("/random/")
@@ -540,7 +540,7 @@ def bulk_edit_authors():
 
 """
 
-tools
+Tools
 
 """
 

@@ -690,6 +690,179 @@ class User(db.Model, UserMixin):
         Collection.restore(data["custom"]["collections"])
 
 
+annotation_collections = db.Table("annotation_collections",
+    db.Column("collection_id", db.Integer, db.ForeignKey("collections.id"), nullable=False),
+    db.Column("annotation_id", db.String(64), db.ForeignKey("annotations.id"), nullable=False),
+    db.PrimaryKeyConstraint("collection_id", "annotation_id")
+)
+
+
+class Collection(db.Model, ToDictMixin, PingedMixin, RestoreMixin):
+
+    __tablename__ = "collections"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Text, unique=True, nullable=False, index=True)
+    color = db.Column(db.Text, default="")
+    pinned = db.Column(db.Boolean, default=False)
+    description = db.Column(db.Text, default="")
+    pinged = db.Column(db.DateTime, nullable=False, index=True, default=datetime.utcnow)
+
+    def __init__(self, name):
+
+        self.name = normalize_name(name)
+
+    def __repr__(self):
+
+        return u"<Collection id:{0} name:{1}>".format(self.id, self.name)
+
+    @validates("name")
+    def validate_name(self, key, name):
+
+        min_length = 0
+        max_length = 32
+
+        if not min_length <= len(name) <= max_length:
+            raise AssertionError("collection must be less than {0} characters".format(max_length))
+
+        if self.name != name:
+            if Collection.query.filter(Collection.name == name).first():
+                raise AssertionError("collection '{0}' already exists".format(name))
+
+        return name
+
+    def edit(self, data):
+
+        self.name = data["name"]
+        self.color = data["color"]
+        self.pinned = data["pinned"]
+        self.description = data["description"]
+
+    def ping(self):
+        self.pinged = datetime.utcnow()
+
+    @property
+    def frequency(self):
+        return self.annotations.count()
+
+    def serialize(self):
+        """ Serialize collection into a dictionary
+        """
+        data = {
+            "id": self.id,
+            "name": self.name,
+            "color": self.color,
+            "pinned": self.pinned,
+            "description": self.description,
+            "pinged": self.pinged.isoformat(),
+            "frequency": self.frequency
+        }
+
+        return data
+
+    @classmethod
+    def remove_orphans(cls, session):
+        """ Remove orphaned collections that are not pinned or have a color.
+        """
+        session.query(Collection) \
+            .filter(
+                ~Collection.annotations.any(),
+                Collection.color=="",
+                Collection.pinned==False,
+                Collection.description=="") \
+            .delete(synchronize_session=False)
+
+
+# Disabled
+# db.event.listen(db.session, "before_commit", Collection.remove_orphans)
+
+
+annotation_tags = db.Table("annotation_tags",
+    db.Column("tag_id", db.Integer, db.ForeignKey("tags.id"), nullable=False),
+    db.Column("annotation_id", db.String(64), db.ForeignKey("annotations.id"), nullable=False),
+    db.PrimaryKeyConstraint("tag_id", "annotation_id")
+)
+
+
+class Tag(db.Model, ToDictMixin, PingedMixin, RestoreMixin):
+
+    __tablename__ = "tags"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Text, unique=True, nullable=False, index=True)
+    color = db.Column(db.Text, default="")
+    pinned = db.Column(db.Boolean, default=False)
+    description = db.Column(db.Text, default="")
+    pinged = db.Column(db.DateTime, nullable=False, index=True, default=datetime.utcnow)
+
+    def __init__(self, name):
+
+        self.name = normalize_name(name)
+
+    def __repr__(self):
+
+        return u"<Tag id:{0} name:{1}>".format(self.id, self.name)
+
+    @validates("name")
+    def validate_name(self, key, name):
+
+        min_length = 0
+        max_length = 32
+
+        if not min_length <= len(name) <= max_length:
+            raise AssertionError("tag must be less than {0} characters".format(max_length))
+
+        if self.name != name:
+            if Tag.query.filter(Tag.name == name).first():
+                raise AssertionError("tag '{0}' already exists".format(name))
+
+        return name
+
+    def edit(self, data):
+
+        self.name = data["name"]
+        self.color = data["color"]
+        self.pinned = data["pinned"]
+        self.description = data["description"]
+
+    def ping(self):
+        self.pinged = datetime.utcnow()
+
+    @property
+    def frequency(self):
+        return self.annotations.count()
+
+    def serialize(self):
+        """ Serialize tag into a dictionary
+        """
+        data = {
+            "id": self.id,
+            "name": self.name,
+            "color": self.color,
+            "pinned": self.pinned,
+            "description": self.description,
+            "pinged": self.pinged.isoformat(),
+            "frequency": self.frequency
+        }
+
+        return data
+
+    @classmethod
+    def remove_orphans(cls, session):
+        """ Remove orphaned tags that are not pinned or have a color.
+        """
+        session.query(Tag) \
+            .filter(
+                ~Tag.annotations.any(),
+                Tag.color=="",
+                Tag.pinned==False,
+                Tag.description=="") \
+            .delete(synchronize_session=False)
+
+
+db.event.listen(db.session, "before_commit", Tag.remove_orphans)
+
+
 class Source(db.Model, ToDictMixin, PingedMixin):
 
     __tablename__ = "sources"
@@ -861,178 +1034,6 @@ class Author(db.Model, ToDictMixin, PingedMixin):
 
 
 db.event.listen(db.session, "before_commit", Author.remove_orphans)
-
-
-annotation_tags = db.Table("annotation_tags",
-    db.Column("tag_id", db.Integer, db.ForeignKey("tags.id"), nullable=False),
-    db.Column("annotation_id", db.String(64), db.ForeignKey("annotations.id"), nullable=False),
-    db.PrimaryKeyConstraint("tag_id", "annotation_id")
-)
-
-
-class Tag(db.Model, ToDictMixin, PingedMixin, RestoreMixin):
-
-    __tablename__ = "tags"
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.Text, unique=True, nullable=False, index=True)
-    color = db.Column(db.Text, default="")
-    pinned = db.Column(db.Boolean, default=False)
-    description = db.Column(db.Text, default="")
-    pinged = db.Column(db.DateTime, nullable=False, index=True, default=datetime.utcnow)
-
-    def __init__(self, name):
-
-        self.name = normalize_name(name)
-
-    def __repr__(self):
-
-        return u"<Tag id:{0} name:{1}>".format(self.id, self.name)
-
-    @validates("name")
-    def validate_name(self, key, name):
-
-        min_length = 0
-        max_length = 32
-
-        if not min_length <= len(name) <= max_length:
-            raise AssertionError("tag must be less than {0} characters".format(max_length))
-
-        if self.name != name:
-            if Tag.query.filter(Tag.name == name).first():
-                raise AssertionError("tag '{0}' already exists".format(name))
-
-        return name
-
-    def edit(self, data):
-
-        self.name = data["name"]
-        self.color = data["color"]
-        self.pinned = data["pinned"]
-        self.description = data["description"]
-
-    def ping(self):
-        self.pinged = datetime.utcnow()
-
-    @property
-    def frequency(self):
-        return self.annotations.count()
-
-    def serialize(self):
-        """ Serialize tag into a dictionary
-        """
-        data = {
-            "id": self.id,
-            "name": self.name,
-            "color": self.color,
-            "pinned": self.pinned,
-            "description": self.description,
-            "pinged": self.pinged.isoformat(),
-            "frequency": self.frequency
-        }
-
-        return data
-
-    @classmethod
-    def remove_orphans(cls, session):
-        """ Remove orphaned tags that are not pinned or have a color.
-        """
-        session.query(Tag) \
-            .filter(
-                ~Tag.annotations.any(),
-                Tag.color=="",
-                Tag.pinned==False,
-                Tag.description=="") \
-            .delete(synchronize_session=False)
-
-
-db.event.listen(db.session, "before_commit", Tag.remove_orphans)
-
-
-annotation_collections = db.Table("annotation_collections",
-    db.Column("collection_id", db.Integer, db.ForeignKey("collections.id"), nullable=False),
-    db.Column("annotation_id", db.String(64), db.ForeignKey("annotations.id"), nullable=False),
-    db.PrimaryKeyConstraint("collection_id", "annotation_id")
-)
-
-
-class Collection(db.Model, ToDictMixin, PingedMixin, RestoreMixin):
-
-    __tablename__ = "collections"
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.Text, unique=True, nullable=False, index=True)
-    color = db.Column(db.Text, default="")
-    pinned = db.Column(db.Boolean, default=False)
-    description = db.Column(db.Text, default="")
-    pinged = db.Column(db.DateTime, nullable=False, index=True, default=datetime.utcnow)
-
-    def __init__(self, name):
-
-        self.name = normalize_name(name)
-
-    def __repr__(self):
-
-        return u"<Collection id:{0} name:{1}>".format(self.id, self.name)
-
-    @validates("name")
-    def validate_name(self, key, name):
-
-        min_length = 0
-        max_length = 32
-
-        if not min_length <= len(name) <= max_length:
-            raise AssertionError("collection must be less than {0} characters".format(max_length))
-
-        if self.name != name:
-            if Collection.query.filter(Collection.name == name).first():
-                raise AssertionError("collection '{0}' already exists".format(name))
-
-        return name
-
-    def edit(self, data):
-
-        self.name = data["name"]
-        self.color = data["color"]
-        self.pinned = data["pinned"]
-        self.description = data["description"]
-
-    def ping(self):
-        self.pinged = datetime.utcnow()
-
-    @property
-    def frequency(self):
-        return self.annotations.count()
-
-    def serialize(self):
-        """ Serialize collection into a dictionary
-        """
-        data = {
-            "id": self.id,
-            "name": self.name,
-            "color": self.color,
-            "pinned": self.pinned,
-            "description": self.description,
-            "pinged": self.pinged.isoformat(),
-            "frequency": self.frequency
-        }
-
-        return data
-
-    @classmethod
-    def remove_orphans(cls, session):
-        """ Remove orphaned collections that are not pinned or have a color.
-        """
-        session.query(Collection) \
-            .filter(
-                ~Collection.annotations.any(),
-                Collection.color=="",
-                Collection.pinned==False,
-                Collection.description=="") \
-            .delete(synchronize_session=False)
-
-
-db.event.listen(db.session, "before_commit", Tag.remove_orphans)
 
 
 class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMixin):

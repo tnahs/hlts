@@ -3,7 +3,9 @@
 /* --------------------------------------------------------------------- */
 
 @import 'reset.css';
-@import url('https://fonts.googleapis.com/css?family=Barlow+Condensed:400,500|Barlow+Semi+Condensed:400,400i,500|Source+Code+Pro:400');
+@import url('https://fonts.googleapis.com/css?family=Barlow+Condensed:400,500,400i,500i');
+@import url('https://fonts.googleapis.com/css?family=Barlow+Semi+Condensed:400,400i,500,500i');
+@import url('https://fonts.googleapis.com/css?family=Source+Code+Pro:400');
 
 
 /* --------------------------------------------------------------------- */
@@ -788,20 +790,35 @@ mark {
 }
 
 .markdown p {
+
 	text-align: justify;
 	hyphens: auto;
 
 	margin-top: 10px;
 }
 
-.markdown strong { font-weight: 500; }
-.markdown em { font-style: italic; }
+.markdown strong {
+
+	font-weight: 500;
+	color: hsl(220, 100%, 70%);
+}
+
+.markdown em {
+
+	font-style: italic;
+	color: hsl(220, 100%, 70%);
+}
+
 .markdown u {
+
 	text-decoration: underline;
 	text-decoration-skip: ink;
 	text-decoration-color: var(--body-text-color-faded);
+	color: hsl(220, 100%, 70%);
 }
+
 .markdown del {
+
 	text-decoration: line-through;
 	text-decoration-color: var(--body-text-color-light);
 	color: var(--body-text-color-faded);
@@ -813,22 +830,43 @@ mark {
 .markdown h4,
 .markdown h5,
 .markdown h6 {
-	padding-bottom: 10px;
+	color: hsl(220, 100%, 70%);
 }
 
-.markdown h1 { font-size: 20pt; }
-.markdown h2 { font-size: 18pt; }
+.markdown * + h1,
+.markdown * + h2,
+.markdown * + h3,
+.markdown * + h4,
+.markdown * + h5,
+.markdown * + h6 {
+	padding-top: 20px;
+}
+
+.markdown h1 + p,
+.markdown h2 + p,
+.markdown h3 + p,
+.markdown h4 + p,
+.markdown h5 + p,
+.markdown h6 + p  {
+	margin-top: 10px !important;
+}
+
+.markdown h1 { font-size: 18pt; }
+.markdown h2 { font-size: 17pt; }
 .markdown h3 { font-size: 16pt; }
-.markdown h4 { font-size: 14pt; }
-.markdown h5 { font-size: 13pt; }
-.markdown h6 { font-size: 12pt; }
+.markdown h4 { font-size: 15pt; }
+.markdown h5 { font-size: 14pt; }
+.markdown h6 {font-size: 13pt; }
 
 .markdown blockquote {
-	padding: 20px 20px;
-	font-style: italic;
+
+	margin: 20px 20px;
+	padding: 0 10px;
+
+	border-left: 2px hsla(220, 100%, 80%, 1) solid;
 }
 
-.markdown ul, ol { padding-left: 30px; }
+.markdown ul, ol {padding-left: 30px; }
 .markdown ol { list-style: lower-roman outside; }
 .markdown ul { list-style: disc outside; }
 
@@ -840,16 +878,17 @@ mark {
 
 .markdown code {
 
-	padding: 1px 5px;
+	padding: 1px 3px;
 
 	box-decoration-break: clone;
 	-webkit-box-decoration-break: clone;
 
-	background-color: hsla(220, 100%, 93%, 1.0);
+	background-color: hsl(0, 0%, 95%) !important;
+	border-radius: 1px;
 
 	/* font block */
 	font-family: var(--monospace-font);
-	color: var(--code-text-color);
+	color: hsl(0, 0%, 30%);
 	font-size: 10pt;
 	font-weight: unset;
 	letter-spacing: unset;
@@ -858,10 +897,13 @@ mark {
 }
 
 .markdown pre code {
+
 	display: block;
 
-	margin: 10px 0;
-	padding: 10px 20px;
+	margin: 5px 0;
+	padding: 6px 12px;
+
+	border-left: 2px hsla(220, 100%, 80%, 1) solid;
 
 	white-space: pre-wrap;
 	word-wrap: break-word;
@@ -1215,4 +1257,19 @@ loginFlash .flashClose {
 	text-align: center;
 
 	/* padding: 50px; */
+}
+
+.betaMarkdown {
+
+	/* used to counteract line-height at top of passage */
+	margin-top: -4px;
+
+	/* font block */
+	font-family: var(--sans-serif-font);
+	color: var(--body-text-color);
+	font-size: 11pt;
+	font-weight: unset;
+	letter-spacing: unset;
+	line-height: 150%;
+	text-transform: unset;
 }

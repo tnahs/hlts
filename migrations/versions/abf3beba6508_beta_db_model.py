@@ -1,7 +1,7 @@
 """beta db model
 
 Revision ID: abf3beba6508
-Revises: 
+Revises:
 Create Date: 2018-10-18 00:17:38.069153
 
 """

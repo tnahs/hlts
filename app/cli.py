@@ -89,9 +89,9 @@ def register_cli(app):
             click.echo("Created Admin User!")
             click.echo("<Username: {0.username}> <is admin: {0.is_admin}>".format(user))
 
-    def run_create_welcome():
+    def run_create_beta_annotations():
 
-        welcome_json = path.join(current_app.root_path, "init", "welcome.json")
+        welcome_json = path.join(current_app.root_path, "beta", "init.json")
 
         with open(welcome_json) as f:
             welcome_annotations = json.load(f)
@@ -136,7 +136,7 @@ def register_cli(app):
         help="Create default users and welcome annotations.")
     def init_beta():
         run_create_default_users()
-        run_create_welcome()
+        run_create_beta_annotations()
 
     @app.cli.command(
         name="create_default_users",
@@ -145,10 +145,10 @@ def register_cli(app):
         run_create_default_users()
 
     @app.cli.command(
-        name="create_welcome",
+        name="create_beta_annotations",
         help="Create welcome annotations.")
-    def create_welcome():
-        run_create_welcome()
+    def create_beta_annotations():
+        run_create_beta_annotations()
 
     @app.cli.command(
         name="create_user",

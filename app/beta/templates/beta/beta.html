@@ -1,0 +1,16 @@
+{% extends "_index.html" %}
+
+
+{% block main %}
+
+    <div class="block blockFloating">
+
+        <div class="blockContent">
+
+            <div class="betaMarkdown markdown">{{ content | markdown }}</div>
+
+        </div>
+
+    </div>
+
+{% endblock %}

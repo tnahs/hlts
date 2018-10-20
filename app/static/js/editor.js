@@ -268,7 +268,7 @@ window.addEventListener('load', function(){
 
                 e.preventDefault();
             }
-            // ctrl/cmd + h
+            // ctrl/cmd + u
             else if ((e.metaKey || e.ctrlKey) && e.which == 85) {
 
                 // _underline_
@@ -276,7 +276,7 @@ window.addEventListener('load', function(){
 
                 e.preventDefault();
             }
-            // ctrl/cmd + u
+            // ctrl/cmd + h
             else if ((e.metaKey || e.ctrlKey) && e.which == 72) {
 
                 // ==highlight==

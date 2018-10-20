@@ -22,7 +22,7 @@ bcrypt = Bcrypt()
 md = Misaka(fenced_code=True, underline=True, highlight=True,
             space_headers=True, superscript=True, strikethrough=True,
             autolink=True, no_intra_emphasis=True, hard_wrap=True,
-            escape=True
+            escape=False
             )
 
 
@@ -53,6 +53,9 @@ def create_app(config=BaseConfig):
 
     from app.api import api
     app.register_blueprint(api, url_prefix="/api")
+
+    from app.beta import beta
+    app.register_blueprint(beta, url_prefix="/beta")
 
     login.login_view = "user.login"
     login.login_message = None
