@@ -20,6 +20,9 @@ class BaseConfig(object):
     SQLALCHEMY_DATABASE_URI = getenv("DATABASE_URL") or \
         "sqlite:///" + os.path.join(BASE_DIR, "db.sqlite")
 
+    FLATPAGES_ROOT = "beta/static/pages/"
+    FLATPAGES_EXTENSION = '.md'
+
     LOGGING_TO_STOUT = to_bool(getenv("LOGGING_TO_STOUT"), False)
     LOGGING_MAIL_SERVER = getenv("LOGGING_MAIL_SERVER")
     LOGGING_MAIL_USERNAME = getenv("LOGGING_MAIL_USERNAME")

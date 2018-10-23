@@ -6,7 +6,7 @@ from random import choice, randint
 from string import letters
 
 from app.models import User, Annotation, Tag, Collection
-from app.data.tools import ExportUserData, RestoreUserData
+from app.data.tools import ExportUserData
 
 from flask import current_app
 

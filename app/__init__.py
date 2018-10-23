@@ -8,8 +8,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_mail import Mail
-from flask_misaka import Misaka
 from flask_bcrypt import Bcrypt
+from flask_flatpages import FlatPages
+from flask_misaka import Misaka
+
 
 from config import BaseConfig
 
@@ -19,6 +21,7 @@ migrate = Migrate()
 login = LoginManager()
 mail = Mail()
 bcrypt = Bcrypt()
+pages = FlatPages()
 md = Misaka(fenced_code=True, underline=True, highlight=True,
             space_headers=True, superscript=True, strikethrough=True,
             autolink=True, no_intra_emphasis=True, hard_wrap=True,
@@ -35,9 +38,10 @@ def create_app(config=BaseConfig):
     db.init_app(app)
     migrate.init_app(app, db)
     login.init_app(app)
-    bcrypt.init_app(app)
-    md.init_app(app)
     mail.init_app(app)
+    bcrypt.init_app(app)
+    pages.init_app(app)
+    md.init_app(app)
 
     from app.user import user
     app.register_blueprint(user)

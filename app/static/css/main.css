@@ -345,11 +345,30 @@ main {
 footer {
 
 	margin-top: 25px;
-
 	min-height: 200px;
+
+	padding-top: 25px;
 
 	background-color: hsla(220, 100%, 90%, 0.95);
 	box-shadow: 0 50vh 0 50vh hsla(220, 100%, 90%, 0.95);
+
+	text-align: center;
+	color: hsla(220, 100%, 75%, 1.00);
+}
+
+footer > * {
+	display: inline-block;
+
+	padding: 10px;
+
+	/* font block */
+	font-family: var(--sans-serif-condensed-font);
+	color: hsla(220, 100%, 75%, 1.00) !important;
+	font-size: 11pt;
+	font-weight: 400;
+	letter-spacing: 1px;
+	line-height: 100%;
+	text-transform: uppercase;
 }
 
 .block {

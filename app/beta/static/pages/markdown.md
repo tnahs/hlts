@@ -1,6 +1,5 @@
-# Using Markdown in HLTS
-
-<br>
+title: How to use Markdown
+date: 2018-10-23
 
 HLTS comes pre-packaged with the ability to render Markdown. The following examples are the basics of how to use Markdown in HLTS as there are a few things specific to HLTS. The intent is to add some rich text formatting without resorting to HTML. Markdown adds a few very simple methods to **bold**  *italicize* _underline_ and ==highlight== text while also providing more complex methods to format text if necessary. Most Annotations with not find themselves filled with complex Markdown but just these few simple modes of emphasis to highlight specifics within an Annotation.
 
@@ -10,11 +9,11 @@ HLTS comes pre-packaged with the ability to render Markdown. The following examp
 
 >For any markup that is not covered by Markdown's syntax, you simply use HTML itself. There's no need to preface it or delimit it to indicate that you're switching from Markdown to HTML; you just use the tags.
 
-via. <https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet>
+via. [Markdown Cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
 
 <br>
 
-#### Text styling
+## Text styling
 
 1. **bold** : `Ctrl/Cmd + b`
 2. *italics* :  `Ctrl/Cmd + i`
@@ -27,7 +26,7 @@ via. <https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet>
 Written as:
 
 ``` markdown
-#### Text styling
+## Text styling
 
 1. **bold** : `Ctrl/Cmd + b`
 2. *italics* :  `Ctrl/Cmd + i`
@@ -39,7 +38,7 @@ Written as:
 
 <br>
 
-#### Ordered/Unordered Lists
+## Ordered/Unordered Lists
 
 1. Ordered list item
 2. Another item
@@ -52,7 +51,7 @@ Written as:
 Written as:
 
 ``` markdown
-#### Ordered/Unordered Lists
+## Ordered/Unordered Lists
 
 1. Ordered list item
 2. Another item
@@ -64,7 +63,7 @@ Written as:
 
 <br>
 
-#### Misc Elements
+## Misc Elements
 
 > ==A block indented paragraph!== Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eget nibh rutrum, semper quam sit amet, congue elit. Cras vulputate massa faucibus libero convallis vulputate. Proin quis pulvinar ipsum, eget luctus quam. Vestibulum pharetra fermentum turpis at luctus. Etiam sit amet enim non lorem interdum cursus. Vivamus vel pharetra mauris, vitae vehicula odio. Nullam auctor sapien et risus molestie, vel varius arcu mattis. Cras ac condimentum orci. ==Followed by a forced line break...==
 
@@ -78,7 +77,7 @@ Written as:
 Written as:
 
 ``` markdown
-#### Misc Elements
+## Misc Elements
 
 > ==A block indented paragraph!== Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eget nibh rutrum, semper quam sit amet, congue elit. Cras vulputate massa faucibus libero convallis vulputate. Proin quis pulvinar ipsum, eget luctus quam. Vestibulum pharetra fermentum turpis at luctus. Etiam sit amet enim non lorem interdum cursus. Vivamus vel pharetra mauris, vitae vehicula odio. Nullam auctor sapien et risus molestie, vel varius arcu mattis. Cras ac condimentum orci. ==Followed by a forced line break...==
 
@@ -91,12 +90,7 @@ Written as:
 
 <br>
 
-_For more information on Markdown..._
+For more information on Markdown...
 
-Markdown Documentation: <https://daringfireball.net/projects/markdown/syntax>
-
-Markdown Cheatsheet: <https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet>
-
-<br>
-
-<div class="text upper faded">Last updated: October 20, 2018</div>
+[Markdown Documentation](https://daringfireball.net/projects/markdown/syntax)
+[Markdown Cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
