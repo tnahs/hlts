@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from app.errors import errors
+from . import errors
 
 from app import db
 

@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+from . import main
+
 import random as rng
 from datetime import datetime
 
@@ -8,11 +10,9 @@ import app.defaults as AppDefaults
 from app import db
 from app.models import Annotation, Source, Author, Tag, Collection
 from app.tools import home_url, SortIt
-
-from app.main import main
+from app.main.tools import SearchAnnotations, paginated_annotations
 from app.main.forms import AnnotationForm, SourceForm, AuthorForm, TagForm, \
     CollectionForm
-from app.main.tools import SearchAnnotations, paginated_annotations
 
 from flask import render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_required, current_user
@@ -153,11 +153,21 @@ def all(page=1):
 @login_required
 def index(mode=None):
 
-    default_mode = "sources"
+    default_mode = "collections"
 
     if mode == "default" or mode == default_mode:
 
         request.view_args["mode"] = default_mode
+
+        query = Collection.query.all()
+        results = Collection.query_to_multiple_dict(query)
+
+    elif mode == "tags":
+
+        query = Tag.query.all()
+        results = Tag.query_to_multiple_dict(query)
+
+    elif mode == "sources" or mode == default_mode:
 
         query = Source.query.all()
         results = Source.query_to_multiple_dict(query)
@@ -166,16 +176,6 @@ def index(mode=None):
 
         query = Author.query.all()
         results = Author.query_to_multiple_dict(query)
-
-    elif mode == "tags":
-
-        query = Tag.query.all()
-        results = Tag.query_to_multiple_dict(query)
-
-    elif mode == "collections":
-
-        query = Collection.query.all()
-        results = Collection.query_to_multiple_dict(query)
 
     else:
 

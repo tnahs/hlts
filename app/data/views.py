@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from app.data import data
+from . import data
 
 from app.tools import home_url
 from app.data.tools import ExportUserData, RestoreUserData

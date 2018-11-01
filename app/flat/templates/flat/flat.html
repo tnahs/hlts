@@ -1,0 +1,40 @@
+{% extends "_index.html" %}
+
+
+{% block main %}
+
+    <div id="flatPage">
+
+        <div class="block blockFloating">
+
+            <div class="blockContent">
+
+                <div class="text upper">{{ page.title }}</div>
+
+            </div>
+
+        </div>
+
+        <div class="block blockBleeding">
+
+            <div class="blockContent">
+
+                <div class="flatContent markdown">{{ page.body | markdown }}</div>
+
+            </div>
+
+        </div>
+
+        <div class="block blockBleeding">
+
+            <div class="blockContent">
+
+                <div class="text upper faded">last updated {{ page.date.strftime('%B %d, %Y') }}</div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}

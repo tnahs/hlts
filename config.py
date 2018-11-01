@@ -8,9 +8,12 @@ from distutils.util import strtobool
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
-def to_bool(string, default):
+def str_to_bool(string=None, default=None):
+    """ Used to convert environment variables to python boolean objects."""
+
     if string:
         return bool(strtobool(string))
+
     return default
 
 
@@ -20,22 +23,22 @@ class BaseConfig(object):
     SQLALCHEMY_DATABASE_URI = getenv("DATABASE_URL") or \
         "sqlite:///" + os.path.join(BASE_DIR, "db.sqlite")
 
-    FLATPAGES_ROOT = "beta/static/pages/"
-    FLATPAGES_EXTENSION = '.md'
-
-    LOGGING_TO_STOUT = to_bool(getenv("LOGGING_TO_STOUT"), False)
+    LOGGING_TO_STOUT = str_to_bool(getenv("LOGGING_TO_STOUT"), False)
     LOGGING_MAIL_SERVER = getenv("LOGGING_MAIL_SERVER")
     LOGGING_MAIL_USERNAME = getenv("LOGGING_MAIL_USERNAME")
     LOGGING_MAIL_PASSWORD = getenv("LOGGING_MAIL_PASSWORD")
     LOGGING_MAIL_PORT = int(getenv("LOGGING_MAIL_PORT") or 25)
-    LOGGING_MAIL_USE_TLS = to_bool(getenv("LOGGING_MAIL_USE_TLS"), True)
+    LOGGING_MAIL_USE_TLS = str_to_bool(getenv("LOGGING_MAIL_USE_TLS"), True)
 
     MAIL_SERVER = getenv("MAIL_SERVER")
     MAIL_USERNAME = getenv("MAIL_USERNAME")
     MAIL_PASSWORD = getenv("MAIL_PASSWORD")
     MAIL_PORT = int(getenv("MAIL_PORT") or 25)
-    MAIL_USE_TLS = to_bool(getenv("MAIL_USE_TLS"), True)
-    MAIL_USE_SSL = to_bool(getenv("MAIL_USE_SSL"), False)
+    MAIL_USE_TLS = str_to_bool(getenv("MAIL_USE_TLS"), True)
+    MAIL_USE_SSL = str_to_bool(getenv("MAIL_USE_SSL"), False)
+
+    FLATPAGES_ROOT = "flat/static/pages/"
+    FLATPAGES_EXTENSION = ".md"
 
 
 class TestingConfig(BaseConfig):

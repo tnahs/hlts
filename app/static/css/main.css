@@ -347,7 +347,7 @@ footer {
 	margin-top: 25px;
 	min-height: 200px;
 
-	padding-top: 25px;
+	padding-top: 15px;
 
 	background-color: hsla(220, 100%, 90%, 0.95);
 	box-shadow: 0 50vh 0 50vh hsla(220, 100%, 90%, 0.95);
@@ -356,7 +356,7 @@ footer {
 	color: hsla(220, 100%, 75%, 1.00);
 }
 
-footer > * {
+footer > a {
 	display: inline-block;
 
 	padding: 10px;
@@ -369,6 +369,21 @@ footer > * {
 	letter-spacing: 1px;
 	line-height: 100%;
 	text-transform: uppercase;
+}
+
+footer .footerInfo {
+	margin: auto;
+	padding-top: 10px;
+	max-width: 500px;
+
+	/* font block */
+	font-family: var(--sans-serif-condensed-font);
+	color: hsla(220, 100%, 75%, 1.00);
+	font-size: 11pt;
+	font-weight: 400;
+	letter-spacing: 1px;
+	line-height: 110%;
+	text-transform: none;
 }
 
 .block {
@@ -642,6 +657,13 @@ mark {
 	padding: 1px 4px 3px 4px;
 }
 
+.paddedAnchor:before {
+	content: '';
+	display: block;
+	visibility: hidden;
+	height: var(--nav-menu-height);
+	margin-top: calc(var(--nav-menu-height) * -1);
+}
 
 .text {
 
@@ -743,7 +765,7 @@ mark {
 
 .annotation .annotationPassage {
 
-	/* used to counteract line-height at top of passage */
+	/* used to counteract line-height */
 	margin-top: -4px;
 
 	/* font block */
@@ -1279,10 +1301,7 @@ loginFlash .flashClose {
 	/* padding: 50px; */
 }
 
-.betaMarkdown {
-
-	/* used to counteract line-height at top of passage */
-	margin-top: -4px;
+#flatPage {
 
 	/* font block */
 	font-family: var(--sans-serif-font);
@@ -1292,4 +1311,15 @@ loginFlash .flashClose {
 	letter-spacing: unset;
 	line-height: 150%;
 	text-transform: unset;
+}
+
+#flatPage .flatContent {
+
+	/* used to counteract line-height */
+	margin-top: -4px;
+}
+
+#flatPage img {
+
+	max-width: 100%;
 }

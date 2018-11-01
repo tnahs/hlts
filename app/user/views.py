@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from app.user import user
+from . import user
 
 from app import db
 from app.models import User

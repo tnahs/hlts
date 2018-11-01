@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from app.api import api
+from . import api
 
 from app.models import Annotation, Tag, Collection, Source, Author
 from app.tools import SortIt, AsyncImport

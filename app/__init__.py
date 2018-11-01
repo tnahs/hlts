@@ -55,11 +55,11 @@ def create_app(config=BaseConfig):
     from app.data import data
     app.register_blueprint(data)
 
+    from app.flat import flat
+    app.register_blueprint(flat)
+
     from app.api import api
     app.register_blueprint(api, url_prefix="/api")
-
-    from app.beta import beta
-    app.register_blueprint(beta, url_prefix="/beta")
 
     login.login_view = "user.login"
     login.login_message = None
