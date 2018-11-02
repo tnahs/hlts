@@ -1,4 +1,4 @@
-{% from "_macros.html" import render_base_annotation, render_multiple_base_annotations,
+{% from "_macros.html" import render_base_annotation, render_multiple_static_annotations,
     attribution_from_source_obj, attribution_from_author_obj with context %}
 
 {% extends "_index.html" %}
@@ -156,7 +156,7 @@
 
             <div class="blockContent">
 
-                {{ render_multiple_base_annotations(dash.daily_topic_annotations) }}
+                {{ render_multiple_static_annotations(dash.daily_topic_annotations) }}
 
             </div>
 

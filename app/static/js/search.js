@@ -21,8 +21,6 @@ window.addEventListener("load", function(){
 
                     for (let term of terms) {
 
-                        term = term.replace(searchInfo["wildcard_symbol"], "");
-
                         const termRegExp = new RegExp(term, "gi");
                         const thisMatch = "$&";
 

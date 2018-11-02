@@ -44,10 +44,11 @@ window.addEventListener("load", function(){
 
     document.addEventListener("scroll", ( ) => {
 
-        let scrollPosY = document.body.scrollTop;
+        let scrollY = window.scrollY;
+
         const nav = document.querySelector("nav");
 
-        if (scrollPosY > 0) {
+        if (scrollY > 0) {
 
             nav.classList.add("dropShadowBig");
         }
@@ -97,9 +98,9 @@ window.addEventListener("load", function(){
 
     /* -------------------------------- show/hide annotation options -------------------------------- */
 
-    const annotationContainers = document.querySelectorAll(".annotationContainer");
+    const annotationContainersInteractive = document.querySelectorAll(".annotationContainerInteractive");
 
-    for (let annotationContainer of annotationContainers) {
+    for (let annotationContainer of annotationContainersInteractive) {
 
         annotationContainer.addEventListener("mouseover", function(){ activate(annotationContainer) });
         annotationContainer.addEventListener("mouseout", function(){ deactivate(annotationContainer) });
@@ -107,7 +108,7 @@ window.addEventListener("load", function(){
 
     function activate(annotationContainer) {
 
-        annotationContainer.classList.add("annotationContainerVisible");
+        annotationContainer.classList.add("annotationContainerInteractiveVisible");
         annotationContainer.classList.add("dropShadowBig");
 
         const options = annotationContainer.lastElementChild;
@@ -116,7 +117,7 @@ window.addEventListener("load", function(){
 
     function deactivate(annotationContainer) {
 
-        annotationContainer.classList.remove("annotationContainerVisible");
+        annotationContainer.classList.remove("annotationContainerInteractiveVisible");
         annotationContainer.classList.remove("dropShadowBig");
 
         const options = annotationContainer.lastElementChild;

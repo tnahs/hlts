@@ -70,7 +70,6 @@ class SearchAnnotations(object):
     bool_words_OR = ["or"]
     bool_default = bool_words_OR[0]
     explicit_symbols = "\"'"
-    wildcard_symbol = "*"
 
     def __init__(self, string):
 
@@ -93,7 +92,6 @@ class SearchAnnotations(object):
             "has_explicit": self._has_explicit,
             "original_query": self._query,
             "errors": self._errors,
-            "wildcard_symbol": self.wildcard_symbol
         }
 
         return search_info
@@ -236,16 +234,12 @@ class SearchAnnotations(object):
 
         for term in self._terms:
 
-            if self.wildcard_symbol in term:
-                term = term.replace(self.wildcard_symbol, '%')
-
             if self._key:
 
                 """
 
                 Generates a column-specific query based on the user
-                specified search key. All "passage" and "notes" queries
-                disregard any wildcard flags.
+                specified search key.
 
                 """
 
@@ -256,22 +250,22 @@ class SearchAnnotations(object):
 
                 elif self._key == "sources":
                     filters.append(
-                        Source.name.ilike(term)
+                        Source.name.contains(term)
                     )
 
                 elif self._key == "authors":
                     filters.append(
-                        Author.name.ilike(term)
+                        Author.name.contains(term)
                     )
 
                 elif self._key == "tags":
                     filters.append(
-                        Annotation.tags.any(Tag.name.ilike(term))
+                        Annotation.tags.any(Tag.name.contains(term))
                     )
 
                 elif self._key == "collections":
                     filters.append(
-                        Annotation.collections.any(Collection.name.ilike(term))
+                        Annotation.collections.any(Collection.name.contains(term))
                     )
 
                 elif self._key == "notes":
@@ -293,10 +287,10 @@ class SearchAnnotations(object):
                 filters.append(
                     or_(
                         Annotation.passage.contains(term),
-                        Source.name.ilike(term),
-                        Author.name.ilike(term),
-                        Annotation.tags.any(Tag.name.ilike(term)),
-                        Annotation.collections.any(Collection.name.ilike(term)),
+                        Source.name.contains(term),
+                        Author.name.contains(term),
+                        Annotation.tags.any(Tag.name.contains(term)),
+                        Annotation.collections.any(Collection.name.contains(term)),
                         Annotation.notes.contains(term)
                     )
                 )

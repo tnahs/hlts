@@ -411,7 +411,7 @@ footer .footerInfo {
 
 		margin: 0;
 		padding: 0;
-		background-color: unset;
+		/* background-color: unset; */
 
 	}
 
@@ -439,7 +439,7 @@ footer .footerInfo {
 
 		grid-column: blockContent;
 
-		padding-top: 0;
+		padding-top: 25px;
 		padding-left: 40px;
 		padding-bottom: 25px;
 		padding-right: 40px;
@@ -520,7 +520,7 @@ footer .footerInfo {
 
 	display: inline-block;
 	padding: 12px 16px;
-	background-color: white;
+	background-color: hsl(0, 0%, 95%);
 
 	/* font block */
 	font-family: var(--sans-serif-condensed-font);
@@ -711,7 +711,15 @@ mark {
 /* ---------------------------- annotations ---------------------------- */
 /* --------------------------------------------------------------------- */
 
-.annotationContainer {
+.annotationContainerStatic {
+	padding-bottom: 50px;
+}
+
+.annotationContainerStatic:last-child{
+    padding-bottom: 0;
+}
+
+.annotationContainerInteractive {
 
 	transition: .3s;
 
@@ -720,22 +728,22 @@ mark {
 	box-shadow: 2px 2px 0px 0px rgba(0,0,0,0);
 }
 
-	.annotationContainerVisible {
+	.annotationContainerInteractiveVisible {
 
 		background-color: hsl(0, 0%, 95%);
 	 }
 
-	.annotationContainerVisible .pill {
+	.annotationContainerInteractiveVisible .pill {
 
 		background-color: white;
 	}
 
-	.annotationContainerVisible .annotation {
+	.annotationContainerInteractiveVisible .annotation {
 
 		border-bottom: solid 2px  hsl(0, 0%, 85%) !important;
 	}
 
-.annotationContainer .annotation {
+.annotationContainerInteractive .annotation {
 
 	padding: 15px;
 
@@ -744,7 +752,7 @@ mark {
 	transition: .3s;
 }
 
-.annotationContainer .annotationOptions {
+.annotationContainerInteractive .annotationOptions {
 
 	padding: 15px 20px;
 
@@ -757,7 +765,7 @@ mark {
 	grid-template-columns: repeat(3, max-content) auto;
 }
 
-.annotationContainer .annotationOptions .deleteAnnotation {
+.annotationContainerInteractive .annotationOptions .deleteAnnotation {
 	justify-self: end;
 }
 
@@ -908,9 +916,23 @@ mark {
 	border-left: 2px hsla(220, 100%, 80%, 1) solid;
 }
 
-.markdown ul, ol {padding-left: 30px; }
-.markdown ol { list-style: lower-roman outside; }
-.markdown ul { list-style: disc outside; }
+.markdown ul, ol {
+
+	padding-left: 15px;
+}
+.markdown ol {
+
+	list-style-type: decimal-leading-zero;
+	list-style-position: inside;
+	list-style-image: none;
+}
+
+.markdown ul {
+
+	list-style-type: square;
+	list-style-position: inside;
+	list-style-image: none;
+}
 
 .markdown hr {
 
@@ -918,15 +940,22 @@ mark {
 	margin: 20px 0;
 }
 
+li::before {
+
+	content: "";
+	width: 5px;
+	display: inline-block;
+  }
+
 .markdown code {
 
-	padding: 1px 3px;
+	padding: 2px 7px;
 
 	box-decoration-break: clone;
 	-webkit-box-decoration-break: clone;
 
-	background-color: hsl(0, 0%, 95%) !important;
-	border-radius: 1px;
+	background-color: hsl(0, 0%, 92%) !important;
+	border-radius: 2px;
 
 	/* font block */
 	font-family: var(--monospace-font);
@@ -934,7 +963,7 @@ mark {
 	font-size: 10pt;
 	font-weight: unset;
 	letter-spacing: unset;
-	line-height: inherit;
+	line-height: unset;
 	text-transform: unset;
 }
 

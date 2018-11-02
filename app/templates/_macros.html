@@ -13,7 +13,7 @@
 
 {% macro no_results(message) -%}
 
-    <div class="block blockBleeding">
+    <div class="block blockFloating">
 
         <div class="blockContent">
 
@@ -90,7 +90,7 @@
 
                 {% if loop.index != results.page %}
 
-                    <a class="paginationPageNumber dropShadowSmall" href='{{ page }}'>{{ loop.index }}</a>
+                    <a class="paginationPageNumber dropShadowSmall" href="{{ page }}">{{ loop.index }}</a>
 
                 {% else %}
 
@@ -109,7 +109,7 @@
 
 {% macro attribution_from_source_obj(source) -%}
 
-    {# Renders source from serialize() output. #}
+    {# Renders source from Source.serialize() output. #}
 
     {% if source.name %}
 
@@ -138,7 +138,7 @@
 
 {% macro attribution_from_author_obj(author) -%}
 
-    {# Renders source from serialize() output. #}
+    {# Renders source from Author.serialize() output. #}
 
     {% if author.name %}
 
@@ -182,9 +182,50 @@
 {%- endmacro %}
 
 
+{% macro render_multiple_interactive_annotations(results) -%}
+
+    {# Renders paginated interactive annotations. #}
+
+    {% for annotation in results.items %}
+
+        {{ render_interactive_annotation(annotation) }}
+
+    {% endfor %}
+
+{%- endmacro %}
+
+
+{% macro render_multiple_static_annotations(results) -%}
+
+    {# Renders paginated static annotations. #}
+
+    {% for annotation in results.items %}
+
+        {{ render_static_annotation(annotation) }}
+
+    {% endfor %}
+
+{%- endmacro %}
+
+
+{% macro render_static_annotation(annotation) -%}
+
+    {# Renders one static annotation. #}
+
+    <div id="{{ annotation.id }}" class="annotationContainerStatic">
+
+        {{ render_base_annotation(annotation) }}
+
+    </div>
+
+{%- endmacro %}
+
+
 {% macro render_interactive_annotation(annotation) -%}
 
-    <div id="{{ annotation.id }}" class="annotationContainer">
+    {# Renders one interactive annotation. #}
+
+    <div id="{{ annotation.id }}" class="annotationContainerInteractive">
 
         {{ render_base_annotation(annotation) }}
 
@@ -221,19 +262,6 @@
         </div>
 
     </div>
-
-{%- endmacro %}
-
-
-{% macro render_multiple_interactive_annotations(results) -%}
-
-    {# Renders paginated annotation. #}
-
-    {% for annotation in results.items %}
-
-        {{ render_interactive_annotation(annotation) }}
-
-    {% endfor %}
 
 {%- endmacro %}
 
@@ -281,56 +309,6 @@
                 {% endfor %}
 
             {% endif %}
-
-        </div>
-
-    </div>
-
-{%- endmacro %}
-
-
-{% macro render_multiple_base_annotations(results) -%}
-
-    {# Renders paginated annotation. #}
-
-    {% for annotation in results.items %}
-
-        {{ render_base_annotation(annotation) }}
-
-    {% endfor %}
-
-{%- endmacro %}
-
-
-{% macro tag_filter_ui(results) -%}
-
-    <div class="block blockBleeding">
-
-        <div class="blockLabel">tag filter</div>
-
-        <div class="blockContent">
-
-            {% if tfilter.enabled %}
-
-                {% set search = request.args.get('search') %}
-
-                <a class="pill tag active" href="{{ url_for(request.endpoint, in_request=in_request, page=page, search=search) }}">clear filters</a>
-
-            {% endif %}
-
-            {% for tag in tfilter.data %}
-
-                {% if tag.enabled %}
-
-                    <a class="pill tag {{ tag.status }}" href="{{ tag.url }}" name="{{ tag.name }}">{{ tag.name }}</a>
-
-                {% else %}
-
-                    <div class="pill tag {{ tag.status }}" name="{{ tag.name }}">{{ tag.name }}</div>
-
-                {% endif %}
-
-            {% endfor %}
 
         </div>
 
