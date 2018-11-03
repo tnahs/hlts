@@ -32,18 +32,18 @@ def colors():
     return jsonify(g.current_user.colors)
 
 
-@api.route("/user/pinned/tags", methods=["GET"])
-@api_key_required
-def pinned_tags():
-
-    return jsonify(g.current_user.pinned_tags)
-
-
 @api.route("/user/pinned/collections", methods=["GET"])
 @api_key_required
 def pinned_collections():
 
     return jsonify(g.current_user.pinned_collections)
+
+
+@api.route("/user/pinned/tags", methods=["GET"])
+@api_key_required
+def pinned_tags():
+
+    return jsonify(g.current_user.pinned_tags)
 
 
 @api.route("/annotations", methods=["GET"])
@@ -64,6 +64,20 @@ def annotations_by_id(in_request):
     query = Annotation.query_by_id(in_request)
 
     data = Annotation.query_to_single_dict(query)
+
+    return jsonify(data)
+
+
+@api.route("/annotations/collection/<string:in_request>", methods=["GET"])
+@api.route("/annotations/collection/<string:in_request>/page/<int:page>", methods=["GET"])
+@api_key_required
+def annotations_by_collection(in_request, page=1):
+
+    query = Annotation.query_by_collection_name(in_request)
+
+    per_page = g.current_user.results_per_page
+
+    data = Annotation.query_to_paginated_dict(query, "main.collection", in_request, page, per_page)
 
     return jsonify(data)
 
@@ -110,13 +124,13 @@ def annotations_by_author(in_request, page=1):
     return jsonify(data)
 
 
-@api.route("/tags", methods=["GET"])
-@api.route("/tags/<string:mode>", methods=["GET"])
+@api.route("/collections", methods=["GET"])
+@api.route("/collections/<string:mode>", methods=["GET"])
 @api_key_required
-def index_tags(mode=None):
+def index_collections(mode=None):
 
-    query = Tag.query.all()
-    results = Tag.query_to_multiple_dict(query)
+    query = Collection.query.all()
+    results = Collection.query_to_multiple_dict(query)
 
     if mode == "alphabetic":
 
@@ -129,13 +143,13 @@ def index_tags(mode=None):
     return jsonify(results)
 
 
-@api.route("/collections", methods=["GET"])
-@api.route("/collections/<string:mode>", methods=["GET"])
+@api.route("/tags", methods=["GET"])
+@api.route("/tags/<string:mode>", methods=["GET"])
 @api_key_required
-def index_collections(mode=None):
+def index_tags(mode=None):
 
-    query = Collection.query.all()
-    results = Collection.query_to_multiple_dict(query)
+    query = Tag.query.all()
+    results = Tag.query_to_multiple_dict(query)
 
     if mode == "alphabetic":
 
@@ -210,15 +224,16 @@ def async_import_annotations(mode=None):
 
     async_import = AsyncImport(context=app)
 
-    if mode == "refresh":
-
-        async_import.refresh(annotations)
-
-    elif mode == "add":
+    if mode == "add":
 
         async_import.add(annotations)
 
+    elif mode == "refresh":
+
+        async_import.refresh(annotations)
+
     else:
+
         return api_error_response(400, message="import type not selected...")
 
     response = jsonify({"response": "success"})

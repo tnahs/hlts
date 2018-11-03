@@ -3,8 +3,8 @@
     <a href="{{ url_for('main.tools') }}">tools</a>
     <a href="{{ url_for('user.settings') }}">user</a>
     <a href="{{ url_for('flat.page', which='manual/main') }}"">manual</a>
-    <a href="{{ url_for('flat.page', which='beta/main') }}">beta</a>
-    <a href="{{ url_for('flat.page', which='beta/report') }}">report bug</a>
+    <a href="{{ url_for('flat.page', which='beta/welcome') }}">beta welcome</a>
+    <a href="{{ url_for('flat.page', which='beta/submit') }}">sugs/bugs</a>
     <div class="footerInfo">Ut faucibus ligula sit amet turpis varius ultricies. Pellentesque sagittis ligula vel fermentum aliquam. Ut lorem massa, ornare eget nibh eu, eleifend tincidunt felis. Bugs, sugs, feedback, questions:
         <a class="accent" href="mailto:{{ config.MAIL_USERNAME }}">{{ config.MAIL_USERNAME }}</a>
     </div>

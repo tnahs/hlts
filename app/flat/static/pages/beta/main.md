@@ -1,5 +1,5 @@
-title: Welcome to the HLTS Beta!
-date: 2018-10-23
+title: HLTS Beta Notes
+date: 2018-11-03
 
 <a class="paddedAnchor" name="table-of-contents"></a>
 
@@ -10,14 +10,13 @@ date: 2018-10-23
     - [Beta Questions](#beta-questions)
     - [Current Non-Critial Bugs](#current-non-critial-bugs)
     - [Reporting Bugs](#reporting-bugs)
+    - [Submitting Feature Suggestions](#submitting-feature-suggestions)
 
 <br>
 
 <a class="paddedAnchor" name="beta-welcome"></a>
 
 ## Beta Welcome
-
-Ut consequat justo facilisis, scelerisque augue in, ullamcorper felis. Cras fringilla dapibus neque at laoreet. Nullam ex diam, tempor nec ligula quis, aliquam dapibus tortor. Proin in neque nibh.
 
 see: [Welcome to the HLTS Beta!](/beta/welcome)
 
@@ -29,9 +28,10 @@ Ut fermentum, leo ac laoreet ultrices, tortor elit sagittis ante, at sagittis mi
 
 <br>
 
-1. Should Collections/Tags/Sources/Authors auto-remove themselves when they are un-used? or should we have a function to remove the un-used ones?
-2. Is Markdown useful and if so, should it be toggled per annotation or for app as a whole?
-3. Should the "Recent" page be past **n** days taken from user settings or just a list of annotations arranged by recently created date?
+1. Are the Annotation fields (passage, source, author, notes, tags and collections) enough for entering and organizing Annotations?
+2. Should Collections/Tags/Sources/Authors auto-remove themselves when they are un-used? or should there be an option to remove the un-used ones?
+3. Is Markdown useful and if so, should it be toggled per annotation or for app as a whole?
+4. Should the "Recent" page be past **number of days** taken from user settings or just a list of annotations arranged by recently created date?
 
 <br>
 
@@ -53,10 +53,20 @@ Interdum et malesuada fames ac ante ipsum primis in faucibus. Aliquam in elit ac
 
 <br>
 
-## Reporting Bugs
 <a class="paddedAnchor" name="reporting-bugs"></a>
 
+## Reporting Bugs
 
 Duis ut nulla dolor. Donec non nisi ultricies, euismod sem quis, vulputate felis. Aenean porttitor risus quis sem tincidunt, a lobortis arcu condimentum.
 
-see: [Report a Bug](/beta/report)
+see: [Sugs and Bugs](/beta/submit)
+
+<br>
+
+<a class="paddedAnchor" name="submitting-feature-suggestions"></a>
+
+## Submitting Feature Suggestions
+
+Duis ut nulla dolor. Donec non nisi ultricies, euismod sem quis, vulputate felis. Aenean porttitor risus quis sem tincidunt, a lobortis arcu condimentum.
+
+see: [Sugs and Bugs](/beta/submit)

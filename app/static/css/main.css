@@ -192,7 +192,7 @@ nav {
 		height: 30px;
 	}
 
-	mainMenu img.addIcon {
+	mainMenu img.newIcon {
 
 		width: 40px;
 		height: 40px;
@@ -901,19 +901,16 @@ mark {
 	margin-top: 10px !important;
 }
 
-.markdown h1 { font-size: 18pt; }
-.markdown h2 { font-size: 17pt; }
+.markdown h1 { font-size: 22pt; }
+.markdown h2 { font-size: 20pt; }
 .markdown h3 { font-size: 16pt; }
-.markdown h4 { font-size: 15pt; }
-.markdown h5 { font-size: 14pt; }
-.markdown h6 {font-size: 13pt; }
+.markdown h4 { font-size: 12pt; }
+.markdown h5 { font-size: 11pt; }
+.markdown h6 {font-size: 10pt; }
 
 .markdown blockquote {
 
-	margin: 20px 20px;
-	padding: 0 10px;
-
-	border-left: 2px hsla(220, 100%, 80%, 1) solid;
+	margin: 30px;
 }
 
 .markdown ul, ol {
@@ -931,7 +928,14 @@ mark {
 
 	list-style-type: square;
 	list-style-position: inside;
-	list-style-image: none;
+	list-style-image: url("../images/bullet.png");
+}
+
+.markdown ol li::before {
+
+	content: "";
+	width: 5px;
+	display: inline-block;
 }
 
 .markdown hr {
@@ -940,16 +944,11 @@ mark {
 	margin: 20px 0;
 }
 
-li::before {
-
-	content: "";
-	width: 5px;
-	display: inline-block;
-  }
 
 .markdown code {
 
-	padding: 2px 7px;
+	padding: 2px 7px 3px 7px;
+	margin: 0 4px 0 2px;
 
 	box-decoration-break: clone;
 	-webkit-box-decoration-break: clone;
@@ -960,24 +959,32 @@ li::before {
 	/* font block */
 	font-family: var(--monospace-font);
 	color: hsl(0, 0%, 30%);
-	font-size: 10pt;
+	font-size: 9pt;
 	font-weight: unset;
 	letter-spacing: unset;
 	line-height: unset;
 	text-transform: unset;
+
+	-webkit-box-shadow: 1px 1px 0px 0px rgba(0,0,0,0.125) !important;
+	-moz-box-shadow: 1px 1px 0px 0px rgba(0,0,0,0.125)!important;
+	box-shadow: 1px 1px 0px 0px rgba(0,0,0,0.125) !important;
 }
 
 .markdown pre code {
 
+	background-color: hsl(0, 0%, 95%) !important;
+
 	display: block;
 
 	margin: 5px 0;
-	padding: 6px 12px;
-
-	border-left: 2px hsla(220, 100%, 80%, 1) solid;
+	padding: 24px 24px;
 
 	white-space: pre-wrap;
 	word-wrap: break-word;
+
+	-webkit-box-shadow: 2px 2px 0px 0px rgba(0,0,0,0.125) !important;
+	-moz-box-shadow: 2px 2px 0px 0px rgba(0,0,0,0.125) !important;
+	box-shadow: 2px 2px 0px 0px rgba(0,0,0,0.125) !important;
 }
 
 /* --------------------------------------------------------------------- */
@@ -1348,7 +1355,54 @@ loginFlash .flashClose {
 	margin-top: -4px;
 }
 
+#flatPage .flatTitle {
+
+	/* font block */
+	font-family: var(--sans-serif-condensed-font);
+	color: hsl(220, 100%, 70%);
+	font-size: 22pt;
+	font-weight: unset;
+	letter-spacing: unset;
+	line-height: 150%;
+	text-transform: uppercase;
+}
+
 #flatPage img {
 
 	max-width: 100%;
+}
+
+#flatPage a {
+
+	color: hsl(220, 100%, 70%);
+
+	transition: .2s;
+}
+
+#flatPage a:hover {
+
+	color: hsl(0, 0%, 80%);
+}
+
+#flatPage ul a,
+#flatPage ol a {
+
+	color: hsl(0, 0%, 60%);
+}
+
+#flatPage .exampleRedPill {
+
+	background-color: hsl(10, 100%, 80%);
+	color: white;
+}
+
+#flatPage .examplePurplePill {
+
+	background-color: hsl(250, 85%, 85%);
+	color: white;
+}
+#flatPage .exampleBluePill {
+
+	background-color: hsl(200, 75%, 80%);
+	color: white;
 }

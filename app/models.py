@@ -593,40 +593,40 @@ class User(db.Model, UserMixin):
         return self.fullname if self.fullname else self.username
 
     @property
-    def tags(self):
-        return [t.serialize() for t in Tag.query.all()]
-
-    @property
     def collections(self):
         return [c.serialize() for c in Collection.query.all()]
 
     @property
-    def colors(self):
-        return self.colored_tags + self.colored_collections
+    def tags(self):
+        return [t.serialize() for t in Tag.query.all()]
 
     @property
-    def colored_tags(self):
-        return [t.serialize() for t in Tag.query.all() if t.color]
+    def colors(self):
+        return self.colored_collections + self.colored_tags
 
     @property
     def colored_collections(self):
         return [c.serialize() for c in Collection.query.all() if c.color]
 
     @property
-    def pinned_tags(self):
-        return [t.serialize() for t in Tag.query.all() if t.pinned]
+    def colored_tags(self):
+        return [t.serialize() for t in Tag.query.all() if t.color]
 
     @property
     def pinned_collections(self):
         return [c.serialize() for c in Collection.query.all() if c.pinned]
 
     @property
-    def customized_tags(self):
-        return [t.serialize() for t in Tag.query.all() if t.color or t.pinned or t.description]
+    def pinned_tags(self):
+        return [t.serialize() for t in Tag.query.all() if t.pinned]
 
     @property
     def customized_collections(self):
         return [c.serialize() for c in Collection.query.all() if c.color or c.pinned or c.description]
+
+    @property
+    def customized_tags(self):
+        return [t.serialize() for t in Tag.query.all() if t.color or t.pinned or t.description]
 
     @property
     def theme(self):

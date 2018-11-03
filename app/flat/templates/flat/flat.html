@@ -3,13 +3,17 @@
 
 {% block main %}
 
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/tomorrow.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
     <div id="flatPage">
 
         <div class="block blockFloating">
 
             <div class="blockContent">
 
-                <div class="text upper">{{ page.title }}</div>
+                <div class="flatTitle">{{ page.title }}</div>
 
             </div>
 

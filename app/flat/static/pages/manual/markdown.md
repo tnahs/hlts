@@ -1,7 +1,8 @@
 title: How to use Markdown
-date: 2018-10-23
+date: 2018-11-03
 
 <a class="paddedAnchor" name="table-of-contents"></a>
+
 # Table of Contents
 
 - [Table of Contents](#table-of-contents)
@@ -13,17 +14,16 @@ date: 2018-10-23
 
 HLTS comes pre-packaged with the ability to render Markdown. The following examples are the basics of how to use Markdown in HLTS as there are a few things specific to HLTS. The intent is to add some rich text formatting without resorting to HTML. Markdown adds a few very simple methods to **bold**  *italicize* _underline_ and ==highlight== text while also providing more complex methods to format text if necessary. Most Annotations with not find themselves filled with complex Markdown but just these few simple modes of emphasis to highlight specifics within an Annotation.
 
+via. [Markdown Documentation](https://daringfireball.net/projects/markdown/syntax):
+
 >Markdown's syntax is intended for one purpose: to be used as a format for *writing* for the web.
 
 >Markdown is not a replacement for HTML, or even close to it. Its syntax is very small, corresponding only to a very small subset of HTML tags. The idea is *not* to create a syntax that makes it easier to insert HTML tags. In my opinion, HTML tags are already easy to insert. The idea for Markdown is to make it easy to read, write, and edit prose. HTML is a *publishing* format; Markdown is a *writing* format. Thus, Markdown's formatting syntax only addresses issues that can be conveyed in plain text.
 
 >For any markup that is not covered by Markdown's syntax, you simply use HTML itself. There's no need to preface it or delimit it to indicate that you're switching from Markdown to HTML; you just use the tags.
 
-via. [Markdown Cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
-
-<br>
-
 <a class="paddedAnchor" name="text-styling"></a>
+
 ## Text styling
 
 1. **bold** : `Ctrl/Cmd + b`
@@ -50,11 +50,12 @@ Written as:
 <br>
 
 <a class="paddedAnchor" name="lists"></a>
+
 ## Lists
 
 1. Ordered list item
 2. Another item
-    * Unordered sub-list.
+    * Unordered sub-list
         * Unordered list can use asterisks
         - Or minuses
         + Or pluses
@@ -67,7 +68,7 @@ Written as:
 
 1. Ordered list item
 2. Another item
-    * Unordered sub-list.
+    * Unordered sub-list
         * Unordered list can use asterisks
         - Or minuses
         + Or pluses
@@ -76,6 +77,7 @@ Written as:
 <br>
 
 <a class="paddedAnchor" name="misc-elements"></a>
+
 ## Misc Elements
 
 > ==A block indented paragraph!== Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eget nibh rutrum, semper quam sit amet, congue elit. Cras vulputate massa faucibus libero convallis vulputate. Proin quis pulvinar ipsum, eget luctus quam. Vestibulum pharetra fermentum turpis at luctus. Etiam sit amet enim non lorem interdum cursus. Vivamus vel pharetra mauris, vitae vehicula odio. Nullam auctor sapien et risus molestie, vel varius arcu mattis. Cras ac condimentum orci. ==Followed by a forced line break...==

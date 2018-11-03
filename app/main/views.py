@@ -335,9 +335,9 @@ Adding/editing annotations
 """
 
 
-@main.route("/add/", methods=["POST", "GET"])
+@main.route("/new/", methods=["POST", "GET"])
 @login_required
-def add():
+def new():
 
     form = AnnotationForm()
 
@@ -353,7 +353,7 @@ def add():
 
         return redirect(url_for("main.recent", mode="added"))
 
-    return render_template("main/add.html", form=form)
+    return render_template("main/new.html", form=form)
 
 
 @main.route("/edit/<string:in_request>", methods=["POST", "GET"])
