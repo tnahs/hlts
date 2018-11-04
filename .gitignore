@@ -1,5 +1,6 @@
 *.pyc
 .pytest_cache
+.vscode
 .DS_Store
 Desktop.ini
 ._*

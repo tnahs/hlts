@@ -24,7 +24,7 @@ see: [Welcome to the HLTS Beta!](/beta/welcome)
 
 ## Beta Questions
 
-Ut fermentum, leo ac laoreet ultrices, tortor elit sagittis ante, at sagittis mi purus et lectus. Suspendisse quis ultricies nulla.
+==SECTION WIP==
 
 <br>
 
@@ -39,7 +39,7 @@ Ut fermentum, leo ac laoreet ultrices, tortor elit sagittis ante, at sagittis mi
 
 ## Current Non-Critial Bugs
 
-Interdum et malesuada fames ac ante ipsum primis in faucibus. Aliquam in elit ac velit ullamcorper gravida a ac urna. Duis ut nulla dolor. Donec non nisi ultricies, euismod sem quis, vulputate felis. Aenean porttitor risus quis sem tincidunt, a lobortis arcu condimentum.
+==SECTION WIP==
 
 <br>
 
@@ -47,7 +47,7 @@ Interdum et malesuada fames ac ante ipsum primis in faucibus. Aliquam in elit ac
 5. Annotation counts on Index pages (Collections/Tags/Sources/Authors) include deleted items.
 6. Index does not list annotations that have no `source` or `author`.
 7. When using markdown and making a search, `this passage` does not match `this ==passage==`.
-9. Annotation editor texarea resets the scroll position of the page on input (keypress inside the textarea) when there's lots of text in editor.
+9. Annotation editor textarea resets the scroll position of the page on input (keypress inside the textarea) when there's lots of text in editor.
 10. Bulk Collection/Tag/Source/Author editor displays all items as "pinned" after single item is submitted. Hard refresh is required to show correct properties.
 11. Searching certain odd strings such as `P : word` does some funky stuff with text highlighting the matches.
 
@@ -57,7 +57,7 @@ Interdum et malesuada fames ac ante ipsum primis in faucibus. Aliquam in elit ac
 
 ## Reporting Bugs
 
-Duis ut nulla dolor. Donec non nisi ultricies, euismod sem quis, vulputate felis. Aenean porttitor risus quis sem tincidunt, a lobortis arcu condimentum.
+==SECTION WIP==
 
 see: [Sugs and Bugs](/beta/submit)
 
@@ -67,6 +67,6 @@ see: [Sugs and Bugs](/beta/submit)
 
 ## Submitting Feature Suggestions
 
-Duis ut nulla dolor. Donec non nisi ultricies, euismod sem quis, vulputate felis. Aenean porttitor risus quis sem tincidunt, a lobortis arcu condimentum.
+==SECTION WIP==
 
 see: [Sugs and Bugs](/beta/submit)

@@ -84,7 +84,7 @@ Written as:
 
 <br>
 
-==A regular paragraph...== Vivamus quam ligula, interdum ut pellentesque egestas, consectetur at arcu. Fusce placerat finibus ultricies. Proin quis semper metus. Quisque ut convallis nunc, non viverra ipsum. Sed rhoncus ex a enim elementum porttitor. ==...And then a horizontal rule.==
+==Next a regular paragraph...== Vivamus quam ligula, interdum ut pellentesque egestas, consectetur at arcu. Fusce placerat finibus ultricies. Proin quis semper metus. Quisque ut convallis nunc, non viverra ipsum. Sed rhoncus ex a enim elementum porttitor. ==...And then a horizontal rule.==
 
 ***
 
@@ -98,7 +98,7 @@ Written as:
 
 <br>
 
-==A regular paragraph...== Vivamus quam ligula, interdum ut pellentesque egestas, consectetur at arcu. Fusce placerat finibus ultricies. Proin quis semper metus. Quisque ut convallis nunc, non viverra ipsum. Sed rhoncus ex a enim elementum porttitor. ==...And then a horizontal rule.==
+==Next a regular paragraph...== Vivamus quam ligula, interdum ut pellentesque egestas, consectetur at arcu. Fusce placerat finibus ultricies. Proin quis semper metus. Quisque ut convallis nunc, non viverra ipsum. Sed rhoncus ex a enim elementum porttitor. ==...And then a horizontal rule.==
 
 ***
 ```

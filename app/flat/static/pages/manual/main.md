@@ -21,10 +21,12 @@ date: 2018-11-03
     - [API](#api)
         - [Your API Key](#your-api-key)
         - [Importing Annotations](#importing-annotations)
-        - [Requirements](#requirements)
+        - [API Requirements](#api-requirements)
         - [Annotation Schema](#annotation-schema)
         - [Example Connection Function](#example-connection-function)
 
+<br>
+***
 <br>
 
 <a class="paddedAnchor" name="annotations"></a>
@@ -51,7 +53,7 @@ All annotations can have a set of `tags` and `collections`. Both are nearly iden
 
 <span class="pill tag examplePurplePill">example-tag1</span> <span class="pill tag exampleRedPill">example-tag2</span> <span class="pill tag exampleBluePill">example-tag3</span>
 
-Ut fermentum, leo ac laoreet ultrices, tortor elit sagittis ante, at sagittis mi purus et lectus. Suspendisse quis ultricies nulla. Ut consequat justo facilisis, scelerisque augue in, ullamcorper felis. Cras fringilla dapibus neque at laoreet. Nullam ex diam, tempor nec ligula quis, aliquam dapibus tortor. Proin in neque nibh.
+==SECTION WIP==
 
 <br>
 
@@ -59,17 +61,21 @@ Ut fermentum, leo ac laoreet ultrices, tortor elit sagittis ante, at sagittis mi
 
 ### Bulk Editing Sources and Authors
 
-Ut fermentum, leo ac laoreet ultrices, tortor elit sagittis ante, at sagittis mi purus et lectus. Suspendisse quis ultricies nulla. Ut consequat justo facilisis, scelerisque augue in, ullamcorper felis. Cras fringilla dapibus neque at laoreet. Nullam ex diam, tempor nec ligula quis, aliquam dapibus tortor. Proin in neque nibh.
+==SECTION WIP==
 
+<br>
+***
 <br>
 
 <a class="paddedAnchor" name="searching-annotations"></a>
 
 ## Searching Annotations
 
-Ut fermentum, leo ac laoreet ultrices, tortor elit sagittis ante, at sagittis mi purus et lectus. Suspendisse quis ultricies nulla. Ut consequat justo facilisis, scelerisque augue in, ullamcorper felis. Cras fringilla dapibus neque at laoreet. Nullam ex diam, tempor nec ligula quis, aliquam dapibus tortor. Proin in neque nibh. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aliquam in elit ac velit ullamcorper gravida a ac urna. Duis ut nulla dolor. Donec non nisi ultricies, euismod sem quis, vulputate felis. Aenean porttitor risus quis sem tincidunt, a lobortis arcu condimentum. Pellentesque fringilla, justo ut tempus venenatis, ex est placerat dui, sed scelerisque tellus dui ut libero. Nam ac vestibulum arcu.
+==SECTION WIP==
 
-> **WARNING:** The query string parser is not very smart at the moment. Straying too far from the following recommended syntax will produce unexpected results.
+**WARNING:** The query string parser is not very smart at the moment. Straying too far from the following recommended syntax will produce unexpected results.
+
+<br>
 
 <a class="paddedAnchor" name="examples"></a>
 
@@ -104,6 +110,8 @@ Search for **art** and **creativity** only in passages.
 
 `tags: art and creativity`
 Search for **love** and **creativity** only in tags.
+
+<br>
 
 <a class="paddedAnchor" name="syntaxes"></a>
 
@@ -168,6 +176,8 @@ Search for **love** and **creativity** only in tags.
         + `-notes {query}`
 
 <br>
+***
+<br>
 
 <a class="paddedAnchor" name="using-markdown"></a>
 
@@ -176,6 +186,8 @@ Search for **love** and **creativity** only in tags.
 see: [Using Markdown in HLTS](/manual/markdown)
 
 <br>
+***
+<br>
 
 <a class="paddedAnchor" name="backing-up-your-data"></a>
 
@@ -183,6 +195,8 @@ see: [Using Markdown in HLTS](/manual/markdown)
 
 There are two options found on the [Tools](/tools) page for backing up your data `download` and `email`. Downloading will save it to your local disk whereas emailing will send the `.hlts` file to your currently set e-mail address. Both options generate an `.hlts` file containing all your data: annotations, tags, collections and their customized settings. In case of an emergency or a migration to another app, this file can be used to completely restore all your work.
 
+<br>
+***
 <br>
 
 <a class="paddedAnchor" name="restoring-your-data"></a>
@@ -195,13 +209,17 @@ The `.hlts` file will be validated to make sure the data is in the right format 
 
 > **NOTE:** Due to server and timeout limits, all Annotation imports are submitted as background jobs. Currently this poses a bit of a problem in that errors only show up in logs which are not very visible to the user. Future versions will have more interaction with background jobs.
 
-> **WARNING:** Restoring user data will **erase all your user settings and annotations** and replace them with what is found in the uploaded `.hlts` file. Please make sure to have a proper backup before proceeding.
+**WARNING:** Restoring user data will **erase all your user settings and annotations** and replace them with what is found in the uploaded `.hlts` file. Please make sure to have a proper backup before proceeding.
+
+<br>
+***
+<br>
 
 <a class="paddedAnchor" name="api"></a>
 
 ## API
 
-HLTS provides simple API methods to import Annotations from an external application. Currently the API only importing and simple querying. Editing and deleting Annotations is not yet supported.
+HLTS provides simple API methods to import Annotations from an external application. Currently only importing and simple querying are supported.
 
 <br>
 
@@ -234,20 +252,21 @@ The API provides two methods to import Annotations. An `add` method and a `refre
 
 <br>
 
-<a class="paddedAnchor" name="requirements"></a>
+<a class="paddedAnchor" name="api-requirements"></a>
 
-### Requirements
+### API Requirements
 
 + All requests should be made via the POST method.
-+ Annotations should be submitted at a list of dictionaries. (see: [Annotation Schema](#annotation-schema))
++ Annotations should be submitted at a list of dictionaries.
++ When sending Annotations to the API, each dictionary in the list MUST match the [Annotation Schema](#annotation-schema). If any item is missing from the dictionary the import will fail.
 
-> **NOTE:** When sending Annotations to the API, each dictionary in the list MUST match the [Annotation Schema](#annotation-schema). If any item is missing from the dictionary the import will fail.
+<br>
 
 <a class="paddedAnchor" name="annotation-schema"></a>
 
 ### Annotation Schema
 
-Annotation Schema
+Annotation JSON Schema
 
 ``` json
 {
@@ -267,7 +286,6 @@ Annotation Schema
     "deleted": bool
 }
 ```
-
 
 <br>
 
@@ -294,25 +312,25 @@ Annotation Schema
     + **type:** text
     + **max:** n/a
     + **default:** n/a
-    + **description:** Provided name will create a `Source object` and `Author object` and append `source:author` as Source.author.name
+    + **description:** Provided text will create a `Source` object and set `Source.name` as `source:name` and `Source.author.name` as `source:author`
 + `source:author`
     + **required:** false
     + **type:** text
     + **max:** n/a
     + **default:** n/a
-    + **description:** Provided name will create a `Source object` and `Author object` and append `source:name` as Source.name
+    + **description:** Provided text will create a `Source` object and set `Source.author.name` as `source:author` and `Source.name` as `source:name`
 + `tags`
     + **required:** false
     + **type:** list
     + **max:** n/a
     + **default:** n/a
-    + **description:** If the `tag` doesn't exist a new a new `Tag object` will be created otherwise an existing Tag() object will be linked to the Annotation.
+    + **description:** If a `tag` in the list doesn't exist, a new `Tag` object will be created. Otherwise an existing `Tag` object will be linked to the Annotation.
 + `collections`
     + **required:** false
     + **type:** list
     + **max:** n/a
     + **default:** n/a
-    + **description:** If the `collection` doesn't exist a new a new `Collection object` will be created otherwise an existing Collection() object will be linked to the Annotation.
+    + **description:** If a `collection` in the list doesn't exist, a new `Collection` object will be created. Otherwise an existing `Collection` object will be linked to the Annotation.
 + `created`
     + **required:** false
     + **type:** iso8601 date
@@ -336,7 +354,7 @@ Annotation Schema
     + **type:** boolean
     + **max:** n/a
     + **default:** true
-    + **description:** Determines whether or not an Annotation can be deleted during a API refresh method.
+    + **description:** Determines whether or not an Annotation can be deleted during the API `refresh` method.
 + `deleted`
     + **required:** false
     + **type:** boolean

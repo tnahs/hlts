@@ -889,7 +889,7 @@ mark {
 .markdown * + h4,
 .markdown * + h5,
 .markdown * + h6 {
-	padding-top: 20px;
+	/* padding-top: 20px; */
 }
 
 .markdown h1 + p,
@@ -1382,12 +1382,6 @@ loginFlash .flashClose {
 #flatPage a:hover {
 
 	color: hsl(0, 0%, 80%);
-}
-
-#flatPage ul a,
-#flatPage ol a {
-
-	color: hsl(0, 0%, 60%);
 }
 
 #flatPage .exampleRedPill {
