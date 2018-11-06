@@ -661,8 +661,8 @@ mark {
 	content: '';
 	display: block;
 	visibility: hidden;
-	height: var(--nav-menu-height);
-	margin-top: calc(var(--nav-menu-height) * -1);
+	height: 105px;
+	margin-top: -105px;
 }
 
 .text {
@@ -1395,8 +1395,16 @@ loginFlash .flashClose {
 	background-color: hsl(250, 85%, 85%);
 	color: white;
 }
-#flatPage .exampleBluePill {
 
-	background-color: hsl(200, 75%, 80%);
+#flatPage .exampleGreenPill {
+
+	background-color: hsl(130, 60%, 80%);
 	color: white;
 }
+
+#flatPage .exampleYellowPill {
+
+	background-color: hsl(50, 100%, 70%);
+	color: white;
+}
+

@@ -23,12 +23,19 @@
 
                         <button class="link button" type="submit">update</button>
 
+                        &nbsp;
+
                         {{ form.csrf_token }}
                         {{ form.id(value=collection.id) }}
-                        {{ form.pinned(checked=collection.pinned) }}
                         {{ form.name(value=collection.name) }}
                         {{ form.color(value=collection.color) }}
                         {{ form.description(value=collection.description) }}
+
+                        &nbsp;
+
+                        <span class="text upper faded">{{ form.pinned.label }}:</span> {{ form.pinned(checked=collection.pinned) }}
+
+                        &nbsp;
 
                         <div class="pill collection" name="{{ collection.name }}">{{ collection.name }} ⋅ {{ collection.frequency }}</div>
 

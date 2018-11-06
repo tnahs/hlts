@@ -16,7 +16,7 @@ def paginated_annotations(template, endpoint, results, in_request=None, mode=Non
 
     Returns the Flask "render_template" function with "annotations.html".
 
-    endpoint:str - Current route endpoint i.e. "main.search".
+    endpoint:str - Current route endpoint e.g. "main.search".
 
     results:Pagination object - This is always a flask_sqlalchemy Pagination
     object. Results are iterated with "results.items".
@@ -298,7 +298,7 @@ class SearchAnnotations(object):
         """
 
         Wraps the filtered query in an and_ or or_ filter based on weather or
-        not the used has used a bool keyword i.e. "and", "or".
+        not the used has used a bool keyword e.g. "and", "or".
 
         """
 

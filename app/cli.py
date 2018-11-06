@@ -5,7 +5,7 @@ import click
 from os import getenv, path
 
 from app import db
-from app.models import User, Annotation
+from app.models import User, Annotation, Collection
 
 from flask import json, current_app
 from sqlalchemy.exc import IntegrityError
@@ -94,9 +94,11 @@ def register_cli(app):
         welcome_json = path.join(current_app.root_path, "beta", "init.json")
 
         with open(welcome_json) as f:
-            welcome_annotations = json.load(f)
+            welcome = json.load(f)
 
-        for annotation in welcome_annotations:
+        Collection.restore(welcome["collections"])
+
+        for annotation in welcome["annotations"]:
 
             importing = Annotation()
             importing.deserialize(annotation)

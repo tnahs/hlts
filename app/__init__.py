@@ -74,10 +74,9 @@ def create_app(config=BaseConfig):
 
         logging_formatter = Formatter("%(asctime)s: %(levelname)s '%(message)s' in %(pathname)s:%(lineno)d")
 
-        # Enabled for stout logging i.e. Heroku
+        # Enabled for stout logging e.g. Heroku
         if app.config["LOGGING_TO_STOUT"]:
             local_handler = StreamHandler()
-
         else:
             local_handler = RotatingFileHandler("logs/hlts.log", maxBytes=10240, backupCount=10)
 

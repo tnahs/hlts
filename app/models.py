@@ -11,7 +11,7 @@ import app.defaults as AppDefaults
 
 from app import db, login, bcrypt
 
-from flask import url_for
+from flask import url_for, current_app
 from flask_login import UserMixin
 from sqlalchemy import func
 from sqlalchemy.orm.exc import NoResultFound
@@ -645,6 +645,7 @@ class User(db.Model, UserMixin):
             "user": self.serialize(),
             "annotations": annotations,
             "meta": {
+                "app_version": current_app.config["APP_VERSION"],
                 "export_date": datetime.utcnow().isoformat(),
                 "count": {
                     "annotations": Annotation.query.count(),
@@ -860,7 +861,8 @@ class Tag(db.Model, ToDictMixin, PingedMixin, RestoreMixin):
             .delete(synchronize_session=False)
 
 
-db.event.listen(db.session, "before_commit", Tag.remove_orphans)
+# Disabled
+# db.event.listen(db.session, "before_commit", Tag.remove_orphans)
 
 
 class Source(db.Model, ToDictMixin, PingedMixin):

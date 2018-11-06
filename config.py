@@ -18,6 +18,9 @@ def str_to_bool(string=None, default=None):
 
 
 class BaseConfig(object):
+
+    APP_VERSION = "v1.0beta"
+
     SECRET_KEY = getenv("SECRET_KEY")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = getenv("DATABASE_URL") or \
@@ -42,6 +45,7 @@ class BaseConfig(object):
 
 
 class TestingConfig(BaseConfig):
+
     TESTING = True
     BCRYPT_LOG_ROUNDS = 4
     WTF_CSRF_ENABLED = False

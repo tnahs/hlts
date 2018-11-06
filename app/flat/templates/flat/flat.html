@@ -29,15 +29,19 @@
 
         </div>
 
-        <div class="block blockBleeding">
+        {% if page.date %}
 
-            <div class="blockContent">
+            <div class="block blockBleeding">
 
-                <div class="text upper faded">last updated {{ page.date.strftime('%B %d, %Y') }}</div>
+                <div class="blockContent">
+
+                    <div class="text upper faded">last updated {{ page.date.strftime('%B %d, %Y') }}</div>
+
+                </div>
 
             </div>
 
-        </div>
+        {% endif %}
 
     </div>
 

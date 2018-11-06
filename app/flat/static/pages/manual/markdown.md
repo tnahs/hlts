@@ -1,5 +1,5 @@
 title: How to use Markdown
-date: 2018-11-03
+date: 2018-11-06
 
 <a class="paddedAnchor" name="table-of-contents"></a>
 
@@ -24,7 +24,7 @@ via. [Markdown Documentation](https://daringfireball.net/projects/markdown/synta
 
 <a class="paddedAnchor" name="text-styling"></a>
 
-## Text styling
+## [Text styling](#table-of-contents)
 
 1. **bold** : `Ctrl/Cmd + b`
 2. *italics* :  `Ctrl/Cmd + i`
@@ -37,7 +37,7 @@ via. [Markdown Documentation](https://daringfireball.net/projects/markdown/synta
 Written as:
 
 ``` markdown
-## Text styling
+## [Text styling](#table-of-contents)
 
 1. **bold** : `Ctrl/Cmd + b`
 2. *italics* :  `Ctrl/Cmd + i`
@@ -51,7 +51,7 @@ Written as:
 
 <a class="paddedAnchor" name="lists"></a>
 
-## Lists
+## [Lists](#table-of-contents)
 
 1. Ordered list item
 2. Another item
@@ -64,7 +64,7 @@ Written as:
 Written as:
 
 ``` markdown
-## Lists
+## [Lists](#table-of-contents)
 
 1. Ordered list item
 2. Another item
@@ -78,7 +78,7 @@ Written as:
 
 <a class="paddedAnchor" name="misc-elements"></a>
 
-## Misc Elements
+## [Misc Elements](#table-of-contents)
 
 > ==A block indented paragraph!== Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eget nibh rutrum, semper quam sit amet, congue elit. Cras vulputate massa faucibus libero convallis vulputate. Proin quis pulvinar ipsum, eget luctus quam. Vestibulum pharetra fermentum turpis at luctus. Etiam sit amet enim non lorem interdum cursus. Vivamus vel pharetra mauris, vitae vehicula odio. Nullam auctor sapien et risus molestie, vel varius arcu mattis. Cras ac condimentum orci. ==Followed by a forced line break...==
 
@@ -92,7 +92,7 @@ Written as:
 Written as:
 
 ``` markdown
-## Misc Elements
+## [Misc Elements](#table-of-contents)
 
 > ==A block indented paragraph!== Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eget nibh rutrum, semper quam sit amet, congue elit. Cras vulputate massa faucibus libero convallis vulputate. Proin quis pulvinar ipsum, eget luctus quam. Vestibulum pharetra fermentum turpis at luctus. Etiam sit amet enim non lorem interdum cursus. Vivamus vel pharetra mauris, vitae vehicula odio. Nullam auctor sapien et risus molestie, vel varius arcu mattis. Cras ac condimentum orci. ==Followed by a forced line break...==
 

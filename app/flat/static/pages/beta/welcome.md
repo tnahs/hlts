@@ -1,5 +1,4 @@
 title: Welcome to the HLTS Beta!
-date: 2018-11-03
 
 Thank you so much for participating in the HLTS Beta! Just a few quick things to note before starting and some things to keep in mind while using the app. Most of the challenge with HLTS up until this point has been setting up the core functionality of the app. Thus the hope for this beta is to help solve some functionality problems namely: *entering data* and *finding entered data*.
 
@@ -23,4 +22,4 @@ The HLTS Team
 
 <br>
 
-For a more details please visit the [HLTS Beta](/beta/main) page. And for more information on how to use HLTS please visit the [HLTS Manual](/manual/main)!
+For a more details please visit the [HLTS Beta Notes](/beta/main) page. And for more information on how to use HLTS please visit the [HLTS Manual](/manual/main)!

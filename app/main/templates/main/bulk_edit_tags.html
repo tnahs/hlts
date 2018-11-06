@@ -1,25 +1,5 @@
 {% from "_macros.html" import pagination with context %}
 
-
-{% macro render_bulk_form_field(field, value, classes=[], label=false) -%}
-
-    {% set classes = classes | join(" ") %}
-
-    <div class="formField">
-
-        {% if label %}
-
-            <div class="fieldLabel text upper faded">{{ field.label.text }}:</div>
-
-        {% endif %}
-
-        {{ field(value=value, class_=classes) }}
-
-    </div>
-
-{%- endmacro %}
-
-
 {% extends "_index.html" %}
 
 
@@ -31,41 +11,48 @@
 
     </div>
 
-    {% for tag in results %}
+    <div class="block blockBleeding">
 
-        <form method="POST" action="{{ url_for('main.bulk_edit_tags') }}">
+        <div class="blockContent">
 
-            <div class="block blockFloating">
+            <div id="bulkEditor">
 
-                <div class="blockLabel">
-                    <button class="link button" type="submit">update</button>
-                </div>
+                {% for tag in results %}
 
-                <div class="blockContent">
+                    <form method="POST" action="{{ url_for('main.bulk_edit_tags') }}">
 
-                    <div id="bulkEditor">
+                        <button class="link button" type="submit">update</button>
 
-                        {% if form.errors %}
-                            {% set error = ["fieldError"] if tag.id | string == form.errors["name"][0] else "" %}
-                        {% endif %}
-
-                        <div class="pill tag" name="{{ tag.name }}">{{ tag.name }} ⋅ {{ tag.frequency }}</div>
+                        &nbsp;
 
                         {{ form.csrf_token }}
                         {{ form.id(value=tag.id) }}
-                        {{ render_bulk_form_field(form.name, tag.name, error) }}
-                        {{ render_bulk_form_field(form.color, tag.color) }}
-                        {{ render_bulk_form_field(form.description, tag.description) }}
-                        {{ form.pinned.label }}: {{ form.pinned(checked=tag.pinned) }}
+                        {{ form.name(value=tag.name) }}
+                        {{ form.color(value=tag.color) }}
+                        {{ form.description(value=tag.description) }}
 
-                    </div>
+                        &nbsp;
 
-                </div>
+                        <span class="text upper faded">{{ form.pinned.label }}:</span> {{ form.pinned(checked=tag.pinned) }}
+
+                        &nbsp;
+
+                        <div class="pill tag" name="{{ tag.name }}">{{ tag.name }} ⋅ {{ tag.frequency }}</div>
+
+                        {% if form.errors %}
+                            {% if tag.id | string == form.errors["name"][0] %}
+                                ERROR!
+                            {% endif %}
+                        {% endif %}
+
+                    </form>
+
+                {% endfor %}
 
             </div>
 
-        </form>
+        </div>
 
-    {% endfor %}
+    </div>
 
 {% endblock %}
