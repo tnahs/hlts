@@ -1,21 +1,8 @@
 #!/bin/bash
 
-# Initiate and configure new hlts instance on Heroku.com
+# Setup and configure new HLTS app on Heroku.com
 
-# https://gabebw.com/blog/2016/06/06/how-to-host-sites-on-a-subdomain-with-heroku
-# https://www.lewagon.com/blog/buying-a-domain-on-namecheap-and-pointing-it-to-heroku
-# https://www.namecheap.com
-# https://www.namecheap.com/myaccount/login.aspx
-# username:shanterg password:12!
-# https://ap.www.namecheap.com/domains/domaincontrolpanel/hlts.app/domain
-# https://ap.www.namecheap.com/Domains/DomainControlPanel/hlts.app/advancedns
-# Add new record
-# CNAME
-# Configure your app's DNS provider to point to the DNS Target
-# like terrestrial-thicket-ful7o43z5htcrxzk87dzo4dl.herokudns.com.
-# For help, see https://devcenter.heroku.com/articles/custom-domains
-
-# Default variables for hlts
+# Default variables for HLTS
 FLASK_APP="run.py"
 SECRET_KEY=$(openssl rand -base64 32)
 LOGGING_TO_STOUT="True"
@@ -126,12 +113,13 @@ if [ $? -eq 0 ]; then
 
     echo
     echo "Next Steps:"
-    echo "1: Configure app's DNS provider to point to the DNS Target."
-    echo "2: Connect Heroku app to HLTS repo."
-    echo "3: Initialize database and HLTS Beta:"
-    echo "-------------------------------------"
-    echo "heroku run flask db upgrade --app $APP_NAME"
-    echo "heroku run flask init_beta --app $APP_NAME"
+    echo "1. Connect $APP_NAME to HLTS repo."
+    echo "2. Initialize Database and HLTS Beta:"
+    echo "   ----------------------------------"
+    echo "   heroku run flask db upgrade --app $APP_NAME"
+    echo "   heroku run flask init_beta --app $APP_NAME"
+    echo "   ----------------------------------"
+    echo "3. Configure $APP_NAME's DNS provider to point to the DNS Target."
     echo
 
 else
