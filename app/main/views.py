@@ -35,7 +35,7 @@ def land():
 
     else:
 
-        return redirect(url_for("user.welcome"))
+        return redirect(url_for("user.login"))
 
 
 """

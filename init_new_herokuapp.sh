@@ -44,7 +44,7 @@ heroku login
 if [ $? -eq 0 ]; then
 
     echo
-    echo "Enter new app config..."
+    echo "Configure new Heroku app..."
     echo
 
     # Gather new app settings
@@ -80,21 +80,21 @@ if [ $? -eq 0 ]; then
     heroku apps:create $APP_NAME
 
     echo
-    echo "Adding Postgress to app..."
+    echo "Adding Postgress..."
     echo
 
     # Add Postgres DB
     heroku addons:add heroku-postgresql:hobby-dev --app $APP_NAME
 
     echo
-    echo "Setting subdomain..."
+    echo "Setting subdomain to $APP_SUBDOMAIN_NAME.$APP_DOMAIN_URL..."
     echo
 
     # Add subdomain
-    heroku domains:add "$APP_SUBDOMAIN_NAME.$APP_DOMAIN_URL" --app $APP_NAME
+    heroku domains:add $APP_SUBDOMAIN_NAME.$APP_DOMAIN_URL --app $APP_NAME
 
     echo
-    echo "Setting config variables"
+    echo "Setting config variables..."
     echo
 
     # Setup config variables
@@ -127,7 +127,11 @@ if [ $? -eq 0 ]; then
     echo
     echo "Next Steps:"
     echo "1: Configure app's DNS provider to point to the DNS Target."
-    echo "2: Connect Heroku app to repo."
+    echo "2: Connect Heroku app to HLTS repo."
+    echo "3: Initialize database and HLTS Beta:"
+    echo "-------------------------------------"
+    echo "heroku run flask db upgrade --app $APP_NAME"
+    echo "heroku run flask init_beta --app $APP_NAME"
     echo
 
 else
