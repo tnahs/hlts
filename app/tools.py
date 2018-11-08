@@ -13,17 +13,17 @@ from flask import request, url_for, current_app
 
 
 def land_url():
-    return url_for('main.land')
+    return url_for("main.land")
 
 
 def home_url():
-    return url_for('main.dashboard')
+    return url_for("main.dashboard")
 
 
 def is_safe_url(target):
     ref_url = urlparse(request.host_url)
     test_url = urlparse(urljoin(request.host_url, target))
-    return test_url.scheme in ('http', 'https') and ref_url.netloc == test_url.netloc
+    return test_url.scheme in ("http", "https") and ref_url.netloc == test_url.netloc
 
 
 def async_threaded(func):
@@ -60,10 +60,10 @@ class AsyncImport(object):
 
             for annotation in annotations:
 
-                if not annotation['id']:
-                    annotation['id'] = None
+                if not annotation["id"]:
+                    annotation["id"] = None
 
-                existing = Annotation.query_by_id(annotation['id'])
+                existing = Annotation.query_by_id(annotation["id"])
 
                 if existing:
 
@@ -93,10 +93,10 @@ class AsyncImport(object):
 
             for annotation in annotations:
 
-                if not annotation['id']:
-                    annotation['id'] = None
+                if not annotation["id"]:
+                    annotation["id"] = None
 
-                existing = Annotation.query_by_id(annotation['id'])
+                existing = Annotation.query_by_id(annotation["id"])
 
                 if existing:
 
@@ -118,45 +118,68 @@ class AsyncImport(object):
 class SortIt(object):
 
     @staticmethod
-    def index_by_name(list_of_dictionaries, indexing_key='name'):
+    def build_alphabetized_index(results,
+                                 indexing_key="name",
+                                 ignored_articles=["the", "an", "a"]):
+        """ Builds an alphabetized index i.e.
+        {
+            'A':
+                [{'name': u'Apple'}],
+            'B':
+                [{'name': u'Banana'}],
+            'Z':
+                [{'name': u'Zucchini'}],
+            '0':
+                [{'name': u'007'}],
+            '9':
+                [{'name': u'9000'}]
+        }
+        results: List[dict] - Must be a list of dictionaries.
+        """
 
         index_characters = string.ascii_uppercase + string.digits
 
-        punctuation = string.punctuation
-        articles = ['the', 'an', 'a']
+        raw_punctuation = string.punctuation
+        re_punctuation = "[{0}]".format(re.escape(raw_punctuation))
+        re_compiled_punctuation = re.compile(re_punctuation)
 
-        punctuation = '[{0}]'.format(re.escape(punctuation))
-        articles = "|".join([r"\b^{0}\b".format(a) for a in articles])
-
-        re_punctuation = re.compile(punctuation)
-        re_articles = re.compile(articles, re.IGNORECASE)
+        raw_articles = ignored_articles
+        re_articles = "|".join([r"\b^{0}\b".format(a) for a in raw_articles])
+        re_compiled_articles = re.compile(re_articles, re.IGNORECASE)
 
         index = {}
+
         for character in index_characters:
 
             index[character] = []
 
-            for dictionary in list_of_dictionaries:
+            for item in results:
 
-                name = dictionary[indexing_key]
+                # Restrive sorting name from current dictionary
+                sorting_name = item[indexing_key]
 
-                name = re_punctuation.sub('', name)
-                name = re_articles.sub('', name)
-                name = name.upper()
+                # Normalize sorting_name
+                sorting_name = re_compiled_punctuation.sub("", sorting_name)
+                sorting_name = re_compiled_articles.sub("", sorting_name)
+                sorting_name = sorting_name.strip().upper()
 
-                if name.startswith(character):
+                if sorting_name.startswith(character):
 
-                    index[character].append(dictionary)
+                    index[character].append(item)
 
-        # Remove empty imdex items
+        # Remove empty index items
         filtered_index = dict((k, v) for k, v in index.iteritems() if v)
 
         return filtered_index
 
     @staticmethod
-    def by_name(list_of_dictionaries, sort_key='name'):
-        return sorted(list_of_dictionaries, key=lambda k: k[sort_key], reverse=False)
+    def by_name(results, sort_key="name"):
+        """ results: List[dict] - Must be a list of dictionaries.
+        """
+        return sorted(results, key=lambda k: k[sort_key], reverse=False)
 
     @staticmethod
-    def by_frequency(list_of_dictionaries, sort_key='frequency'):
-        return sorted(list_of_dictionaries, key=lambda k: k[sort_key], reverse=True)
+    def by_frequency(results, sort_key="frequency"):
+        """ results: List[dict] - Must be a list of dictionaries.
+        """
+        return sorted(results, key=lambda k: k[sort_key], reverse=True)

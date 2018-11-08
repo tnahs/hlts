@@ -1,0 +1,80 @@
+{
+    "collections": [
+        {
+            "name": "star",
+            "color": "hsl(50, 100%, 65%)",
+            "pinned": true,
+            "description": "Some of our favorites!"
+        },
+        {
+            "name": "orange",
+            "color": "hsl(30, 100%, 75%)",
+            "pinned": true,
+            "description": ""
+        },
+        {
+            "name": "red",
+            "color": "hsl(10, 100%, 80%)",
+            "pinned": true,
+            "description": ""
+        },
+        {
+            "name": "blue",
+            "color": "hsl(190, 75%, 75%)",
+            "pinned": true,
+            "description": ""
+        },
+        {
+            "name": "purple",
+            "color": "hsl(250, 85%, 85%)",
+            "pinned": true,
+            "description": ""
+        },
+        {
+            "name": "green",
+            "color": "hsl(130, 60%, 83%)",
+            "pinned": true,
+            "description": ""
+        }
+    ],
+    "annotations": [
+        {
+            "id": "",
+            "passage": "No work of art is really ever finished. They only stop at good places.",
+            "notes": "",
+            "source": {
+                "author": "Robert Henri",
+                "name": "The Art Spirit"
+            },
+            "tags": [
+                "art"
+            ],
+            "collections": [
+                "star"
+            ],
+            "created": "",
+            "modified": "",
+            "origin": "beta",
+            "protected": false,
+            "deleted": false
+        },
+        {
+            "id": "",
+            "passage": "01:17:36 I've never seen the movie and I never will.\r\n01:18:25 From this supposed failure, come a lot of creation.\r\n01:18:32 In the life, thing come, you say \"yes.\"\r\n01:18:37 Thing go away, you say \"yes.\"\r\n01:18:40 We don't do Dune? Yes!",
+            "notes": "Director: Frank Pavich",
+            "source": {
+                "name": "Jodorowsky's Dune (2013)",
+                "author": "Alejandro Jodorowsky"
+            },
+            "tags": [],
+            "collections": [
+                "star"
+            ],
+            "created": "",
+            "modified": "",
+            "origin": "beta",
+            "protected": false,
+            "deleted": false
+        }
+    ]
+}

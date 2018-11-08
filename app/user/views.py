@@ -11,7 +11,7 @@ from flask import request, redirect, url_for, render_template
 from flask_login import login_required, login_user, logout_user, current_user
 
 
-@user.route('/login/', methods=['GET', 'POST'])
+@user.route("/login/", methods=["GET", "POST"])
 def login():
 
     form = LoginForm()
@@ -25,7 +25,7 @@ def login():
 
         login_user(user, remember=remember)
 
-        next_url = request.args.get('next', None)
+        next_url = request.args.get("next", None)
 
         if next_url and is_safe_url(next_url):
 
@@ -35,19 +35,19 @@ def login():
 
             return redirect(home_url())
 
-    return render_template('user/login.html', form=form)
+    return render_template("user/login.html", form=form)
 
 
-@user.route('/logout')
+@user.route("/logout/")
 @login_required
 def logout():
 
     logout_user()
 
-    return redirect(url_for('user.login'))
+    return redirect(url_for("user.login"))
 
 
-@user.route('/settings/', methods=['POST', 'GET'])
+@user.route("/settings/", methods=["POST", "GET"])
 @login_required
 def settings():
 

@@ -35,9 +35,8 @@ def register_cli(app):
             except:
                 click.echo("Unexpected error: {0}".format(sys.exc_info()[0]))
 
-    def run_create_default_users():
+    def run_create_default_user():
 
-        # Create default user
         user = User(username=getenv("DEFAULT_APPUSER_USERNAME"),
                     email=getenv("DEFAULT_APPUSER_EMAIL"),
                     is_admin=False)
@@ -63,7 +62,8 @@ def register_cli(app):
             click.echo("Created Default User!")
             click.echo("<Username: {0.username}> <is admin: {0.is_admin}>".format(user))
 
-        # Create admin user
+    def run_create_admin():
+
         user = User(username=getenv("ADMIN_APPUSER_USERNAME"),
                     email=getenv("ADMIN_APPUSER_EMAIL"),
                     is_admin=True)
@@ -89,9 +89,9 @@ def register_cli(app):
             click.echo("Created Admin User!")
             click.echo("<Username: {0.username}> <is admin: {0.is_admin}>".format(user))
 
-    def run_create_beta_annotations():
+    def run_create_welcome_annotations():
 
-        welcome_json = path.join(current_app.root_path, "beta", "init.json")
+        welcome_json = path.join(current_app.root_path, "init", "welcome.json")
 
         with open(welcome_json) as f:
             welcome = json.load(f)
@@ -135,22 +135,28 @@ def register_cli(app):
 
     @app.cli.command(
         name="init_beta",
-        help="Create default users and welcome annotations.")
+        help="Create default user and welcome annotations.")
     def init_beta():
-        run_create_default_users()
-        run_create_beta_annotations()
+        run_create_default_user()
+        run_create_welcome_annotations()
 
     @app.cli.command(
-        name="create_default_users",
-        help="Create default users.")
-    def create_default_users():
-        run_create_default_users()
+        name="create_default_user",
+        help="Create default user.")
+    def create_default_user():
+        run_create_default_user()
 
     @app.cli.command(
-        name="create_beta_annotations",
+        name="create_admin",
+        help="Create app admin.")
+    def create_admin():
+        run_create_admin()
+
+    @app.cli.command(
+        name="create_welcome_annotations",
         help="Create welcome annotations.")
-    def create_beta_annotations():
-        run_create_beta_annotations()
+    def create_welcome_annotations():
+        run_create_welcome_annotations()
 
     @app.cli.command(
         name="create_user",
@@ -160,7 +166,7 @@ def register_cli(app):
         click.echo("Create user...")
 
         username = click.prompt("Username")
-        password = click.prompt("Password", hide_input=True, confirmation_prompt=True)
+        password = click.prompt("Password (6-32 characters)", hide_input=True, confirmation_prompt=True)
         email = click.prompt("Email")
         is_admin = click.prompt("Admin?", type=bool, default=False)
 
@@ -243,7 +249,7 @@ def register_cli(app):
                 user.username = new_username
 
             if click.confirm("Change Password?"):
-                new_password = click.prompt("New Password", hide_input=True, confirmation_prompt=True)
+                new_password = click.prompt("New Password (6-32 characters)", hide_input=True, confirmation_prompt=True)
                 user.set_password(new_password)
 
             if click.confirm("Change Email?"):
@@ -288,7 +294,7 @@ def register_cli(app):
 
         user = User.query.filter_by(username=username).first()
 
-        if user and click.confirm("User exists! Grant new API Key?", abort=True):
+        if user and click.confirm("User exists! Generate new API Key?", abort=True):
 
             user.new_api_key()
             click.echo("New API Key: {0}".format(user.api_key))
@@ -298,11 +304,11 @@ def register_cli(app):
             click.echo("User does not exist!")
 
     @app.cli.command(
-        name="reset_all_users",
-        help="Erase users & re-create users.")
-    def reset_all_users():
+        name="reset_user",
+        help="Erase and re-create user.")
+    def reset_user():
 
-        if click.confirm("WARNING! Reset users to default?", abort=True):
+        if click.confirm("WARNING! Reset user to default?", abort=True):
 
             # Remove all users
             User.query.delete()
@@ -318,7 +324,7 @@ def register_cli(app):
                 click.echo("Removed all users!")
 
             # Create users
-            run_create_default_users()
+            run_create_default_user()
 
     @app.cli.command(
         name="erase_all_annotations",

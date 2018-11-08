@@ -1196,7 +1196,6 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
 
     def serialize(self):
         """ Serialize annotation into a dictionary
-
         Dates: Exported as ISO 8601 Format
         """
         data = {
@@ -1220,17 +1219,21 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
 
     def deserialize(self, data):
         """ De-serialize annotation from a dictionary
-
         Dates: Supports importing only ISO 8601 Format
         """
-        created = dateparser(data["created"]) if data["created"] else None
-        modified = dateparser(data["modified"]) if data["modified"] else None
 
-        self.id = data["id"]
+        if data["id"]:
+            self.id = data["id"]
+
         self.passage = data["passage"]
         self.notes = data["notes"]
-        self.created = created
-        self.modified = modified
+
+        if data["created"]:
+            self.created = dateparser(data["created"])
+
+        if data["modified"]:
+            self.modified = dateparser(data["modified"])
+
         self.protected = data["protected"]
         self.deleted = data["deleted"]
         self.origin = data["origin"]

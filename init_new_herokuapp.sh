@@ -2,10 +2,26 @@
 
 # Initiate and configure new hlts instance on Heroku.com
 
+# https://gabebw.com/blog/2016/06/06/how-to-host-sites-on-a-subdomain-with-heroku
+# https://www.lewagon.com/blog/buying-a-domain-on-namecheap-and-pointing-it-to-heroku
+# https://www.namecheap.com
+# https://www.namecheap.com/myaccount/login.aspx
+# username:shanterg password:12!
+# https://ap.www.namecheap.com/domains/domaincontrolpanel/hlts.app/domain
+# https://ap.www.namecheap.com/Domains/DomainControlPanel/hlts.app/advancedns
+# Add new record
+# CNAME
+# Configure your app's DNS provider to point to the DNS Target
+# like terrestrial-thicket-ful7o43z5htcrxzk87dzo4dl.herokudns.com.
+# For help, see https://devcenter.heroku.com/articles/custom-domains
+
 # Default variables for hlts
 FLASK_APP="run.py"
 SECRET_KEY=$(openssl rand -base64 32)
 LOGGING_TO_STOUT="True"
+
+DEFAULT_APP_DOMAIN_URL="hlts.app"
+DEFAULT_APP_SUBDOMAIN_NAME="www"
 
 DEFAULT_LOGGING_MAIL_SERVER="smtp.googlemail.com"
 DEFAULT_LOGGING_MAIL_USERNAME="hltsapp.logs@gmail.com"
@@ -32,14 +48,16 @@ if [ $? -eq 0 ]; then
     echo
 
     # Gather new app settings
-    read -p "App Name: " APP_NAME
+    read -p    "App Name: " APP_NAME
+    read -e -p "App Domain Url: " -i $DEFAULT_APP_DOMAIN_URL APP_DOMAIN_URL
+    read -e -p "App Subdomaine: " -i $DEFAULT_APP_SUBDOMAIN_NAME APP_SUBDOMAIN_NAME
 
-    read -p "Default User Username: " DEFAULT_APPUSER_USERNAME
-    read -p "Default User E-mail: " DEFAULT_APPUSER_EMAIL
-    read -p "Default User Password: " DEFAULT_APPUSER_PASSWORD
-    read -p "Admin User Username: " ADMIN_APPUSER_USERNAME
-    read -p "Admin User E-mail: " ADMIN_APPUSER_EMAIL
-    read -p "Admin User Password: " -i ADMIN_APPUSER_PASSWORD
+    read -p    "Default User Username (4-32 characters): " DEFAULT_APPUSER_USERNAME
+    read -p    "Default User E-mail: " DEFAULT_APPUSER_EMAIL
+    read -p    "Default User Password (6-32 characters): " DEFAULT_APPUSER_PASSWORD
+    read -p    "Admin User Username (4-32 characters): " ADMIN_APPUSER_USERNAME
+    read -p    "Admin User E-mail: " ADMIN_APPUSER_EMAIL
+    read -p    "Admin User Password (6-32 characters): " ADMIN_APPUSER_PASSWORD
 
     read -e -p "Logging Mail Server: " -i $DEFAULT_LOGGING_MAIL_SERVER LOGGING_MAIL_SERVER
     read -e -p "Logging Mail Username: " -i $DEFAULT_LOGGING_MAIL_USERNAME LOGGING_MAIL_USERNAME
@@ -69,6 +87,13 @@ if [ $? -eq 0 ]; then
     heroku addons:add heroku-postgresql:hobby-dev --app $APP_NAME
 
     echo
+    echo "Setting subdomain..."
+    echo
+
+    # Add subdomain
+    heroku domains:add "$APP_SUBDOMAIN_NAME.$APP_DOMAIN_URL" --app $APP_NAME
+
+    echo
     echo "Setting config variables"
     echo
 
@@ -95,6 +120,16 @@ if [ $? -eq 0 ]; then
         ADMIN_APPUSER_EMAIL=$ADMIN_APPUSER_EMAIL \
         ADMIN_APPUSER_PASSWORD=$ADMIN_APPUSER_PASSWORD \
         --app $APP_NAME
+
+    # Echo subdomain info
+    heroku domains --app $APP_NAME
+
+    echo
+    echo "Next Steps:"
+    echo "1: Configure app's DNS provider to point to the DNS Target."
+    echo "2: Connect Heroku app to repo."
+    echo
+
 else
 
     echo

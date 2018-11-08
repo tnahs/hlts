@@ -35,7 +35,7 @@ def land():
 
     else:
 
-        return redirect(url_for("user.login"))
+        return redirect(url_for("user.welcome"))
 
 
 """
@@ -181,7 +181,7 @@ def index(mode=None):
 
         return redirect(url_for("main.index", mode="default"))
 
-    results = SortIt.index_by_name(results)
+    results = SortIt.build_alphabetized_index(results)
 
     return render_template("main/index.html", results=results)
 

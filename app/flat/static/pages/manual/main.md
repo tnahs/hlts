@@ -294,7 +294,7 @@ The API provides two methods to import Annotations. An `add` method and a `refre
 ### [API Requirements](#api-requirements)
 
 + All requests should be made via the POST method.
-+ Annotations should be submitted at a list of dictionaries following the [Annotation Schema](#annotation-schema).
++ Annotations should be submitted as a list of dictionaries following the [Annotation Schema](#annotation-schema).
 + When sending Annotations to the API, each dictionary in the list MUST match the [Annotation Schema](#annotation-schema). If any item is missing from the dictionary the import will fail.
 
 <br>
@@ -332,10 +332,10 @@ Annotation JSON Schema
 
 + `id`
     + **required:** false
-    + **input type:** string or `null`
+    + **input type:** string
     + **max:** 64
     + **default:** uuid4
-    + **description:** If `null` a [uuid4](https://docs.python.org/2/library/uuid.html#uuid.uuid4) is generated.
+    + **description:** Ig no `id` is provided a [uuid4](https://docs.python.org/2/library/uuid.html#uuid.uuid4) is generated.
 + `passage`
     + **required:** true
     + **input type:** text

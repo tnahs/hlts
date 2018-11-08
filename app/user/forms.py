@@ -18,7 +18,7 @@ class LoginForm(FlaskForm):
     password = PasswordField(
         validators=[InputRequired()],
         render_kw={'placeholder': 'password'})
-    remember = BooleanField('remember')
+    remember = BooleanField('remember me')
 
     def validate_username(self, field):
 

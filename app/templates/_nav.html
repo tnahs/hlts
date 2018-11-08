@@ -53,8 +53,11 @@
 	<userMenu>
 
 		<a class="userMenuButton" href="{{ url_for('user.settings') }}">
-			<span class="userMenuName">user: {{ current_user.display_name }}</span>
-			 <img class="userMenuIcon" src="{{ url_for('static', filename='images/icon_settings.png') }}"/>
+			<span class="userMenuInfo">
+				<span class="userName">{{ current_user.display_name }}</span>
+				<span class="userEmail">{{ current_user.email }}</span>
+			</span>
+			<img class="userMenuIcon" src="{{ url_for('static', filename='images/icon_settings.png') }}"/>
 		</a>
 
 	</userMenu>

@@ -7,42 +7,60 @@
 
 	<body>
 
-		<div id="userLogin">
+		<div id="userWelcome">
 
-			<div class="loginContainer dropShadowBig">
+			<div class="welcomeContainer dropShadowBig">
 
 				{% set next = request.args.get('next', None) %}
 
-				<form method="POST" action="{{ url_for('user.login', next=next) }}">
+                <div class="loginContainer">
 
-					<div class="loginForm">
+                    <form method="POST" action="{{ url_for('user.login', next=next) }}">
 
-						<loginFlash> {{ flash() }} </loginFlash>
+                        <img class="appLogo" src="{{ url_for('static', filename='images/app_logo.png') }}"/>
 
-						{{ form.csrf_token }}
+					    <div class="loginForm">
 
-						{{ render_form_field(form.username) }}
-						{{ render_form_field(form.password) }}
+                            <loginFlash> {{ flash() }} </loginFlash>
 
-						<br>
-						<br>
+                            {{ form.csrf_token }}
 
-						{{ form.remember }} <span class="text upper faded">{{ form.remember.label }}</span><br>
+                            {{ render_form_field(form.username) }}
+                            {{ render_form_field(form.password) }}
 
-					</div>
+                            <div class="loginRemember">
 
-					<div class="loginFormOptions">
+                                {{ form.remember }}<label>{{ form.remember.label.text }}</label>
 
-						<button class="link button faded" type="submit">login</button>
+                            </div>
 
-					</div>
+                        </div>
 
-				</form>
+                        <div class="loginFormOptions">
 
-				<div class="loginAccent"></div>
+                            <button class="link button" type="submit">login</button>
+
+                        </div>
+
+                    </form>
+
+                    <div class="loginTrouble">
+
+                        Trouble logging in?
+                        <a class="accent" href="mailto:{{ config.MAIL_USERNAME }}">Contact Us!</a>
+
+                    </div>
+
+                </div>
+
+                <div class="accentContainer">
+
+                    Interested in beta testing HLTS?
+                    <a class="white" href="mailto:{{ config.MAIL_USERNAME }}">Contact us!</a>
+
+                </div>
 
 			</div>
-
 
 		</div>
 

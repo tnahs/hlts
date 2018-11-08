@@ -9,7 +9,7 @@ The more challenging problem to solve is entering data. In other words, *How can
 As for the second problem, HLTS provides three methods to find entered data: Tags, Collections and a custom search syntax (see: [Searching Annotations](/manual/main/#searching-annotations)). Tags and Collections work roughly in the same way, however, serve two separate functions, namely: Tags as "topic markers" and Collections as "project folders". (see: [Tags and Collections](/manual/main/#tags-and-collections))
 
 
-A final word on the UI. Most of the focus on this beta has been to get the inner workings up and running. As a result the UI is rather under-developed. For the moment it's purpose is to be clear and utilitarian. We've got many ideas for a more slick and responsive UI, but that's for future releases.
+A final word on the UI. Most of the focus on this beta has been to get the inner workings up and running. As a result the UI is rather under-developed. (HLTS does not have a mobile-friendly UI but it will work on mobile, however, certain things might not display properly.) For the moment it's purpose is to be clear and utilitarian. We've got many ideas for a more slick and responsive UI, but that's for future releases.
 
 <br>
 

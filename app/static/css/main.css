@@ -32,7 +32,7 @@
 	--body-bg-color: hsl(0, 0%, 95%);
 	--body-text-color: #555555;
 	--body-text-color-light: #999999;
-	--body-text-color-faded: #AAAAAA;
+	--body-text-color-faded: hsl(0, 0%, 67%);
 	--a-color: hsl(0, 0%, 50%);
 	--a-hover-color: hsl(0, 0%, 80%);
 	--hr-color: hsl(0, 0%, 90%);
@@ -258,15 +258,6 @@ nav {
 
 	userMenu .userMenuButton {
 
-		/* font block */
-		font-family: var(--sans-serif-condensed-font);
-		color: hsla(220, 100%, 75%, 1.00);
-		font-size: 11pt;
-		font-weight: 500;
-		letter-spacing: 1px;
-		line-height: 100%;
-		text-transform: uppercase;
-
 		display: grid;
 		grid-template-columns: repeat(2, max-content);
 		align-items: center;
@@ -277,15 +268,46 @@ nav {
 		color: white;
 	}
 
-	userMenu .userMenuButton .userMenuName {
+	userMenu .userMenuButton .userMenuInfo {
 
-		/*  */
+		display: grid;
+		grid-template-rows: repeat(2, max-content);
+		align-items: center;
+
+		text-align: right;
 	}
+
+	userMenu .userMenuButton .userMenuInfo .userName {
+
+		/* font block */
+		font-family: var(--sans-serif-condensed-font);
+		color: hsl(220, 100%, 75%);
+		font-size: 13pt;
+		font-weight: 400;
+		letter-spacing: 1px;
+		line-height: 100%;
+		text-transform: uppercase;
+
+	}
+
+	userMenu .userMenuButton .userMenuInfo .userEmail {
+
+		/* font block */
+		font-family: var(--sans-serif-condensed-font);
+		color: hsl(220, 100%, 75%);
+		font-size: 10pt;
+		font-weight: 500;
+		letter-spacing: 1px;
+		line-height: 100%;
+		text-transform: none;
+
+	}
+
 
 	userMenu .userMenuButton img.userMenuIcon {
 
-		width: 50px;
-		height: 50px;
+		width: 60px;
+		height: 60px;
 	}
 
 	mainFlash {
@@ -1031,7 +1053,7 @@ textarea {
 
 input[type=password]{
 
-	letter-spacing: 2px;
+	/* letter-spacing: 2px; */
 }
 
 .formField input,
@@ -1203,64 +1225,151 @@ button {
 /* ----------------------------- login.html ---------------------------- */
 /* --------------------------------------------------------------------- */
 
-#userLogin {
+
+#userWelcome {
+
 	display: grid;
 	grid-template-columns: 1fr;
-	grid-template-rows: 75vh;
+	grid-template-rows: 100vh;
 	align-items: center;
 	justify-items: center;
 }
 
-#userLogin .loginContainer {
+#userWelcome .welcomeContainer {
 
-	background-color: white;
+	margin: 25px;
+
+	background-color: hsl(220, 100%, 90%);
 
 	display: grid;
-	grid-template-columns: 400px 125px;
+	grid-template-areas: "login" "info";
+	grid-template-columns: minmax(100px, 400px) minmax(100px, 400px);
+
 }
 
-#userLogin .loginContainer .loginForm  {
+@media only screen and (max-width: 512px) {
 
-	padding: 100px 50px 50px 50px;
+	/* Mobile */
+
+	#userWelcome .welcomeContainer {
+
+		grid-template-areas: "login"
+		                     "info";
+		grid-template-columns: minmax(100px, 400px);
+	}
 }
 
-#userLogin .loginContainer .loginForm input[type=text],
-#userLogin .loginContainer .loginForm input[type=password] {
+#userWelcome .welcomeContainer .loginContainer  {
 
-	margin: 2px 0;
-	padding: 6px 10px;
+	grid-area: "login";
+	align-self: end;
 
-	width: 100%;
-
-	line-height: 150%;
-	background-color: hsl(0, 0%, 95%);
+	background-color: white;
+	padding: 50px 25px 25px 25px;
 }
 
-#userLogin .loginContainer .loginFormOptions {
+	#userWelcome .welcomeContainer img.appLogo {
 
-	padding: 0 25px 25px 0;
-	text-align: right;
+		display: block;
+
+		width: 120px;
+		height: 45px;
+
+		margin: auto;
+	}
+
+	#userWelcome .welcomeContainer .loginForm {
+
+		margin: 50px 0 0 0;
+	}
+
+	#userWelcome .welcomeContainer .loginForm .loginRemember {
+
+		padding: 7px;
+
+		/* font block */
+		font-family: var(--sans-serif-condensed-font);
+		color: hsl(0, 0%, 80%);
+		font-size: 10pt;
+		font-weight: 400;
+		letter-spacing: 1px;
+		line-height: 100%;
+		text-transform: uppercase;
+
+	}
+
+		.loginRemember label {
+
+			padding-left: 5px;
+
+			vertical-align: bottom;
+			position: relative;
+			top: 1px;
+		}
+
+	#userWelcome .welcomeContainer .loginFormOptions {
+
+		padding: 7px;
+
+		text-align: right;
+	}
+
+		.loginFormOptions button {
+
+			/* font block */
+			font-family: var(--sans-serif-condensed-font);
+			color: hsl(0, 0%, 70%);
+			font-size: 11pt;
+			font-weight: 400;
+			letter-spacing: 1px;
+			line-height: 100%;
+			text-transform: uppercase;
+		}
+
+	#userWelcome .welcomeContainer .loginTrouble  {
+
+		margin: 50px 0 0 0;
+		text-align: center;
+
+		/* font block */
+		font-family: var(--sans-serif-condensed-font);
+		color: hsl(0, 0%, 70%);
+		font-size: 10pt;
+		font-weight: 400;
+		letter-spacing: 1px;
+		line-height: 100%;
+		text-transform: none;
+	}
+
+#userWelcome .welcomeContainer .accentContainer  {
+
+	grid-area: "info";
+	align-self: end;
+
+	padding: 25px;
+
+	text-align: center;
+
+	/* font block */
+	font-family: var(--sans-serif-condensed-font);
+	color: hsl(220, 100%, 75%);
+	font-size: 10pt;
+	font-weight: 400;
+	letter-spacing: 1px;
+	line-height: 100%;
+	text-transform: none;
 }
-
-#userLogin .loginContainer .loginAccent {
-
-	background-color: hsla(220, 100%, 90%, 0.95);
-}
-
 
 loginFlash {
 
-	width: 100%;
-	display: inline-block;
-
-	cursor: pointer;
-
+	display: block;
 	margin: 2px 0;
+	cursor: pointer;
 }
 
 loginFlash .flashContainer {
 
-	height: var(--flash-container-height);
+	height: 30px;
 
 	display: grid;
 	grid-template-columns: 1fr max-content;
@@ -1269,14 +1378,14 @@ loginFlash .flashContainer {
 
 loginFlash .flashContainer.warning {
 
-	background-color: hsl(0, 100%, 75%) !important;
+	/* background-color: hsl(0, 100%, 90%) !important; */
 }
 
 loginFlash .flashMessage {
 
 	/* font block */
 	font-family: var(--sans-serif-condensed-font);
-	color: white;
+	color: hsl(0, 100%, 80%) !important;;
 	font-size: 11pt;
 	font-weight: 400;
 	letter-spacing: 1px;
@@ -1285,14 +1394,6 @@ loginFlash .flashMessage {
 
 	text-align: center;
 }
-
-loginFlash .flashClose {
-
-	color: white;
-
-	padding-right: 25px;
-}
-
 
 /* ---------------- */
 
