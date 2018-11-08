@@ -433,15 +433,12 @@ footer .footerInfo {
 
 		margin: 0;
 		padding: 0;
-		/* background-color: unset; */
-
 	}
 
 	.block.blockFloating {
 
 		margin: 25px;
 		padding: 0;
-
 	}
 
 	.block.blockBleeding {
@@ -517,6 +514,29 @@ footer .footerInfo {
 		text-transform: uppercase;
 
 		text-align: right;
+	}
+
+	@media only screen and (max-width: 512px) {
+
+		/* Mobile */
+
+		.block > .blockLabel {
+
+			grid-column: blockContent;
+
+			padding-top: 25px;
+			padding-left: 0;
+			padding-right: 0;
+			padding-bottom: 0;
+
+			text-align: center;
+		}
+
+		.block > .blockContent {
+
+			text-align: center;
+		}
+
 	}
 
 /* pagination ------------------------------------------------------------- */
