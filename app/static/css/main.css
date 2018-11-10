@@ -337,7 +337,6 @@ nav {
 		/* Mobile */
 
 		mainMenu #navIndex,
-		searchMenu img.searchIcon,
 		userMenu {
 
 			display: none;
@@ -347,11 +346,6 @@ nav {
 
 			grid-template-columns: repeat(2, max-content);
 			grid-column-gap: 8px;
-		}
-
-		searchMenu {
-
-			grid-template-columns: auto;
 		}
 
 	}
