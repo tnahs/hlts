@@ -8,7 +8,7 @@
 {% endmacro %}
 
 
-{% macro icon(name) -%}
+{% macro icon_img(name) -%}
 
 	{% set classname = name ~ "Icon" %}
 
@@ -27,12 +27,12 @@
 
 	<mainMenu>
 
-		<a class="{{ current('main.dashboard') }}" href="{{ url_for('main.dashboard') }}">{{ icon("dashboard") }}</a>
-		<a class="{{ current('main.index') }}" href="{{ url_for('main.index', mode='default')}}">index</a>
-		<a class="{{ current('main.recent') }}" href="{{ url_for('main.recent', mode='default') }}">recent</a>
-		<a class="{{ current('main.new') }}" href="{{ url_for('main.new') }}">{{ icon("new") }}</a>
-		<a class="{{ current('main.trash') }}" href="{{ url_for('main.trash') }}">{{ icon("trash") }}</a>
-		<a class="{{ current('main.tools') }}" href="{{ url_for('main.tools') }}">{{ icon("tools") }}</a>
+		<a id="navDashboard" class="{{ current('main.dashboard') }}" href="{{ url_for('main.dashboard') }}">{{ icon_img("dashboard") }}</a>
+		<a id="navIndex" class="{{ current('main.index') }}" href="{{ url_for('main.index', mode='default')}}">index</a>
+		<a id="navRecent" class="{{ current('main.recent') }}" href="{{ url_for('main.recent', mode='default') }}">recent</a>
+		<a id="navNew" class="{{ current('main.new') }}" href="{{ url_for('main.new') }}">{{ icon_img("new") }}</a>
+		<a id="navTrash" class="{{ current('main.trash') }}" href="{{ url_for('main.trash') }}">{{ icon_img("trash") }}</a>
+		<a id="navTools" class="{{ current('main.tools') }}" href="{{ url_for('main.tools') }}">{{ icon_img("tools") }}</a>
 
 	</mainMenu>
 
@@ -40,7 +40,7 @@
 
 		{% set search = request.args.get('search') if request.endpoint == "main.search"  else "" %}
 
-		{{ icon("search") }}
+		{{ icon_img("search") }}
 
 		<form action="{{ url_for('main.search') }}" method="GET">
 
@@ -53,15 +53,20 @@
 	<userMenu>
 
 		<a class="userMenuButton" href="{{ url_for('user.settings') }}">
-			<span class="userMenuInfo">
+
+			<div class="userMenuInfo">
+
 				<span class="userName">{{ current_user.display_name }}</span>
 				<span class="userEmail">{{ current_user.email }}</span>
-			</span>
+
+			</div>
+
 			<img class="userMenuIcon" src="{{ url_for('static', filename='images/icon_settings.png') }}"/>
+
 		</a>
 
 	</userMenu>
 
-	<mainFlash> {{ flash() }} </mainFlash>
+	<mainFlash>{{ flash() }}</mainFlash>
 
 </nav>

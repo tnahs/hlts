@@ -252,7 +252,7 @@ nav {
 		display: grid;
 		align-items: center;
 
-		padding: 0 30px 0 30px;
+		padding: 0 20px 0 20px;
 		background-color: hsla(220, 100%, 90%, 0.95);
 	}
 
@@ -303,11 +303,57 @@ nav {
 
 	}
 
-
 	userMenu .userMenuButton img.userMenuIcon {
 
 		width: 60px;
 		height: 60px;
+	}
+
+	@media only screen and (max-width: 1024px) {
+
+		/* Mobile */
+
+	}
+
+	@media only screen and (max-width: 768px) {
+
+		/* Mobile */
+
+		mainMenu #navRecent,
+		mainMenu #navTrash,
+		mainMenu #navTools {
+
+			display: none;
+		}
+
+		mainMenu {
+
+			grid-template-columns: repeat(3, max-content);
+		}
+	}
+
+	@media only screen and (max-width: 512px) {
+
+		/* Mobile */
+
+		mainMenu #navIndex,
+		searchMenu img.searchIcon,
+		userMenu {
+
+			display: none;
+		}
+
+		mainMenu {
+
+			grid-template-columns: repeat(2, max-content);
+			grid-column-gap: 8px;
+		}
+
+		searchMenu {
+
+			grid-template-columns: auto;
+		}
+
 	}
 
 	mainFlash {
@@ -534,7 +580,7 @@ footer .footerInfo {
 
 		.block > .blockContent {
 
-			text-align: center;
+			/* text-align: center; */
 		}
 
 	}
@@ -1205,7 +1251,7 @@ button {
 
 .pill.collection {
 
-	margin: 2px;
+	margin: 2px 0;
 	padding: 6px 12px;
 
 	border-radius: 999px;
