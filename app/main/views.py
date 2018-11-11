@@ -335,9 +335,9 @@ Adding/editing annotations
 """
 
 
-@main.route("/new/", methods=["POST", "GET"])
+@main.route("/new/annotation", methods=["POST", "GET"])
 @login_required
-def new():
+def new_annotation():
 
     form = AnnotationForm()
 
