@@ -147,7 +147,7 @@ nav {
 	position: fixed;
 	z-index: 999;
 
-	transition: .3s;
+	transition: box-shadow .3s;
 
 	display: grid;
 	grid-template-columns: max-content auto max-content;
@@ -164,8 +164,7 @@ nav {
 		background-color: hsla(0, 0%, 100%, .95);
 
 		display: grid;
-		grid-template-columns: repeat(6, max-content);
-		grid-column-gap: 15px;
+		grid-template-columns: repeat(5, max-content);
 		align-items: center;
 	}
 
@@ -186,25 +185,118 @@ nav {
 		color: hsla(220, 100%, 75%, 1.00);
 	}
 
-	mainMenu img.dashboardIcon {
+	mainMenu #navDashboard {
+
+		padding-right: 15px;
+	}
+
+	mainMenu #navDashboard img#iconDashboard {
 
 		width: 80px;
 		height: 30px;
 	}
 
-	mainMenu img.newIcon {
+	mainMenu #navIndex {
+
+		padding-right: 15px;
+	}
+
+	mainMenu #navRecent {
+
+		padding-right: 5px;
+	}
+
+	mainMenu #navCreate {
+
+		padding: 0;
+		margin: 0;
+	}
+
+	mainMenu #navCreate img#iconCreateMenu {
 
 		width: 40px;
 		height: 40px;
+
+		cursor: pointer;
 	}
 
-	mainMenu img.toolsIcon {
+		mainMenu #navCreate #navCreateChoices {
 
-		width: 40px;
-		height: 40px;
-	}
+			display: none;
+			position: fixed;
+			top: 77px;
+		}
 
-	mainMenu img.trashIcon {
+		mainMenu #navCreate #navCreateChoices:before {
+
+			content: "";
+			position: absolute;
+			top: -20px;
+			left: 11px;
+			width: 0;
+			height: 0;
+			border-top: 10px solid transparent;
+			border-left: 10px solid transparent;
+			border-right: 10px solid transparent;
+			border-bottom: 10px solid hsla(220, 100%, 90%, 0.95);
+		}
+
+		mainMenu #navCreate #navCreateChoices a {
+
+			/* font block */
+			font-family: var(--sans-serif-condensed-font);
+			color: hsla(220, 100%, 75%, 1.00);
+			font-size: 9.5pt;
+			font-weight: 400;
+			letter-spacing: 1px;
+			line-height: 100%;
+			text-transform: uppercase;
+
+			display: block;
+			padding: 15px 20px;
+			background-color: hsla(220, 100%, 95%, 0.95);
+		}
+
+		mainMenu #navCreate #navCreateChoices a:hover {
+
+			background-color:  hsla(220, 100%, 90%, 0.95);
+			color: white;
+		}
+
+		mainMenu #navCreate #navCreateChoices a.disabled,
+		mainMenu #navCreate #navCreateChoices a.disabled:hover {
+
+			cursor: default;
+			color: hsla(220, 100%, 75%, .50);
+		}
+
+		mainMenu #navCreate #navCreateChoices div {
+
+			/* font block */
+			font-family: var(--sans-serif-condensed-font);
+			color: hsla(220, 100%, 75%, 1.00);
+			font-size: 9.5pt;
+			font-weight: 400;
+			letter-spacing: 1px;
+			line-height: 100%;
+			text-transform: uppercase;
+
+			text-align: right;
+
+			display: block;
+			padding: 10px 20px;
+			background-color: hsla(220, 100%, 90%, 0.95);
+		}
+
+		mainMenu #navCreateChoices hr {
+
+			background-color: hsla(220, 100%, 92%, 0.95);
+
+			height: 2px;
+		}
+
+	mainMenu #navTrash img#iconTrash {
+
 		width: 40px;
 		height: 40px;
 	}
@@ -219,10 +311,10 @@ nav {
 
 		height: 100%;
 		padding-left: 15px;
-		background-color: hsla(220, 100%, 90%, 0.95);
+		background-color: hsla(220, 100%, 95%, 0.95);
 	}
 
-	searchMenu img.searchIcon {
+	searchMenu img#iconSearch {
 
 		width: 40px;
 		height: 40px;
@@ -253,60 +345,85 @@ nav {
 		align-items: center;
 
 		padding: 0 20px 0 20px;
-		background-color: hsla(220, 100%, 90%, 0.95);
+		background-color: hsla(0, 0%, 100%, .95);
+		/* background-color: hsla(220, 100%, 90%, 0.95); */
 	}
 
-	userMenu .userMenuButton {
+	userMenu img#iconUserMenu {
 
-		display: grid;
-		grid-template-columns: repeat(2, max-content);
-		align-items: center;
+		width: 45px;
+		height: 45px;
 	}
 
-	userMenu .userMenuButton:hover {
+	userMenu #userMenuChoices {
 
-		color: white;
+		display: none;
+		position: fixed;
+		right: 20px;
+		top: 77px;
 	}
 
-	userMenu .userMenuButton .userMenuInfo {
+	userMenu #userMenuChoices:before {
 
-		display: grid;
-		grid-template-rows: repeat(2, max-content);
-		align-items: center;
-
-		text-align: right;
+		content: "";
+		position: absolute;
+		top: -20px;
+		right: 13px;
+		width: 0;
+		height: 0;
+		border-top: 10px solid transparent;
+		border-left: 10px solid transparent;
+		border-right: 10px solid transparent;
+		border-bottom: 10px solid hsla(220, 96%, 90%, 0.95);
 	}
 
-	userMenu .userMenuButton .userMenuInfo .userName {
+	userMenu #userMenuChoices a {
 
 		/* font block */
 		font-family: var(--sans-serif-condensed-font);
-		color: hsl(220, 100%, 75%);
-		font-size: 13pt;
+		color: hsla(220, 100%, 75%, 1.00);
+		font-size: 9.5pt;
 		font-weight: 400;
 		letter-spacing: 1px;
 		line-height: 100%;
 		text-transform: uppercase;
 
+		text-align: right;
+
+		display: block;
+		padding: 15px 20px;
+		background-color: hsla(220, 100%, 95%, 0.95);
 	}
 
-	userMenu .userMenuButton .userMenuInfo .userEmail {
+	userMenu #userMenuChoices a:hover {
+
+		background-color:  hsla(220, 100%, 90%, 0.95);
+		color: white;
+	}
+
+	userMenu #userMenuChoices div {
 
 		/* font block */
 		font-family: var(--sans-serif-condensed-font);
-		color: hsl(220, 100%, 75%);
-		font-size: 10pt;
-		font-weight: 500;
+		color: hsla(220, 100%, 75%, 1.00);
+		font-size: 9.5pt;
+		font-weight: 400;
 		letter-spacing: 1px;
 		line-height: 100%;
-		text-transform: none;
+		text-transform: uppercase;
 
+		text-align: right;
+
+		display: block;
+		padding: 10px 20px;
+		background-color: hsla(220, 100%, 90%, 0.95);
 	}
 
-	userMenu .userMenuButton img.userMenuIcon {
+	userMenu #userMenuChoices hr {
 
-		width: 60px;
-		height: 60px;
+		background-color: hsla(220, 100%, 98%, 0.95);
+
+		height: 2px;
 	}
 
 	@media only screen and (max-width: 1024px) {
@@ -320,8 +437,7 @@ nav {
 		/* Mobile */
 
 		mainMenu #navRecent,
-		mainMenu #navTrash,
-		mainMenu #navTools {
+		mainMenu #navTrash {
 
 			display: none;
 		}
@@ -329,6 +445,11 @@ nav {
 		mainMenu {
 
 			grid-template-columns: repeat(3, max-content);
+		}
+
+		mainMenu #navIndex {
+
+			padding-right: 10px;
 		}
 	}
 
@@ -346,6 +467,11 @@ nav {
 
 			grid-template-columns: repeat(2, max-content);
 			grid-column-gap: 8px;
+		}
+
+		mainMenu #navDashboard {
+
+			padding-right: 0;
 		}
 
 	}
@@ -421,7 +547,7 @@ footer {
 footer > a {
 	display: inline-block;
 
-	padding: 10px;
+	padding: 7px;
 
 	/* font block */
 	font-family: var(--sans-serif-condensed-font);
@@ -434,8 +560,9 @@ footer > a {
 }
 
 footer .footerInfo {
+
 	margin: auto;
-	padding-top: 10px;
+	padding: 10px 25px;
 	max-width: 500px;
 
 	/* font block */
@@ -446,6 +573,8 @@ footer .footerInfo {
 	letter-spacing: 1px;
 	line-height: 110%;
 	text-transform: none;
+
+	text-align: justify;
 }
 
 .block {
@@ -628,7 +757,7 @@ a {
 
 	color: rgba(0, 0, 0, 0.5);
 
-	transition: .2s;
+	transition: color .2s;
 }
 a *:hover {
 
@@ -646,7 +775,7 @@ a *:hover {
 	line-height: 100%;
 	text-transform: uppercase;
 
-	transition: 0.3s;
+	transition: color 0.3s;
 }
 
 *.link:hover {

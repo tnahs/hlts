@@ -52,12 +52,107 @@ window.addEventListener("load", function(){
 
             nav.classList.add("dropShadowBig");
         }
-
         else {
 
             nav.classList.remove("dropShadowBig");
         }
     });
+
+    //
+
+    const iconCreateMenu = document.querySelector("#iconCreateMenu");
+    const navCreateChoices = document.querySelector("#navCreateChoices");
+
+    iconCreateMenu.addEventListener("mouseover", function() {
+
+        iconCreateMenu.src = iconCreateMenu.getAttribute("active");
+    });
+
+    iconCreateMenu.addEventListener("mouseout", function() {
+
+        if (!navCreateChoices.style.display || navCreateChoices.style.display === "none") {
+
+            iconCreateMenu.src = iconCreateMenu.getAttribute("inactive");
+        }
+    });
+
+    iconCreateMenu.addEventListener("click", function() {
+
+        if (!navCreateChoices.style.display || navCreateChoices.style.display === "none") {
+
+            iconCreateMenu.src = iconCreateMenu.getAttribute("active");
+            navCreateChoices.style.display = "block";
+        }
+        else {
+
+            iconCreateMenu.src = iconCreateMenu.getAttribute("inactive");
+            navCreateChoices.style.display = "none";
+        }
+    });
+
+    document.addEventListener("click", function(event) {
+
+        if (event.target != iconCreateMenu) {
+
+            iconCreateMenu.src = iconCreateMenu.getAttribute("inactive");
+            navCreateChoices.style.display = "none";
+        }
+    });
+
+    //
+
+    const iconUserMenu = document.querySelector("#iconUserMenu");
+    const userMenuChoices = document.querySelector("#userMenuChoices");
+
+    iconUserMenu.addEventListener("mouseover", function() {
+
+        iconUserMenu.src = iconUserMenu.getAttribute("active");
+    });
+
+    iconUserMenu.addEventListener("mouseout", function() {
+
+        if (!userMenuChoices.style.display || userMenuChoices.style.display === "none") {
+
+            iconUserMenu.src = iconUserMenu.getAttribute("inactive");
+        }
+    });
+
+    iconUserMenu.addEventListener("click", function() {
+
+        if (!userMenuChoices.style.display || userMenuChoices.style.display === "none") {
+
+            iconUserMenu.src = iconUserMenu.getAttribute("active");
+            userMenuChoices.style.display = "block";
+        }
+        else {
+
+            iconUserMenu.src = iconUserMenu.getAttribute("inactive");
+            userMenuChoices.style.display = "none";
+        }
+    });
+
+    document.addEventListener("click", function(event) {
+
+        if (event.target != iconUserMenu) {
+
+            iconUserMenu.src = iconUserMenu.getAttribute("inactive");
+            userMenuChoices.style.display = "none";
+        }
+    });
+
+
+    const iconTrash = document.querySelector("#iconTrash");
+
+    iconTrash.addEventListener("mouseover", function() {
+
+        iconTrash.src = iconTrash.getAttribute("active");
+    });
+
+    iconTrash.addEventListener("mouseout", function() {
+
+        iconTrash.src = iconTrash.getAttribute("inactive");
+    });
+
 
     /* -------------------------------------------------------------------- */
     /* Color pills -------------------------------------------------------- */

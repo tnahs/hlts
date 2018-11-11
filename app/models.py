@@ -470,8 +470,8 @@ class User(db.Model, UserMixin):
 
         if not min_length <= len(raw_password) <= max_length:
             raise AssertionError(
-                """password must be
-                {0}-{1} characters""".format(min_length, max_length))
+                "password must be {0}-{1} characters"
+                .format(min_length, max_length))
 
         self.password = bcrypt.generate_password_hash(raw_password)
 
@@ -500,8 +500,8 @@ class User(db.Model, UserMixin):
 
         if not min_length <= len(username) <= max_length:
             raise AssertionError(
-                """username must be
-                {0}-{1} characters""".format(min_length, max_length))
+                "username must be {0}-{1} characters"
+                .format(min_length, max_length))
 
         if self.username != username:
             if User.query.filter(User.username == username).first():
@@ -519,8 +519,8 @@ class User(db.Model, UserMixin):
 
             if not min_length <= len(fullname) <= max_length:
                 raise AssertionError(
-                    """fullname must be less than
-                    {0} characters""".format(max_length))
+                    "fullname must be less than {0} characters"
+                    .format(max_length))
 
         return fullname
 
@@ -532,8 +532,8 @@ class User(db.Model, UserMixin):
 
         if not min_length <= len(email) <= max_length:
             raise AssertionError(
-                """e-mail must be
-                {0}-{1} characters""".format(min_length, max_length))
+                "e-mail must be {0}-{1} characters"
+                .format(min_length, max_length))
 
         if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
             raise AssertionError("invalid e-mail address")
@@ -557,8 +557,8 @@ class User(db.Model, UserMixin):
 
         if not min_length <= results_per_page <= max_length:
             raise AssertionError(
-                """results per page must be an an
-                integer between {0} and {1}""".format(min_length, max_length))
+                "results per page must be an integer between {0} and {1}"
+                .format(min_length, max_length))
 
         return results_per_page
 
@@ -575,8 +575,8 @@ class User(db.Model, UserMixin):
 
         if not min_length <= recent_days <= max_length:
             raise AssertionError(
-                """recent days must be an iteger
-                between {0} and {1}""".format(min_length, max_length))
+                "recent days must be an integer between {0} and {1}"
+                .format(min_length, max_length))
 
         return recent_days
 
@@ -903,8 +903,8 @@ class Source(db.Model, ToDictMixin, PingedMixin):
 
             if source is not None:
                 raise AssertionError(
-                    "source/author combo '{0}/{1}'"
-                    " already exists".format(name, author_name))
+                    "source/author combo '{0}/{1}' already exists"
+                    .format(name, author_name))
 
     def edit(self, data):
 

@@ -45,13 +45,14 @@ Some current quirks to note while using HLTS. None of these should cause any err
 
 <br>
 
-1. Dashboard annotation count includes deleted items.
+1. Dashboard Annotation count includes deleted items.
 2. Annotation counts on Index pages (Collections/Tags/Sources/Authors) include deleted items.
-3. Index does not list annotations that have no `source` or `author`.
+3. Index does not list Annotations that have no `source` or `author`.
 4. When using markdown and performing a search, `this passage` does not match `this ==passage==`.
 5. Annotation editor textarea resets the scroll position of the page on input (keypress inside the textarea) when there's lots of text in editor.
 6. Bulk Collection/Tag/Source/Author editor displays all items as "pinned" after single item is submitted. Hard refresh is required to show correct properties.
 7. Searching certain odd strings such as `P : word` does some funky stuff with text highlighting the matches.
+8. If Tag or Collection name does not start with a letter or number it will not appear on the Index page.
 
 <br>
 

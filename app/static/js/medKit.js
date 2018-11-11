@@ -225,6 +225,7 @@ class MedKit {
     }
 
     clearInput() {
+
         this.medKit.input.value = '';
     }
 

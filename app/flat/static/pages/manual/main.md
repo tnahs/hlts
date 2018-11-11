@@ -56,6 +56,8 @@ There are two ways to create an Annotation. Through the [New Annotation](/new) p
 
 All Annotations can have a set of `tags` and `collections`. Both are nearly identical in the way they are implemented under the hood and in the UI however in principle they serve two different functions. An Annotation's `tags` is a list of topics pertaining the content of the Annotation. They serve more as a "property" of the Annotation. Whereas an Annotation's `collections` are more to be considered as a bin that holds or connects different Annotations regardless of their tags.
 
+Currently, Tags and Collections are created on the [New Annotation](/new) page by entering a name in the `Add Tags...` to `Add to Collections...` field. In order to edit the tag name and/or attributes see [Customizing Tags and Collections](#customizing-tags-and-collections).
+
 <br>
 
 <a class="paddedAnchor" name="bulk-editing"></a>

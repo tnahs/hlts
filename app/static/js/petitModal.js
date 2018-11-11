@@ -104,20 +104,20 @@ class PetitModal {
 
     buildModal(data, url, message, action) {
 
-        const annotationElemement = document.querySelector(`[id="${data}"]`);
+        const annotationElement = document.querySelector(`[id="${data}"]`);
 
         this.petitModal.message.innerText = `${message}`;
         this.petitModal.confirmButton.innerText = action;
         this.petitModal.confirmButton.addEventListener("click", ( ) => {
 
-            this.submitModal(url, data, annotationElemement);
+            this.submitModal(url, data, annotationElement);
         });
 
         document.addEventListener("keydown", (event) => {
 
             if (event.code == "Enter") {
 
-                this.submitModal(url, data, annotationElemement);
+                this.submitModal(url, data, annotationElement);
 
                 event.preventDefault();
             }
@@ -140,7 +140,7 @@ class PetitModal {
         this.petitModal.main.style.visibility = "hidden";
     }
 
-    submitModal(url, data, annotationElemement) {
+    submitModal(url, data, annotationElement) {
 
         // FIXMEMODAL
 
@@ -153,7 +153,7 @@ class PetitModal {
 
             if (response.ok) {
 
-                annotationElemement.remove();
+                annotationElement.remove();
                 this.hideModal();
             }
 

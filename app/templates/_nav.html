@@ -7,63 +7,71 @@
 
 {% endmacro %}
 
-
-{% macro icon_img(name) -%}
-
-	{% set classname = name ~ "Icon" %}
-
-	{% if request.endpoint.split(".")[-1] == name %}
-		{% set filename = "images/icon_" ~ name ~ "_current.png" %}
-	{% else %}
-		{% set filename = "images/icon_" ~ name ~ ".png" %}
-	{% endif %}
-
-	<img class="{{ classname }}" src="{{ url_for('static', filename=filename) }}"/>
-
-{% endmacro %}
-
-
 <nav>
 
 	<mainMenu>
 
-		<a id="navDashboard" class="{{ current('main.dashboard') }}" href="{{ url_for('main.dashboard') }}">{{ icon_img("dashboard") }}</a>
+		<a id="navDashboard" class="{{ current('main.dashboard') }}" href="{{ url_for('main.dashboard') }}">
+			<img id="iconDashboard" src="{{ url_for('static', filename='images/nav/dashboard.png') }}"/>
+		</a>
+
 		<a id="navIndex" class="{{ current('main.index') }}" href="{{ url_for('main.index', mode='default')}}">index</a>
+
 		<a id="navRecent" class="{{ current('main.recent') }}" href="{{ url_for('main.recent', mode='default') }}">recent</a>
-		<a id="navNew" class="{{ current('main.new') }}" href="{{ url_for('main.new') }}">{{ icon_img("new") }}</a>
-		<a id="navTrash" class="{{ current('main.trash') }}" href="{{ url_for('main.trash') }}">{{ icon_img("trash") }}</a>
-		<a id="navTools" class="{{ current('main.tools') }}" href="{{ url_for('main.tools') }}">{{ icon_img("tools") }}</a>
+
+		<div id="navCreate">
+			<img id="iconCreateMenu"
+				src="{{ url_for('static', filename='images/nav/create.png') }}"
+				active="{{ url_for('static', filename='images/nav/create-active.png') }}"
+				inactive="{{ url_for('static', filename='images/nav/create.png') }}"/>
+			<div id="navCreateChoices" class="dropShadowBig">
+				<div>create new</div>
+				<hr>
+				<a href="{{ url_for('main.new') }}">annotation</a>
+				<a class="disabled" href="#">collection</a>
+				<a class="disabled" href="#">tag</a>
+			</div>
+		</div>
+
+		<a id="navTrash" class="{{ current('main.trash') }}" href="{{ url_for('main.trash') }}">
+			<img id="iconTrash"
+				src="{{ url_for('static', filename='images/nav/trash.png') }}"
+				active="{{ url_for('static', filename='images/nav/trash-active.png') }}"
+				inactive="{{ url_for('static', filename='images/nav/trash.png') }}"/>
+		</a>
+
+
 
 	</mainMenu>
 
 	<searchMenu>
 
-		{% set search = request.args.get('search') if request.endpoint == "main.search"  else "" %}
+		{% set search = request.args.get("search") if request.endpoint == "main.search"  else "" %}
 
-		{{ icon_img("search") }}
+		<img id="iconSearch" src="{{ url_for('static', filename='images/nav/search.png') }}"/>
 
 		<form action="{{ url_for('main.search') }}" method="GET">
-
 			<input type="text" name="search" value="{{ search }}"/>
-
 		</form>
 
 	</searchMenu>
 
 	<userMenu>
 
-		<a class="userMenuButton" href="{{ url_for('user.settings') }}">
-
-			<div class="userMenuInfo">
-
-				<span class="userName">{{ current_user.display_name }}</span>
-				<span class="userEmail">{{ current_user.email }}</span>
-
-			</div>
-
-			<img class="userMenuIcon" src="{{ url_for('static', filename='images/icon_settings.png') }}"/>
-
-		</a>
+		<img id="iconUserMenu"
+			src="{{ url_for('static', filename='images/nav/user.png') }}"
+			active="{{ url_for('static', filename='images/nav/user-active.png') }}"
+			inactive="{{ url_for('static', filename='images/nav/user.png') }}"/>
+		<div id="userMenuChoices" class="dropShadowBig">
+			<div>signed in as {{ current_user.display_name }}</div>
+			<hr>
+			<a href="{{ url_for('flat.page', which='manual/main') }}">hlts manual</a>
+			<a href="{{ url_for('flat.page', which='beta/main') }}">beta notes</a>
+			<a href="{{ url_for('main.tools') }}">tools</a>
+			<hr>
+			<a href="{{ url_for('user.settings') }}">settings</a>
+			<a href="{{ url_for('user.logout') }}">logout</a>
+		</div>
 
 	</userMenu>
 
