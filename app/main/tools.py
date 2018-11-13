@@ -4,7 +4,7 @@ import re
 
 from app.models import Annotation, Source, Author, Tag, Collection
 
-from flask import render_template
+from flask import render_template, url_for
 from flask_login import current_user
 from sqlalchemy import or_, and_
 
@@ -44,19 +44,21 @@ def paginated_annotations(template, endpoint, results, in_request=None, mode=Non
     # Paginate results
     results = results.paginate(page=page, per_page=current_user.results_per_page, error_out=False)
 
-    # Generate next page url
-    # next_page = None
-    # if results.has_next:
-    #     next_page = url_for(endpoint, in_request=in_request, page=results.next_num, mode=mode)
-
     # Generate previous page url
-    # prev_page = None
-    # if results.has_prev:
-    #     prev_page = url_for(endpoint, in_request=in_request, page=results.prev_num, mode=mode)
+    prev_page = None
+    if results.has_prev:
+        prev_page = url_for(endpoint, in_request=in_request, page=results.prev_num, mode=mode)
+
+    # Generate next page url
+    next_page = None
+    if results.has_next:
+        next_page = url_for(endpoint, in_request=in_request, page=results.next_num, mode=mode)
 
     url = {
         "endpoint": endpoint,
         "mode": mode,
+        "prev_page": prev_page,
+        "next_page": next_page,
     }
 
     return render_template(template, results=results, in_request=in_request, url=url,

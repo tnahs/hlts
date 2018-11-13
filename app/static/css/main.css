@@ -151,8 +151,7 @@ nav {
 
 	display: grid;
 	grid-template-columns: max-content auto max-content;
-	grid-template-areas: "navMain navSearch navUser"
-						 "navflash navflash navflash";
+	grid-template-areas: "navMain navSearch navUser";
 }
 
 	mainMenu {
@@ -468,33 +467,22 @@ nav {
 
 	mainFlash {
 
-		grid-area: navflash;
-
-		cursor: pointer;
-
-		width: 100%;
+		/*  */
 	}
 
 	mainFlash .flashContainer {
 
-		height: var(--flash-container-height);
-
-		display: grid;
-		grid-template-columns: 1fr max-content;
-		align-items: center;
-	}
-
-	mainFlash .flashContainer.success {
-
-		background-color: hsla(220, 100%, 75%, 1.00);
-	}
-
-	mainFlash .flashContainer.warning {
-
-		background-color: hsl(0, 100%, 75%) !important;
+		margin: 25px;
 	}
 
 	mainFlash .flashMessage {
+
+		display: grid;
+		grid-row-gap: 10px;
+		grid-template-columns: 1fr max-content;
+		align-items: center;
+
+		padding: 10px;
 
 		/* font block */
 		font-family: var(--sans-serif-condensed-font);
@@ -506,13 +494,35 @@ nav {
 		text-transform: uppercase;
 
 		text-align: center;
+
+		transition: .2s;
+	}
+
+	mainFlash .flashMessage.flashSuccess {
+
+		background-color: hsla(220, 100%, 95%, 0.95);
+		color: hsla(220, 100%, 80%, 1.00);
+	}
+
+	mainFlash .flashMessage.flashSuccess:hover {
+
+		color: hsla(220, 100%, 70%, 1.00);
+	}
+
+	mainFlash .flashMessage.flashWarning {
+
+		background-color: hsla(0, 100%, 96%, 0.95);
+		color: hsla(0, 100%, 80%, 1.00);
+	}
+
+	mainFlash .flashMessage.flashWarning:hover {
+
+		color: hsla(0, 100%, 70%, 1.00);
 	}
 
 	mainFlash .flashClose {
 
-		color: white;
-
-		padding-right: 25px;
+		cursor: pointer;
 	}
 
 main {
@@ -625,14 +635,25 @@ footer .footerInfo {
 		padding-right: 40px;
 	}
 
-	.block > .blockPagination {
+	.block > .blockPaginationTop {
+
+		grid-column: blockContent;
+
+		padding-top: 0;
+		padding-left: 25px;
+		padding-bottom: 25px;
+		padding-right: 25px;
+
+	}
+
+	.block > .blockPaginationBottom {
 
 		grid-column: blockContent;
 
 		padding-top: 25px;
-		padding-left: 40px;
+		padding-left: 25px;
 		padding-bottom: 25px;
-		padding-right: 40px;
+		padding-right: 25px;
 
 	}
 
@@ -714,29 +735,16 @@ footer .footerInfo {
 
 .paginationContainer {
 
-	display: grid;
-	grid-template-columns: repeat(2, auto);
+	text-align: center;
 }
 
-.paginationContainer .paginationPages  {
-
-	justify-self: end;
-}
-
-.paginationContainer .paginationInfo  {
-
-	justify-self: start;
-}
-
-.paginationContainer .paginationInfo .paginationMatches,
+.paginationContainer .paginationPages,
+.paginationContainer .paginationInfo,
 .paginationContainer .paginationPages .paginationPageNumber,
-.paginationContainer .paginationPages .paginationEllipsis {
+.paginationContainer .paginationPages .paginationEllipsis,
+.paginationContainer .paginationInfo .paginationMatches {
 
 	display: inline-block;
-
-	margin: 2px 0;
-	padding: 12px 16px;
-	background-color: hsl(0, 0%, 95%);
 
 	/* font block */
 	font-family: var(--sans-serif-condensed-font);
@@ -748,13 +756,37 @@ footer .footerInfo {
 	text-transform: uppercase;
 }
 
-.paginationContainer .paginationPages .paginationPageNumber.current,
-.paginationContainer .paginationPages .paginationPageNumber:hover {
+.paginationContainer .paginationPages .paginationPageNumber {
 
-	color: white !important;
-	background-color: hsla(220, 100%, 85%, 1);
+	padding: 0 7px;
 }
 
+.paginationContainer .paginationPages .paginationEllipsis {
+
+	padding: 0;
+}
+
+.paginationContainer .paginationInfo .paginationMatches {
+
+	padding-right: 10px;
+
+	color: rgba(0, 0, 0, 0.25);
+}
+
+.paginationContainer .paginationPages .paginationPageNumber.currentPage,
+.paginationContainer .paginationPages .paginationPageNumber:hover {
+
+	color: hsla(220, 100%, 75%, 1.00);
+}
+
+@media only screen and (max-width: 768px) {
+
+	.paginationContainer .paginationPages {
+
+		display: block;
+		padding-top: 25px;
+	}
+}
 
 /* globals ---------------------------------------------------------------- */
 
@@ -797,7 +829,8 @@ a *:hover {
 
 *.link.button.form,
 *.link.button.header,
-*.link.button.settings {
+*.link.button.settings,
+*.link.button.tools {
 
 	padding-right: 15px;
 }
@@ -1577,23 +1610,16 @@ hr {
 
 loginFlash {
 
-	display: block;
-	margin: 2px 0;
-	cursor: pointer;
+	/*  */
 }
 
 loginFlash .flashContainer {
 
-	height: 30px;
+	margin-bottom: 10px;
 
 	display: grid;
 	grid-template-columns: 1fr max-content;
 	align-items: center;
-}
-
-loginFlash .flashContainer.warning {
-
-	/* background-color: hsl(0, 100%, 90%) !important; */
 }
 
 loginFlash .flashMessage {
@@ -1610,6 +1636,15 @@ loginFlash .flashMessage {
 	text-align: center;
 }
 
+loginFlash .flashMessage.flashWarning {
+
+	/*  */
+}
+
+loginFlash .flashMessage .flashClose {
+
+	display: none;
+}
 /* ---------------- */
 
 #errorPage {

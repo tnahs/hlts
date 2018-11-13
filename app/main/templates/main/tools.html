@@ -15,12 +15,39 @@
 
         <div class="blockContent">
 
-            <a class="link button settings" href="{{ url_for('data.download_user_data') }}">download data as .hlts</a>
-            <a class="link button settings" href="{{ url_for('data.email_user_data') }}">e-mail data as .hlts</a>
-            <a class="link button settings" href="{{ url_for('data.restore_user_data') }}">restore from .hlts file</a>
+            <a class="link button tools" href="{{ url_for('data.download_user_data') }}">download data as .hlts</a>
+            <a class="link button tools" href="{{ url_for('data.email_user_data') }}">e-mail data as .hlts</a>
+            <a class="link button tools" href="{{ url_for('data.restore_user_data') }}">restore from .hlts file</a>
 
         </div>
 
     </div>
+
+    {% if config["DEBUG"] %}
+
+        <div class="block blockBleeding">
+
+            <div class="blockLabel">debugging tools</div>
+
+            <div class="blockContent">
+
+                <a class="link button tools" href="{{ url_for('main.debug_flash') }}">debug flash</a>
+
+            </div>
+
+            <div class="blockLabel">browser info</div>
+
+            <div class="blockContent">
+
+                <div class="text upper">browser: {{ USER_AGENT.browser }}</div>
+                <div class="text upper">platform: {{ USER_AGENT.platform }}</div>
+                <div class="text upper">version: {{ USER_AGENT.version }}</div>
+                <div class="text upper">language: {{ USER_AGENT.language }}</div>
+
+            </div>
+
+        </div>
+
+    {% endif %}
 
 {% endblock %}

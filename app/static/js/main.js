@@ -5,38 +5,20 @@ window.addEventListener("load", function(){
     /* -------------------------------------------------------------------- */
     /* Close mainFlash ------------------------------------------------- */
 
-    const mainFlash = document.querySelector("mainFlash .flashContainer");
+    const flashMessages = document.querySelectorAll("mainFlash .flashMessage");
 
-    if (mainFlash) {
+    if (flashMessages) {
 
-        const main = document.querySelector("main");
+        for (let flashMessage of flashMessages) {
 
-        const rootStyles = window.getComputedStyle(document.body);
-        const navMenuHeight = rootStyles.getPropertyValue("--nav-menu-height");
-        const flashContainerHeight = rootStyles.getPropertyValue("--flash-container-height");
-        const navMenuHeightInt = parseInt(navMenuHeight.slice(0, -2));
-        const flashContainerHeightInt = parseInt(flashContainerHeight.slice(0, -2));
+            const flashClose = flashMessage.querySelector(".flashClose");
 
-        main.style.paddingTop =  `${navMenuHeightInt + flashContainerHeightInt}px`;
+            flashClose.addEventListener("click", function() {
 
-        mainFlash.addEventListener("click", function() {
-
-            mainFlash.remove()
-
-            main.style.paddingTop = `${navMenuHeightInt}px`;
-        });
+                flashMessage.remove()
+            });
+        }
     }
-
-    const loginFlash = document.querySelector("loginFlash .flashContainer");
-
-    if (loginFlash) {
-
-        loginFlash.addEventListener("click", function() {
-
-            loginFlash.remove()
-        });
-    }
-
 
     /* -------------------------------------------------------------------- */
     // Nav ---------------------------------------------------------------- */

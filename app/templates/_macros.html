@@ -2,9 +2,9 @@
 
 	{% for mode in modes %}
 
-		{% set current = 'current' if request.view_args['mode'] == mode else '' %}
+		{% set current = "current" if request.view_args["mode"] == mode else "" %}
 
-		<a class="link button header {{ current }}" href='{{ url_for(endpoint, mode=mode) }}'>{{ mode }}</a>
+		<a class="link button header {{ current }}" href="{{ url_for(endpoint, mode=mode) }}">{{ mode }}</a>
 
 	{% endfor %}
 
@@ -22,29 +22,6 @@
         </div>
 
     </div>
-
-{%- endmacro %}
-
-
-{% macro flash() -%}
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-
-        {% if messages %}
-
-            {% for category, message in messages %}
-
-                <div class="flashContainer {{ category }}">
-
-                    <div class="flashMessage">{{ message }}</div>
-
-                </div>
-
-            {% endfor %}
-
-        {% endif %}
-
-    {% endwith %}
 
 {%- endmacro %}
 
@@ -69,47 +46,103 @@
 
 {%- endmacro %}
 
+{% macro pagination_top(results, url) -%}
 
-{% macro pagination(results) -%}
+    {% if results.total > 0 %}
 
-    <div class="paginationContainer">
+        <div class="blockPaginationTop">
 
-        <div class="paginationInfo">
+            {{ generate_pagination(results, url) }}
 
-            <div class="paginationMatches dropShadowSmall">
+        </div>
 
-                {{ results.total }} match{% if results.total != 1 %}es{% endif %}
+    {% endif %}
+
+{% endmacro %}
+
+
+{% macro pagination_bottom(results, url) -%}
+
+    {% if results.total > 0 %}
+
+        <div class="block blockFloating">
+
+            <div class="blockPaginationBottom">
+
+                {{ generate_pagination(results, url) }}
 
             </div>
 
         </div>
 
-        <div class="paginationPages">
+    {% endif %}
 
-            {%- for page in results.iter_pages(left_edge=1, left_current=0, right_current=2, right_edge=1) %}
+{% endmacro %}
 
-                {% if page %}
 
-                    {% if page != results.page %}
+{% macro generate_pagination(results, url) -%}
 
-                        <a class="paginationPageNumber dropShadowSmall"
-                           href="{{ url_for(url.endpoint, in_request=in_request, page=page, mode=url.mode) }}">{{ page }}</a>
+    <div class="paginationContainer">
 
-                    {% else %}
+        <div class="paginationInfo">
 
-                        <span class="paginationPageNumber dropShadowSmall current">{{ page }}</span>
+            <div class="paginationMatches">
 
-                    {% endif %}
+                {{ results.total }} result{% if results.total != 1 %}s{% endif %}
+
+            </div>
+
+        </div>
+
+        {% if results.total > results.per_page %}
+
+            <div class="paginationPages">
+
+                {% if url.prev_page %}
+
+                    <a class="link button" href="{{ url.prev_page }}">prev</a>
 
                 {% else %}
 
-                    <span class="paginationEllipsis dropShadowSmall">…</span>
+                    <span class="text upper faded">prev</span>
 
                 {% endif %}
 
-            {%- endfor %}
+                {%- for page in results.iter_pages(left_edge=1, left_current=1, right_current=2, right_edge=1) %}
 
-        </div>
+                    {% if page %}
+
+                        {% if page != results.page %}
+
+                            <a class="paginationPageNumber" href="{{ url_for(url.endpoint, in_request=in_request, page=page, mode=url.mode) }}">{{ page }}</a>
+
+                        {% else %}
+
+                            <span class="paginationPageNumber currentPage">{{ page }}</span>
+
+                        {% endif %}
+
+                    {% else %}
+
+                        <span class="paginationEllipsis faded">…</span>
+
+                    {% endif %}
+
+                {%- endfor %}
+
+                {% if url.next_page %}
+
+                    <a class="link button" href="{{ url.next_page }}">next</a>
+
+                {% else %}
+
+                    <span class="text upper faded">next</span>
+
+                {% endif %}
+
+            </div>
+
+        {% endif %}
 
     </div>
 

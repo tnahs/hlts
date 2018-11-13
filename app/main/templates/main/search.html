@@ -1,4 +1,4 @@
-{% from "_macros.html" import no_results, pagination, render_multiple_interactive_annotations with context %}
+{% from "_macros.html" import no_results, pagination_top, pagination_bottom, render_multiple_interactive_annotations with context %}
 
 {% extends "_index.html" %}
 
@@ -50,15 +50,7 @@
 
             </div>
 
-        </div>
-
-        <div class="block blockInvisible">
-
-            <div class="blockPagination">
-
-                {{ pagination(results) }}
-
-            </div>
+            {{ pagination_top(results, url) }}
 
         </div>
 
@@ -71,6 +63,8 @@
             </div>
 
         </div>
+
+        {{ pagination_bottom(results, url) }}
 
     {% endif %}
 

@@ -1,4 +1,4 @@
-{% from "_macros.html" import pagination, render_multiple_interactive_annotations with context %}
+{% from "_macros.html" import pagination_top, pagination_bottom, render_multiple_interactive_annotations with context %}
 
 {% extends "_index.html" %}
 
@@ -8,6 +8,8 @@
     <div class="block blockFloating">
 
         <div class="blockTitle">random annotations</div>
+
+        {{ pagination_top(results, url) }}
 
     </div>
 
@@ -25,16 +27,6 @@
 
     {% else %}
 
-        <div class="block blockInvisible">
-
-            <div class="blockPagination">
-
-                {{ pagination(results) }}
-
-            </div>
-
-        </div>
-
         <div class="block blockBleeding">
 
             <div class="blockContent">
@@ -44,6 +36,8 @@
             </div>
 
         </div>
+
+        {{ pagination_bottom(results, url) }}
 
     {% endif %}
 

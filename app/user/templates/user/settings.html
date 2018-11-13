@@ -47,24 +47,17 @@
 
                     {{ render_form_field(form.api_key) }}
 
-                    <div class="link button accent toggleAPILabel" id="toggleAPIKey">Show API Key</div>
+                    <div class="toggleAPILabel link button faded" id="toggleAPIKey">Show API Key</div>
 
                 </div>
 
-                {% if current_user.is_admin %}
+                <div class="blockLabel">app version</div>
 
-                    <div class="blockLabel">admin info</div>
+                <div class="blockContent">
 
-                    <div class="blockContent">
+                        <div class="text upper">{{ config["APP_VERSION"] }}</div>
 
-                        <div class="text upper">{{ USER_AGENT.browser }}</div>
-                        <div class="text upper">{{ USER_AGENT.platform }}</div>
-                        <div class="text upper">{{ USER_AGENT.version }}</div>
-                        <div class="text upper">{{ USER_AGENT.language }}</div>
-
-                    </div>
-
-                {% endif %}
+                </div>
 
             </div>
 

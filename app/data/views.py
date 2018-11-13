@@ -31,7 +31,7 @@ def email_user_data():
     export = ExportUserData(user=current_user, context=app)
     export.email()
 
-    flash("e-mailed HLTS data to {0}!".format(current_user.email), "success")
+    flash("e-mailed HLTS data to {0}!".format(current_user.email), "flashSuccess")
 
     return redirect(url_for("main.tools"))
 
@@ -55,7 +55,7 @@ def restore_user_data():
         try:
             restore.validate(data)
         except Exception as error:
-            flash(error.message, "warning")
+            flash(error.message, "flashWarning")
             return redirect(url_for("data.restore_user_data"))
 
         else:
@@ -63,11 +63,11 @@ def restore_user_data():
             try:
                 restore.execute()
             except Exception as error:
-                flash(error.message, "warning")
+                flash(error.message, "flashWarning")
                 return redirect(url_for("data.restore_user_data"))
 
             else:
-                flash("restored user settings and {0} annotations".format(restore.annotation_count), "success")
+                flash("restored user settings and {0} annotations".format(restore.annotation_count), "flashSuccess")
                 return redirect(home_url())
 
     return render_template("data/restore.html", form_restore=form_restore)

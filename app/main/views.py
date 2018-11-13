@@ -153,21 +153,11 @@ def all(page=1):
 @login_required
 def index(mode=None):
 
-    default_mode = "collections"
+    default_mode = "sources"
 
     if mode == "default" or mode == default_mode:
 
         request.view_args["mode"] = default_mode
-
-        query = Collection.query.all()
-        results = Collection.query_to_multiple_dict(query)
-
-    elif mode == "tags":
-
-        query = Tag.query.all()
-        results = Tag.query_to_multiple_dict(query)
-
-    elif mode == "sources" or mode == default_mode:
 
         query = Source.query.all()
         results = Source.query_to_multiple_dict(query)
@@ -176,6 +166,16 @@ def index(mode=None):
 
         query = Author.query.all()
         results = Author.query_to_multiple_dict(query)
+
+    elif mode == "tags":
+
+        query = Tag.query.all()
+        results = Tag.query_to_multiple_dict(query)
+
+    elif mode == "collections":
+
+        query = Collection.query.all()
+        results = Collection.query_to_multiple_dict(query)
 
     else:
 
@@ -349,7 +349,7 @@ def new_annotation():
         db.session.add(annotation)
         db.session.commit()
 
-        flash("new annotation added!", "success")
+        flash("new annotation added!", "flashSuccess")
 
         return redirect(url_for("main.recent", mode="added"))
 
@@ -364,7 +364,7 @@ def edit_annotation(in_request):
 
     if annotation.deleted:
 
-        flash("annotation is deleted! restore before editing!", "warning")
+        flash("annotation is deleted! restore before editing!", "flashWarning")
 
         return redirect(home_url())
 
@@ -381,7 +381,7 @@ def edit_annotation(in_request):
             db.session.add(annotation)
             db.session.commit()
 
-            flash("annotation duplicated!", "success")
+            flash("annotation duplicated!", "flashSuccess")
 
             return redirect(url_for("main.edit", in_request=annotation.id))
 
@@ -392,7 +392,7 @@ def edit_annotation(in_request):
 
             db.session.commit()
 
-            flash("annotation edited!", "success")
+            flash("annotation edited!", "flashSuccess")
 
             return redirect(url_for("main.recent", mode="edited"))
 
@@ -576,6 +576,16 @@ Tools
 def tools():
 
     return render_template("main/tools.html")
+
+
+@main.route("/debug/flash")
+@login_required
+def debug_flash():
+
+    flash("this is a successful flash", "flashSuccess")
+    flash("this is a warning flash", "flashWarning")
+
+    return redirect(url_for("main.tools"))
 
 
 """

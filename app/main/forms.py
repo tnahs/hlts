@@ -74,7 +74,7 @@ class SourceForm(FlaskForm):
             source.validate_source(self.name.data, self.author_name.data)
 
         except AssertionError as error:
-            flash(error, "warning")
+            flash(error, "flashWarning")
             raise ValidationError(self.id.data)
 
 
@@ -90,7 +90,7 @@ class AuthorForm(FlaskForm):
             author.name = field.data
 
         except AssertionError as error:
-            flash(error, "warning")
+            flash(error, "flashWarning")
             raise ValidationError(self.id.data)
 
 
@@ -111,7 +111,7 @@ class TagForm(FlaskForm):
             tag.name = field.data
 
         except AssertionError as error:
-            flash(error, "warning")
+            flash(error, "flashWarning")
             raise ValidationError(self.id.data)
 
 
@@ -132,5 +132,5 @@ class CollectionForm(FlaskForm):
             collection.name = field.data
 
         except AssertionError as error:
-            flash(error, "warning")
+            flash(error, "flashWarning")
             raise ValidationError(self.id.data)

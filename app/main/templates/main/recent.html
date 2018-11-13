@@ -1,4 +1,4 @@
-{% from "_macros.html" import header_buttons, pagination, render_multiple_interactive_annotations with context %}
+{% from "_macros.html" import header_buttons, pagination_top, pagination_bottom, render_multiple_interactive_annotations with context %}
 
 {% extends "_index.html" %}
 
@@ -7,15 +7,15 @@
 
     <div class="block blockFloating">
 
-        <div class="blockTitle">recent</div>
+        <div class="blockTitle">recent : past {{ current_user.recent_days }} days</div>
 
         <div class="blockMenu">
 
             {{ header_buttons(endpoint="main.recent", modes=["added", "edited", "imported"]) }}
 
-            <span class="text upper faded">in the past {{ current_user.recent_days }} days</span>
-
         </div>
+
+        {{ pagination_top(results, url) }}
 
     </div>
 
@@ -33,16 +33,6 @@
 
     {% else %}
 
-        <div class="block blockInvisible">
-
-            <div class="blockPagination">
-
-                {{ pagination(results) }}
-
-            </div>
-
-        </div>
-
         <div class="block blockBleeding">
 
             <div class="blockContent">
@@ -52,6 +42,8 @@
             </div>
 
         </div>
+
+        {{ pagination_bottom(results, url) }}
 
     {% endif %}
 

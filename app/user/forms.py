@@ -26,7 +26,7 @@ class LoginForm(FlaskForm):
             self.user = User.check_user(field.data)
 
         except ValueError as error:
-            flash(error, "warning")
+            flash(error, "flashWarning")
             raise ValidationError()
 
     def validate_password(self, field):
@@ -37,7 +37,7 @@ class LoginForm(FlaskForm):
                 self.user.check_password(field.data)
 
             except ValueError as error:
-                flash(error, "warning")
+                flash(error, "flashWarning")
                 raise ValidationError()
 
 
@@ -75,7 +75,7 @@ class UserForm(FlaskForm):
             self.user.username = field.data
 
         except AssertionError as error:
-            flash(error, "warning")
+            flash(error, "flashWarning")
             raise ValidationError()
 
     def validate_fullname(self, field):
@@ -84,7 +84,7 @@ class UserForm(FlaskForm):
             self.user.fullname = field.data
 
         except AssertionError as error:
-            flash(error, "warning")
+            flash(error, "flashWarning")
             raise ValidationError()
 
     def validate_email(self, field):
@@ -93,7 +93,7 @@ class UserForm(FlaskForm):
             self.user.email = field.data
 
         except AssertionError as error:
-            flash(error, "warning")
+            flash(error, "flashWarning")
             raise ValidationError()
 
     def validate_results_per_page(self, field):
@@ -102,7 +102,7 @@ class UserForm(FlaskForm):
             self.user.results_per_page = field.data
 
         except AssertionError as error:
-            flash(error, "warning")
+            flash(error, "flashWarning")
             raise ValidationError()
 
     def validate_recent_days(self, field):
@@ -111,5 +111,5 @@ class UserForm(FlaskForm):
             self.user.recent_days = field.data
 
         except AssertionError as error:
-            flash(error, "warning")
+            flash(error, "flashWarning")
             raise ValidationError()
