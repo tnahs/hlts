@@ -4,13 +4,13 @@ import re
 
 from app.models import Annotation, Source, Author, Tag, Collection
 
-from flask import url_for, render_template
+from flask import render_template
 from flask_login import current_user
 from sqlalchemy import or_, and_
 
 
 def paginated_annotations(template, endpoint, results, in_request=None, mode=None,
-    page=None, request_info=None, search_info=None):
+                          page=None, request_info=None, search_info=None):
 
     """
 
@@ -42,15 +42,25 @@ def paginated_annotations(template, endpoint, results, in_request=None, mode=Non
     request_info = request_info.serialize() if request_info else None
 
     # Paginate results
-    results = results.paginate(page=page,
-        per_page=current_user.results_per_page, error_out=False)
+    results = results.paginate(page=page, per_page=current_user.results_per_page, error_out=False)
 
-    # Generate page urls
-    pages = [url_for(endpoint, in_request=in_request, page=pg,
-        mode=mode) for pg in results.iter_pages()]
+    # Generate next page url
+    # next_page = None
+    # if results.has_next:
+    #     next_page = url_for(endpoint, in_request=in_request, page=results.next_num, mode=mode)
 
-    return render_template(template, results=results, in_request=in_request,
-        page=page, pages=pages, request_info=request_info, search_info=search_info)
+    # Generate previous page url
+    # prev_page = None
+    # if results.has_prev:
+    #     prev_page = url_for(endpoint, in_request=in_request, page=results.prev_num, mode=mode)
+
+    url = {
+        "endpoint": endpoint,
+        "mode": mode,
+    }
+
+    return render_template(template, results=results, in_request=in_request, url=url,
+                           request_info=request_info, search_info=search_info)
 
 
 class SearchAnnotations(object):

@@ -21,9 +21,6 @@
 
                     <form method="POST" action="{{ url_for('main.bulk_edit_collections') }}">
 
-                        <button class="link button" type="submit">update</button>
-
-                        &nbsp;
 
                         {{ form.csrf_token }}
                         {{ form.id(value=collection.id) }}
@@ -45,7 +42,24 @@
                             {% endif %}
                         {% endif %}
 
+                        <br>
+
+                        <button class="link button" type="submit">update</button>
+
                     </form>
+
+                    <form method="POST" action="{{ url_for('main.delete_collection') }}">
+
+                        <button class="link button" type="submit">delete</button>
+
+                        &nbsp;
+
+                        {{ form.csrf_token }}
+                        {{ form.id(value=collection.id) }}
+
+                    </form>
+
+                    <hr>
 
                 {% endfor %}
 

@@ -9,7 +9,7 @@
 
         {% for letter, items in results.items() | sort %}
 
-            <div class="blockLabel">{{ letter }}</div>
+            <div class="blockLabel indexLetter">{{ letter }}</div>
 
             <div class="blockContent">
 
@@ -42,9 +42,9 @@
 
     <div class="block blockFloating">
 
-        <div class="blockLabel">index</div>
+        <div class="blockTitle">index</div>
 
-        <div class="blockContent">
+        <div class="blockMenu">
 
             {{ header_buttons(endpoint="main.index", modes=["collections", "tags", "sources", "authors"]) }}
 

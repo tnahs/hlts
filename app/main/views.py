@@ -324,8 +324,8 @@ def search(page=1):
     results = search.query
     search_info = search.info
 
-    return paginated_annotations(template="main/search.html", endpoint="main.search", search_info=search_info,
-        results=results, page=page)
+    return paginated_annotations(template="main/search.html", endpoint="main.search",
+        search_info=search_info, results=results, page=page)
 
 
 """
@@ -353,12 +353,12 @@ def new_annotation():
 
         return redirect(url_for("main.recent", mode="added"))
 
-    return render_template("main/new.html", form=form)
+    return render_template("main/new_annotation.html", form=form)
 
 
 @main.route("/edit/<string:in_request>", methods=["POST", "GET"])
 @login_required
-def edit(in_request):
+def edit_annotation(in_request):
 
     annotation = Annotation.query_by_id(in_request, error404=True)
 
@@ -398,7 +398,7 @@ def edit(in_request):
 
     form = AnnotationForm(obj=annotation)
 
-    return render_template("main/edit.html", form=form, id=in_request)
+    return render_template("main/edit_annotation.html", form=form, id=in_request)
 
 
 @main.route("/delete_annotation/", methods=["POST"])
@@ -481,6 +481,19 @@ def bulk_edit_tags():
     return render_template("main/bulk_edit_tags.html", results=results, form=form)
 
 
+@main.route("/delete_tag", methods=["POST", "GET"])
+@login_required
+def delete_tag():
+
+    id = request.form['id']
+    tag = Tag.query.get(id)
+
+    db.session.delete(tag)
+    db.session.commit()
+
+    return redirect(url_for("main.bulk_edit_tags"))
+
+
 @main.route("/edit/collections", methods=["POST", "GET"])
 @login_required
 def bulk_edit_collections():
@@ -498,6 +511,19 @@ def bulk_edit_collections():
     results = Collection.query.order_by(Collection.pinned.desc(), Collection.name)
 
     return render_template("main/bulk_edit_collections.html", results=results, form=form)
+
+
+@main.route("/delete_collection", methods=["POST", "GET"])
+@login_required
+def delete_collection():
+
+    id = request.form['id']
+    collection = Collection.query.get(id)
+
+    db.session.delete(collection)
+    db.session.commit()
+
+    return redirect(url_for("main.bulk_edit_collections"))
 
 
 @main.route("/edit/sources", methods=["POST", "GET"])

@@ -7,13 +7,13 @@
 
     <div class="block blockFloating">
 
-        <div class="blockLabel">recent</div>
+        <div class="blockTitle">recent</div>
 
-        <div class="blockContent">
+        <div class="blockMenu">
 
             {{ header_buttons(endpoint="main.recent", modes=["added", "edited", "imported"]) }}
 
-            <span class="text upper accent">in the past {{ current_user.recent_days }} days</span>
+            <span class="text upper faded">in the past {{ current_user.recent_days }} days</span>
 
         </div>
 

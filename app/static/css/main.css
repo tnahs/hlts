@@ -164,7 +164,8 @@ nav {
 		background-color: hsla(0, 0%, 100%, .95);
 
 		display: grid;
-		grid-template-columns: repeat(5, max-content);
+		grid-template-columns: repeat(5, auto);
+		grid-column-gap: 10px;
 		align-items: center;
 	}
 
@@ -187,7 +188,7 @@ nav {
 
 	mainMenu #navDashboard {
 
-		padding-right: 15px;
+		padding-right: 10px;
 	}
 
 	mainMenu #navDashboard img#iconDashboard {
@@ -196,20 +197,16 @@ nav {
 		height: 30px;
 	}
 
-	mainMenu #navIndex {
+	mainMenu #navIndex img#iconIndex {
 
-		padding-right: 15px;
+		width: 40px;
+		height: 40px;
 	}
 
-	mainMenu #navRecent {
+	mainMenu #navRecent img#iconRecent {
 
-		padding-right: 5px;
-	}
-
-	mainMenu #navCreate {
-
-		padding: 0;
-		margin: 0;
+		width: 40px;
+		height: 40px;
 	}
 
 	mainMenu #navCreate img#iconCreateMenu {
@@ -232,7 +229,7 @@ nav {
 			content: "";
 			position: absolute;
 			top: -20px;
-			left: 11px;
+			left: 10px;
 			width: 0;
 			height: 0;
 			border-top: 10px solid transparent;
@@ -299,6 +296,8 @@ nav {
 
 		width: 40px;
 		height: 40px;
+
+		margin-bottom: 1px;
 	}
 
 	searchMenu {
@@ -327,7 +326,7 @@ nav {
 
 		/* font block */
 		font-family: var(--sans-serif-condensed-font);
-		color: hsla(220, 100%, 75%, 1.00);
+		color: hsla(220, 100%, 80%, 1.00);
 		font-size: 15pt;
 		font-weight: 400;
 		letter-spacing: 1px;
@@ -343,6 +342,8 @@ nav {
 
 		display: grid;
 		align-items: center;
+
+		cursor: pointer;
 
 		padding: 0 20px 0 20px;
 		background-color: hsla(0, 0%, 100%, .95);
@@ -447,18 +448,13 @@ nav {
 			grid-template-columns: repeat(3, max-content);
 		}
 
-		mainMenu #navIndex {
-
-			padding-right: 10px;
-		}
 	}
 
 	@media only screen and (max-width: 512px) {
 
 		/* Mobile */
 
-		mainMenu #navIndex,
-		userMenu {
+		mainMenu #navIndex {
 
 			display: none;
 		}
@@ -468,12 +464,6 @@ nav {
 			grid-template-columns: repeat(2, max-content);
 			grid-column-gap: 8px;
 		}
-
-		mainMenu #navDashboard {
-
-			padding-right: 0;
-		}
-
 	}
 
 	mainFlash {
@@ -623,6 +613,18 @@ footer .footerInfo {
 		padding: 25px;
 	}
 
+	.block > .blockMenu {
+
+		grid-column: blockContent;
+
+		text-align: center;
+
+		padding-top: 0;
+		padding-left: 40px;
+		padding-bottom: 25px;
+		padding-right: 40px;
+	}
+
 	.block > .blockPagination {
 
 		grid-column: blockContent;
@@ -721,15 +723,18 @@ footer .footerInfo {
 	justify-self: end;
 }
 
-.paginationContainer .paginationMatches  {
+.paginationContainer .paginationInfo  {
 
 	justify-self: start;
 }
 
-.paginationContainer .paginationMatches .paginationInfo,
-.paginationContainer .paginationPages .paginationPageNumber {
+.paginationContainer .paginationInfo .paginationMatches,
+.paginationContainer .paginationPages .paginationPageNumber,
+.paginationContainer .paginationPages .paginationEllipsis {
 
 	display: inline-block;
+
+	margin: 2px 0;
 	padding: 12px 16px;
 	background-color: hsl(0, 0%, 95%);
 
@@ -859,6 +864,17 @@ a *:hover {
 
 	background-color: hsla(220, 100%, 90%, 1.0) !important;
 	padding: 1px 4px 3px 4px;
+}
+
+.indexLetter {
+
+	/* font block */
+	font-family: var(--sans-serif-condensed-font);
+	color: rgba(0, 0, 0, 0.1) !important;
+	font-size: 20pt !important;
+	font-weight: 400;
+	letter-spacing: 1px;
+	line-height: 80% !important;
 }
 
 mark {
@@ -1294,11 +1310,21 @@ input[type=password]{
 	padding-top: 5px;
 }
 
+.toggleAPILabel {
+
+	padding: 0 0 2px 3px;
+}
+
 /* ------------------------------- forms ------------------------------- */
 
 button {
 
 	cursor: pointer;
+}
+
+hr {
+	height: 2px;
+	background-color: hsl(0, 0%, 90%);
 }
 
 /* --------------------------------------------------------------------- */

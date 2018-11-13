@@ -9,13 +9,9 @@
 
         <div class="block blockFloating">
 
-            <div class="blockLabel">user settings</div>
+            <div class="blockTitle">user settings</div>
 
-            <div class="blockContent">
-
-                <button class="link button" type="submit">update</button>
-
-            </div>
+            <div class="blockMenu"><button class="link button" type="submit">update</button></div>
 
         </div>
 
@@ -51,6 +47,8 @@
 
                     {{ render_form_field(form.api_key) }}
 
+                    <div class="link button accent toggleAPILabel" id="toggleAPIKey">Show API Key</div>
+
                 </div>
 
                 {% if current_user.is_admin %}
@@ -73,15 +71,5 @@
         </div>
 
     </form>
-
-    <div class="block blockFloating">
-
-        <div class="blockContent">
-
-            <a class="link button accent" href="{{ url_for('user.logout') }}">logout</a>
-
-        </div>
-
-    </div>
 
 {% endblock %}

@@ -58,7 +58,35 @@ window.addEventListener("load", function(){
         }
     });
 
-    //
+    // icon index
+
+    const iconIndex = document.querySelector("#iconIndex");
+
+    iconIndex.addEventListener("mouseover", function() {
+
+        iconIndex.src = iconIndex.getAttribute("active");
+    });
+
+    iconIndex.addEventListener("mouseout", function() {
+
+        iconIndex.src = iconIndex.getAttribute("inactive");
+    });
+
+    // icon recent
+
+    const iconRecent = document.querySelector("#iconRecent");
+
+    iconRecent.addEventListener("mouseover", function() {
+
+        iconRecent.src = iconRecent.getAttribute("active");
+    });
+
+    iconRecent.addEventListener("mouseout", function() {
+
+        iconRecent.src = iconRecent.getAttribute("inactive");
+    });
+
+    // icon create
 
     const iconCreateMenu = document.querySelector("#iconCreateMenu");
     const navCreateChoices = document.querySelector("#navCreateChoices");
@@ -99,7 +127,21 @@ window.addEventListener("load", function(){
         }
     });
 
-    //
+    // icon trash
+
+    const iconTrash = document.querySelector("#iconTrash");
+
+    iconTrash.addEventListener("mouseover", function() {
+
+        iconTrash.src = iconTrash.getAttribute("active");
+    });
+
+    iconTrash.addEventListener("mouseout", function() {
+
+        iconTrash.src = iconTrash.getAttribute("inactive");
+    });
+
+    // icon user
 
     const iconUserMenu = document.querySelector("#iconUserMenu");
     const userMenuChoices = document.querySelector("#userMenuChoices");
@@ -140,19 +182,28 @@ window.addEventListener("load", function(){
         }
     });
 
+    //--------------------------------
 
-    const iconTrash = document.querySelector("#iconTrash");
 
-    iconTrash.addEventListener("mouseover", function() {
+    const toggleAPIKey = document.querySelector("#toggleAPIKey");
+    const apiKey = document.querySelector("#api_key");
 
-        iconTrash.src = iconTrash.getAttribute("active");
-    });
+    if(apiKey && toggleAPIKey) {
 
-    iconTrash.addEventListener("mouseout", function() {
+        apiKey.type = "password"
 
-        iconTrash.src = iconTrash.getAttribute("inactive");
-    });
+        toggleAPIKey.addEventListener("click", function() {
 
+            if (apiKey.type === "password") {
+
+                apiKey.type = "text";
+            }
+            else {
+
+                apiKey.type = "password";
+            }
+        });
+    }
 
     /* -------------------------------------------------------------------- */
     /* Color pills -------------------------------------------------------- */

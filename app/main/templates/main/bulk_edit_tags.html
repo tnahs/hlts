@@ -21,10 +21,6 @@
 
                     <form method="POST" action="{{ url_for('main.bulk_edit_tags') }}">
 
-                        <button class="link button" type="submit">update</button>
-
-                        &nbsp;
-
                         {{ form.csrf_token }}
                         {{ form.id(value=tag.id) }}
                         {{ form.name(value=tag.name) }}
@@ -45,7 +41,24 @@
                             {% endif %}
                         {% endif %}
 
+                        <br>
+
+                        <button class="link button" type="submit">update</button>
+
                     </form>
+
+                    <form method="POST" action="{{ url_for('main.delete_tag') }}">
+
+                        <button class="link button" type="submit">delete</button>
+
+                        &nbsp;
+
+                        {{ form.csrf_token }}
+                        {{ form.id(value=tag.id) }}
+
+                    </form>
+
+                    <hr>
 
                 {% endfor %}
 

@@ -8,18 +8,17 @@
     <script src="{{ url_for('static', filename='js/medKit.js') }}"></script>
     <script src="{{ url_for('static', filename='js/editor.js') }}"></script>
 
-    <form method="POST" action="{{ url_for('main.edit', in_request=id, referrer=referrer) }}">
+    <form method="POST" action="{{ url_for('main.new_annotation') }}">
 
         <div class="block blockFloating">
 
-            <div class="blockLabel">edit annotation</div>
+            <div class="blockTitle">new annotation</div>
 
-            <div class="blockContent">
+            <div class="blockMenu">
 
-                <button class="link button form" type="submit">update</button>
-                     <a class="link button form" href="{{ HOME_URL }}">cancel</a>
-                <button class="link button form" type="reset">reset</button>
-                <button class="link button form" type="submit" name="duplicate">duplicate</button>
+                    <button class="link button form" type="submit">add</button>
+                        <a class="link button form" href="{{ HOME_URL }}">cancel</a>
+                    <button class="link button form" type="reset" >reset</button>
 
             </div>
 
@@ -43,16 +42,6 @@
 
                     <medKit name='collection'></medKit>
                     {{ form.collections(id="collection-medKitData") }}
-
-                    <div class="annotationMetaData text upper faded">
-
-                        {{ form.created.label }}: {{ form.created.data.strftime('%B %d, %Y') }}<br>
-                        {{ form.modified.label }}: {{ form.modified.data.strftime('%B %d, %Y') }}<br>
-                        {{ form.origin.label }}: {{ form.origin.data }}<br>
-                        {{ form.protected.label }}: {{ form.protected.data }}<br>
-                        {{ form.id.label }}: {{ form.id.data }}<br>
-
-                    </div>
 
                 </div>
 

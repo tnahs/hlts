@@ -12,11 +12,11 @@
 
         {% if search_info.errors | length == 1 %}
 
-            {% set error_message = search_info.errors | join ~ "..." %}
+            {% set error_message = search_info.errors | join ~ "…" %}
 
         {% else %}
 
-            {% set error_message = search_info.errors[:-1] | join(", ") ~ " and " ~ search_info.errors[-1] ~ "..." %}
+            {% set error_message = search_info.errors[:-1] | join(", ") ~ " and " ~ search_info.errors[-1] ~ "…" %}
 
         {% endif %}
 

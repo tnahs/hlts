@@ -74,9 +74,9 @@
 
     <div class="paginationContainer">
 
-        <div class="paginationMatches">
+        <div class="paginationInfo">
 
-            <div class="paginationInfo dropShadowSmall">
+            <div class="paginationMatches dropShadowSmall">
 
                 {{ results.total }} match{% if results.total != 1 %}es{% endif %}
 
@@ -86,15 +86,24 @@
 
         <div class="paginationPages">
 
-            {%- for page in pages %}
+            {%- for page in results.iter_pages(left_edge=1, left_current=0, right_current=2, right_edge=1) %}
 
-                {% if loop.index != results.page %}
+                {% if page %}
 
-                    <a class="paginationPageNumber dropShadowSmall" href="{{ page }}">{{ loop.index }}</a>
+                    {% if page != results.page %}
+
+                        <a class="paginationPageNumber dropShadowSmall"
+                           href="{{ url_for(url.endpoint, in_request=in_request, page=page, mode=url.mode) }}">{{ page }}</a>
+
+                    {% else %}
+
+                        <span class="paginationPageNumber dropShadowSmall current">{{ page }}</span>
+
+                    {% endif %}
 
                 {% else %}
 
-                    <span class="paginationPageNumber dropShadowSmall current">{{ loop.index }}</span>
+                    <span class="paginationEllipsis dropShadowSmall">…</span>
 
                 {% endif %}
 
@@ -243,7 +252,7 @@
 
             {% else %}
 
-                <a class="link button faded editAnnotation" href="{{ url_for('main.edit', in_request=annotation.id) }}">edit</a>
+                <a class="link button faded editAnnotation" href="{{ url_for('main.edit_annotation', in_request=annotation.id) }}">edit</a>
 
                 <div class="link button ghost pmDisabledTrigger duplicateAnnotation" action="duplicate"
                     message="duplicate annotation?" url="{{ url_for('main.dashboard') }}"
