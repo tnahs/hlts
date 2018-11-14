@@ -50,6 +50,28 @@
 
         </div>
 
+        <div class="blockMenu">
+
+            {% if request.view_args["mode"] == "sources" %}
+
+                <a class="link button" href="{{ url_for('main.bulk_edit_sources') }}">bulk edit sources</a>
+
+            {% elif request.view_args["mode"] == "authors" %}
+
+                <a class="link button" href="{{ url_for('main.bulk_edit_authors') }}">bulk edit authors</a>
+
+            {% elif request.view_args["mode"] == "tags" %}
+
+                <a class="link button" href="{{ url_for('main.bulk_edit_tags') }}">bulk edit tags</a>
+
+            {% elif request.view_args["mode"] == "collections" %}
+
+                <a class="link button" href="{{ url_for('main.bulk_edit_collections') }}">bulk edit collections</a>
+
+            {% endif %}
+
+        </div>
+
     </div>
 
     {% if results | length == 0 %}
@@ -65,32 +87,6 @@
         </div>
 
     {% else %}
-
-        <div class="block blockBleeding">
-
-            <div class="blockContent">
-
-                {% if request.view_args["mode"] == "sources" %}
-
-                    <a class="link button" href="{{ url_for('main.bulk_edit_sources') }}">edit sources</a>
-
-                {% elif request.view_args["mode"] == "authors" %}
-
-                    <a class="link button" href="{{ url_for('main.bulk_edit_authors') }}">edit authors</a>
-
-                {% elif request.view_args["mode"] == "tags" %}
-
-                    <a class="link button" href="{{ url_for('main.bulk_edit_tags') }}">edit tags</a>
-
-                {% elif request.view_args["mode"] == "collections" %}
-
-                    <a class="link button" href="{{ url_for('main.bulk_edit_collections') }}">edit collections</a>
-
-                {% endif %}
-
-            </div>
-
-        </div>
 
         {% if request.view_args["mode"] == "sources" %}
 

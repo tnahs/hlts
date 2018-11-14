@@ -356,7 +356,7 @@ def new_annotation():
     return render_template("main/new_annotation.html", form=form)
 
 
-@main.route("/edit/<string:in_request>", methods=["POST", "GET"])
+@main.route("/edit/annotation/<string:in_request>", methods=["POST", "GET"])
 @login_required
 def edit_annotation(in_request):
 
@@ -383,7 +383,7 @@ def edit_annotation(in_request):
 
             flash("annotation duplicated!", "flashSuccess")
 
-            return redirect(url_for("main.edit", in_request=annotation.id))
+            return redirect(url_for("main.edit_annotation", in_request=annotation.id))
 
         if form.validate_on_submit():
 
@@ -485,7 +485,7 @@ def bulk_edit_tags():
 @login_required
 def delete_tag():
 
-    id = request.form['id']
+    id = request.form["id"]
     tag = Tag.query.get(id)
 
     db.session.delete(tag)
@@ -517,7 +517,7 @@ def bulk_edit_collections():
 @login_required
 def delete_collection():
 
-    id = request.form['id']
+    id = request.form["id"]
     collection = Collection.query.get(id)
 
     db.session.delete(collection)

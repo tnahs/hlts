@@ -22,93 +22,21 @@
 	--body-bg-color: hsl(0, 0%, 95%);
 
 	--nav-menu-height: 65px;
-	--flash-container-height: 40px;
 
 	--annotation-metadata-text-color: hsl(0, 0%, 70%);
 
 	/* --------------------------------------- */
 
-	/* body */
-	--body-bg-color: hsl(0, 0%, 95%);
-	--body-text-color: #555555;
-	--body-text-color-light: #999999;
+	--body-text-color: hsl(0, 0%, 33%);
+	--body-text-color-light: hsl(0, 0%, 60%);
 	--body-text-color-faded: hsl(0, 0%, 67%);
-	--a-color: hsl(0, 0%, 50%);
-	--a-hover-color: hsl(0, 0%, 80%);
-	--hr-color: hsl(0, 0%, 90%);
-
-	/* header */
-	--header-bg-color: hsl(0, 0%, 100%);
-
-	/* window */
-	--window-bg-color: hsl(0, 0%, 100%);
-	--window-shadow-color: #DDDDDD;
-	--window-border-color: #E8E8E8;
-	--window-btm-border-color: #DDDDDD;
-
-	/* annotations */
-	--annotation-window-color: var(--window-bg-color);
-	--annotation-top-border-color: var(--accent-half);
-
-	/* accent colors */
-	--accent-full: hsl(260, 50%, 70%);
-	--accent-half: hsl(260, 40%, 80%);
-	--accent-qart: hsl(260, 40%, 90%);
-	--accent-warning: hsl(0, 80%, 65%);
-	--accent-tag-text-color:#FFFFFF;
-
-	/* flash */
-	--flash-success-text-color: var(--accent-full);
-	--flash-warning-text-color: var(--accent-warning);
-
-	/* annotation */
-	--metadata-text-hover-color: hsl(0, 0%, 80%);
-	--code-bg-color: hsl(0, 0%, 95%);
-	--code-text-color: hsl(0, 0%, 30%);
-
-	/* tags */
-	--tag-bg-color: hsl(0, 0%, 95%);
-	--tag-text-color: #888888;
-	--tag-text-color-white: #FFFFFF;
-	--tag-bg-hover-color: hsl(0, 0%, 93%);
-	--tag-text-hover-color: #888888;
-	--tag-bg-activated-color: #FCFCFC;
-	--tag-text-activated-color: #888888;
-	--tag-color0: #FF8786;
-	--tag-color1: #F9B695;
-	--tag-color2: #F9E095;
-	--tag-color3: #CED982;
-	--tag-color4: #7AB4BD;
-	--tag-color5: #B085A8;
-	--tag-color6: #CB9C86;
-	--tag-color7: #75A89A;
-	--tag-color8: #5362B0;
-	--tag-color9: #B0648A;
-
-	/* tag suggestion */
-	--tag-suggestion-bg-color: hsl(0, 0%, 100%);
-
-
-	/* buttons */
-	--text-button-color: #888888;
 
 	/* input */
-	--input-text-color: #555555;
-	--input-text-color-protected: #DDDDDD;
-	--input-placeholder-color: #DDDDDD;
-	--input-placeholder-hover-color: #999999;
-	--input-error-text-color: var(--accent-warning);
+	--input-text-color: hsl(0, 0%, 33%);
+	--input-placeholder-color: hsl(0, 0%, 87%);
+	--input-placeholder-hover-color: hsl(0, 0%, 60%);
 
-	--search-text-color-focus: hsl(0, 0%, 20%);
-	--search-text-color-blur: hsl(0, 0%, 50%);
-
-	/* highlighting */
-	--highlight-bg-color: var(--accent-qart);
-	--highlight-text-color: unset;
-	--mark-passage-bg-color: var(--accent-full);
-	--mark-passage-text-color: unset;
-	--mark-tag-bg-color: var(--accent-full);
-	--mark-tag-text-color: var(--accent-tag-text-color);
+	--accent-warning: hsl(0, 80%, 65%);
 }
 
 /* --------------------------------------------------------------------- */
@@ -168,67 +96,94 @@ nav {
 		align-items: center;
 	}
 
-	mainMenu a {
-
-		/* font block */
-		font-family: var(--sans-serif-condensed-font);
-		color: var(--a-color);
-		font-size: 11pt;
-		font-weight: 400;
-		letter-spacing: 1.5px;
-		line-height: 100%;
-		text-transform: uppercase;
-	}
-
-	mainMenu a:hover {
-
-		color: hsla(220, 100%, 75%, 1.00);
-	}
-
 	mainMenu #navDashboard {
 
 		padding-right: 10px;
 	}
 
-	mainMenu #navDashboard img#iconDashboard {
+	mainMenu .icon,
+	searchMenu .icon,
+	userMenu .icon {
+
+		width: 32px;
+		height: 32px;
+		background-size: 32px 32px;
+		background-position: center;
+		background-repeat: no-repeat;
+
+		transition: .3s;
+	}
+
+	mainMenu #navDashboard .icon.iconDashboard {
 
 		width: 80px;
 		height: 30px;
+		background-size: 80px 30px;
+
+		background-image: url("../images/nav/dashboard.png");
 	}
 
-	mainMenu #navIndex img#iconIndex {
+	mainMenu #navIndex .icon.iconIndex {
 
-		width: 40px;
-		height: 40px;
+		background-image: url("../images/nav/index.png");
 	}
 
-	mainMenu #navRecent img#iconRecent {
+	mainMenu #navIndex .icon.iconIndex:hover {
 
-		width: 40px;
-		height: 40px;
+		background-image: url("../images/nav/index-active.png");
 	}
 
-	mainMenu #navCreate img#iconCreateMenu {
+	mainMenu #navRecent .icon.iconRecent {
 
-		width: 40px;
-		height: 40px;
-
-		cursor: pointer;
+		background-image: url("../images/nav/recent.png");
 	}
 
-		mainMenu #navCreate #navCreateChoices {
+	mainMenu #navRecent .icon.iconRecent:hover {
+
+		background-image: url("../images/nav/recent-active.png");
+	}
+
+	mainMenu #navTrash .icon.iconTrash {
+
+		background-image: url("../images/nav/trash.png");
+	}
+
+	mainMenu #navTrash .icon.iconTrash:hover {
+
+		background-image: url("../images/nav/trash-active.png");
+	}
+
+	mainMenu #navCreate {
+
+		/*  */
+	}
+
+		mainMenu #navCreate .icon.iconCreateMenu {
+
+			background-image: url("../images/nav/create.png");
+		}
+
+		mainMenu #navCreate .icon.iconCreateMenu:hover,
+		mainMenu #navCreate .icon.iconCreateMenu.iconCreateMenuActive {
+
+			cursor: pointer;
+
+			background-image: url("../images/nav/create-active.png");
+		}
+
+		mainMenu #navCreate #createMenuChoices {
 
 			display: none;
 			position: fixed;
 			top: 77px;
 		}
 
-		mainMenu #navCreate #navCreateChoices:before {
+		mainMenu #navCreate #createMenuChoices:before {
 
 			content: "";
 			position: absolute;
 			top: -20px;
-			left: 10px;
+			left: 6px;
 			width: 0;
 			height: 0;
 			border-top: 10px solid transparent;
@@ -237,7 +192,7 @@ nav {
 			border-bottom: 10px solid hsla(220, 100%, 90%, 0.95);
 		}
 
-		mainMenu #navCreate #navCreateChoices a {
+		mainMenu #navCreate #createMenuChoices a {
 
 			/* font block */
 			font-family: var(--sans-serif-condensed-font);
@@ -253,20 +208,20 @@ nav {
 			background-color: hsla(220, 100%, 95%, 0.95);
 		}
 
-		mainMenu #navCreate #navCreateChoices a:hover {
+		mainMenu #navCreate #createMenuChoices a:hover {
 
 			background-color:  hsla(220, 100%, 90%, 0.95);
 			color: white;
 		}
 
-		mainMenu #navCreate #navCreateChoices a.disabled,
-		mainMenu #navCreate #navCreateChoices a.disabled:hover {
+		mainMenu #navCreate #createMenuChoices a.disabled,
+		mainMenu #navCreate #createMenuChoices a.disabled:hover {
 
 			cursor: default;
 			color: hsla(220, 100%, 75%, .50);
 		}
 
-		mainMenu #navCreate #navCreateChoices div {
+		mainMenu #navCreate #createMenuChoices div {
 
 			/* font block */
 			font-family: var(--sans-serif-condensed-font);
@@ -284,27 +239,19 @@ nav {
 			background-color: hsla(220, 100%, 90%, 0.95);
 		}
 
-		mainMenu #navCreateChoices hr {
+		mainMenu #createMenuChoices hr {
 
 			background-color: hsla(220, 100%, 92%, 0.95);
 
 			height: 2px;
 		}
 
-	mainMenu #navTrash img#iconTrash {
-
-		width: 40px;
-		height: 40px;
-
-		margin-bottom: 1px;
-	}
-
 	searchMenu {
 
 		grid-area: navSearch;
 
 		display: grid;
-		grid-template-columns: min-content auto;
+		grid-template-columns: max-content auto;
 		align-items: center;
 
 		height: 100%;
@@ -312,28 +259,27 @@ nav {
 		background-color: hsla(220, 100%, 95%, 0.95);
 	}
 
-	searchMenu img#iconSearch {
+		searchMenu .icon.iconSearch {
 
-		width: 40px;
-		height: 40px;
-	}
+			background-image: url("../images/nav/search.png");
+		}
 
-	searchMenu input {
+		searchMenu input {
 
-		width: 100%;
-		padding-left: 10px;
+			width: 100%;
+			padding-left: 10px;
 
-		/* font block */
-		font-family: var(--sans-serif-condensed-font);
-		color: hsla(220, 100%, 80%, 1.00);
-		font-size: 15pt;
-		font-weight: 400;
-		letter-spacing: 1px;
-		line-height: 100%;
-		text-transform: uppercase;
+			/* font block */
+			font-family: var(--sans-serif-condensed-font);
+			color: hsla(220, 100%, 80%, 1.00);
+			font-size: 15pt;
+			font-weight: 400;
+			letter-spacing: 1px;
+			line-height: 100%;
+			text-transform: uppercase;
 
-		transition: color 0.3s;
-	}
+			transition: color 0.3s;
+		}
 
 	userMenu {
 
@@ -344,87 +290,97 @@ nav {
 
 		cursor: pointer;
 
-		padding: 0 20px 0 20px;
+		padding: 0 15px 0 15px;
 		background-color: hsla(0, 0%, 100%, .95);
-		/* background-color: hsla(220, 100%, 90%, 0.95); */
 	}
 
-	userMenu img#iconUserMenu {
+		userMenu .icon.iconUserMenu {
 
-		width: 45px;
-		height: 45px;
-	}
+			width: 40px;
+			height: 40px;
+			background-size: 40px 40px;
 
-	userMenu #userMenuChoices {
+			background-image: url("../images/nav/user.png");
+		}
 
-		display: none;
-		position: fixed;
-		right: 20px;
-		top: 77px;
-	}
+		userMenu .icon.iconUserMenu:hover,
+		userMenu .icon.iconUserMenu.iconUserMenuActive {
 
-	userMenu #userMenuChoices:before {
+			cursor: pointer;
 
-		content: "";
-		position: absolute;
-		top: -20px;
-		right: 13px;
-		width: 0;
-		height: 0;
-		border-top: 10px solid transparent;
-		border-left: 10px solid transparent;
-		border-right: 10px solid transparent;
-		border-bottom: 10px solid hsla(220, 96%, 90%, 0.95);
-	}
+			background-image: url("../images/nav/user-active.png");
+		}
 
-	userMenu #userMenuChoices a {
+		userMenu #userMenuChoices {
 
-		/* font block */
-		font-family: var(--sans-serif-condensed-font);
-		color: hsla(220, 100%, 75%, 1.00);
-		font-size: 9.5pt;
-		font-weight: 400;
-		letter-spacing: 1px;
-		line-height: 100%;
-		text-transform: uppercase;
+			display: none;
+			position: fixed;
+			right: 10px;
+			top: 77px;
+		}
 
-		text-align: right;
+		userMenu #userMenuChoices:before {
 
-		display: block;
-		padding: 15px 20px;
-		background-color: hsla(220, 100%, 95%, 0.95);
-	}
+			content: "";
+			position: absolute;
+			top: -20px;
+			right: 15px;
+			width: 0;
+			height: 0;
+			border-top: 10px solid transparent;
+			border-left: 10px solid transparent;
+			border-right: 10px solid transparent;
+			border-bottom: 10px solid hsla(220, 96%, 90%, 0.95);
+		}
 
-	userMenu #userMenuChoices a:hover {
+		userMenu #userMenuChoices a {
 
-		background-color:  hsla(220, 100%, 90%, 0.95);
-		color: white;
-	}
+			/* font block */
+			font-family: var(--sans-serif-condensed-font);
+			color: hsla(220, 100%, 75%, 1.00);
+			font-size: 9.5pt;
+			font-weight: 400;
+			letter-spacing: 1px;
+			line-height: 100%;
+			text-transform: uppercase;
 
-	userMenu #userMenuChoices div {
+			text-align: right;
 
-		/* font block */
-		font-family: var(--sans-serif-condensed-font);
-		color: hsla(220, 100%, 75%, 1.00);
-		font-size: 9.5pt;
-		font-weight: 400;
-		letter-spacing: 1px;
-		line-height: 100%;
-		text-transform: uppercase;
+			display: block;
+			padding: 15px 20px;
+			background-color: hsla(220, 100%, 95%, 0.95);
+		}
 
-		text-align: right;
+		userMenu #userMenuChoices a:hover {
 
-		display: block;
-		padding: 10px 20px;
-		background-color: hsla(220, 100%, 90%, 0.95);
-	}
+			background-color:  hsla(220, 100%, 90%, 0.95);
+			color: white;
+		}
 
-	userMenu #userMenuChoices hr {
+		userMenu #userMenuChoices div {
 
-		background-color: hsla(220, 100%, 98%, 0.95);
+			/* font block */
+			font-family: var(--sans-serif-condensed-font);
+			color: hsla(220, 100%, 75%, 1.00);
+			font-size: 9.5pt;
+			font-weight: 400;
+			letter-spacing: 1px;
+			line-height: 100%;
+			text-transform: uppercase;
 
-		height: 2px;
-	}
+			text-align: right;
+
+			display: block;
+			padding: 10px 20px;
+			background-color: hsla(220, 100%, 90%, 0.95);
+		}
+
+		userMenu #userMenuChoices hr {
+
+			background-color: hsla(220, 100%, 98%, 0.95);
+
+			height: 2px;
+		}
 
 	@media only screen and (max-width: 1024px) {
 
@@ -453,17 +409,55 @@ nav {
 
 		/* Mobile */
 
-		mainMenu #navIndex {
-
-			display: none;
-		}
-
 		mainMenu {
 
 			grid-template-columns: repeat(2, max-content);
 			grid-column-gap: 8px;
 		}
+
+		mainMenu #navDashboard {
+
+			padding-right: 0;
+		}
+
+		mainMenu #navIndex {
+
+			display: none;
+		}
+
+		searchMenu {
+
+			grid-template-columns: auto;
+		}
+
+		searchMenu .icon.iconSearch {
+
+			display: none
+		}
+
+		userMenu .icon.iconUserMenu {
+
+			width: 10px;
+
+			background-image: url("../images/nav/user-compact.png");
+		}
+
+		userMenu .icon.iconUserMenu:hover,
+		userMenu .icon.iconUserMenu.iconUserMenuActive {
+
+			background-image: url("../images/nav/user-compact-active.png");
+		}
+
+		userMenu #userMenuChoices:before {
+
+			right: 5px;
+		}
 	}
+
+main {
+
+	padding-top: var(--nav-menu-height);
+}
 
 	mainFlash {
 
@@ -494,41 +488,36 @@ nav {
 		text-transform: uppercase;
 
 		text-align: center;
-
-		transition: .2s;
 	}
 
 	mainFlash .flashMessage.flashSuccess {
 
 		background-color: hsla(220, 100%, 95%, 0.95);
-		color: hsla(220, 100%, 80%, 1.00);
-	}
-
-	mainFlash .flashMessage.flashSuccess:hover {
-
 		color: hsla(220, 100%, 70%, 1.00);
 	}
 
 	mainFlash .flashMessage.flashWarning {
 
 		background-color: hsla(0, 100%, 96%, 0.95);
-		color: hsla(0, 100%, 80%, 1.00);
-	}
-
-	mainFlash .flashMessage.flashWarning:hover {
-
 		color: hsla(0, 100%, 70%, 1.00);
 	}
 
-	mainFlash .flashClose {
+	mainFlash .flashMessage .flashClose {
 
 		cursor: pointer;
+
+		transition: .3s;
 	}
 
-main {
+	mainFlash .flashMessage.flashWarning .flashClose:hover {
 
-	padding-top: var(--nav-menu-height);
-}
+		color: hsla(0, 100%, 60%, 1.00);
+	}
+
+	mainFlash .flashMessage.flashSuccess .flashClose:hover {
+
+		color: hsla(220, 100%, 60%, 1.00);
+	}
 
 footer {
 
@@ -768,9 +757,11 @@ footer .footerInfo {
 
 .paginationContainer .paginationInfo .paginationMatches {
 
-	padding-right: 10px;
-
 	color: rgba(0, 0, 0, 0.25);
+}
+
+.paginationContainer .paginationInfo .paginationMatches::after {
+	content: " ⋅ "
 }
 
 .paginationContainer .paginationPages .paginationPageNumber.currentPage,
@@ -780,6 +771,10 @@ footer .footerInfo {
 }
 
 @media only screen and (max-width: 768px) {
+
+	.paginationContainer .paginationInfo .paginationMatches::after {
+		content: ""
+	}
 
 	.paginationContainer .paginationPages {
 
@@ -1014,19 +1009,51 @@ mark {
 
 .annotationContainerInteractive .annotationOptions {
 
-	padding: 15px 20px;
+	padding: 10px;
 
 	opacity: 0;
 
 	transition: .3s;
 
 	display: grid;
-	grid-column-gap: 10px;
-	grid-template-columns: repeat(3, max-content) auto;
+	grid-template-columns: repeat(2, auto);
 }
 
-.annotationContainerInteractive .annotationOptions .deleteAnnotation {
+.annotationContainerInteractive .annotationOptions .deleteAnnotation,
+.annotationContainerInteractive .annotationOptions .killAnnotation {
+
 	justify-self: end;
+}
+
+.annotationContainerInteractive .annotationOptions .icon {
+
+	width: 28px;
+	height: 28px;
+	background-size: 28px 28px;
+	background-position: center;
+	background-repeat: no-repeat;
+
+	transition: .3s;
+}
+
+.annotationContainerInteractive .annotationOptions #iconEditAnnotation {
+
+	background-image: url("../images/annotation_options/edit.png");
+}
+
+.annotationContainerInteractive .annotationOptions #iconEditAnnotation:hover {
+
+	background-image: url("../images/annotation_options/edit-active.png");
+}
+
+.annotationContainerInteractive .annotationOptions #iconDeleteAnnotation {
+
+	background-image: url("../images/annotation_options/delete.png");
+}
+
+.annotationContainerInteractive .annotationOptions #iconDeleteAnnotation:hover {
+
+	background-image: url("../images/annotation_options/delete-active.png");
 }
 
 /* ------------------ passage ----------------- */
@@ -1289,11 +1316,6 @@ textarea {
 	vertical-align: top;
 }
 
-input[type=password]{
-
-	/* letter-spacing: 2px; */
-}
-
 .formField input,
 .formField textarea {
 
@@ -1341,11 +1363,6 @@ input[type=password]{
 .formField:not(:first-child) .fieldLabel {
 
 	padding-top: 5px;
-}
-
-.toggleAPILabel {
-
-	padding: 0 0 2px 3px;
 }
 
 /* ------------------------------- forms ------------------------------- */
@@ -1411,7 +1428,7 @@ hr {
 
 	/* font block */
 	font-family: var(--sans-serif-condensed-font);
-	color: var(--tag-text-color);
+	color: hsl(0, 0%, 53%);
 	font-size: 10.5pt;
 	font-weight: 400;
 	letter-spacing: unset;
@@ -1727,7 +1744,7 @@ loginFlash .flashMessage .flashClose {
 
 	color: hsl(220, 100%, 70%);
 
-	transition: .2s;
+	transition: .3s;
 }
 
 #flatPage a:hover {

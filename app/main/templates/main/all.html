@@ -9,7 +9,7 @@
 
         <div class="blockTitle">all annotations</div>
 
-        {{ pagination_top(results, url) }}
+        {{ pagination_top(results, current_url) }}
 
     </div>
 
@@ -39,6 +39,6 @@
 
     {% endif %}
 
-    {{ pagination_bottom(results, url) }}
+    {{ pagination_bottom(results, current_url) }}
 
 {% endblock %}

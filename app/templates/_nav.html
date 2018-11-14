@@ -1,46 +1,23 @@
-{% from "_macros.html" import flash %}
-
-
-{% macro current(page) -%}
-
-	{% if request.endpoint == page %} current {% endif %}
-
-{%- endmacro %}
-
-
-{% macro interactive_icon(id, filename_root) -%}
-
-	{% set active = "images/nav/" ~ filename_root ~ "-active.png" %}
-	{% set inactive = "images/nav/" ~ filename_root ~ ".png" %}
-
-	{% set url_active = url_for("static", filename=active) %}
-	{% set url_inactive = url_for("static", filename=inactive) %}
-
-	<img id="{{ id }}" src="{{ url_inactive }}" active="{{ url_active }}" inactive="{{ url_inactive }}"/>
-
-{%- endmacro %}
-
-
 <nav>
 
 	<mainMenu>
 
 		<a id="navDashboard" href="{{ url_for('main.dashboard') }}">
-			<img id="iconDashboard" src="{{ url_for('static', filename='images/nav/dashboard.png') }}"/>
+			<div class="icon iconDashboard"></div>
 		</a>
 
 		<a id="navIndex" href="{{ url_for('main.index') }}">
-			{{ interactive_icon(id="iconIndex", filename_root="index") }}
+			<div class="icon iconIndex"></div>
 		</a>
 
 
 		<a id="navRecent" href="{{ url_for('main.recent') }}">
-			{{ interactive_icon(id="iconRecent", filename_root="recent") }}
+			<div class="icon iconRecent"></div>
 		</a>
 
 		<div id="navCreate">
-			{{ interactive_icon(id="iconCreateMenu", filename_root="create") }}
-			<div id="navCreateChoices" class="dropShadowBig">
+			<div class="icon iconCreateMenu"></div>
+			<div id="createMenuChoices" class="dropShadowBig">
 				<div>create new</div>
 				<hr>
 				<a href="{{ url_for('main.new_annotation') }}">annotation</a>
@@ -50,7 +27,7 @@
 		</div>
 
 		<a id="navTrash" href="{{ url_for('main.trash') }}">
-			{{ interactive_icon(id="iconTrash", filename_root="trash") }}
+			<div class="icon iconTrash"></div>
 		</a>
 
 	</mainMenu>
@@ -59,7 +36,7 @@
 
 		{% set search = request.args.get("search") if request.endpoint == "main.search"  else "" %}
 
-		<img id="iconSearch" src="{{ url_for('static', filename='images/nav/search.png') }}"/>
+		<div class="icon iconSearch"></div>
 
 		<form action="{{ url_for('main.search') }}" method="GET">
 			<input type="text" name="search" value="{{ search }}"/>
@@ -69,7 +46,7 @@
 
 	<userMenu>
 
-		{{ interactive_icon(id="iconUserMenu", filename_root="user") }}
+		<div class="icon iconUserMenu"></div>
 		<div id="userMenuChoices" class="dropShadowBig">
 			<div>signed in as {{ current_user.display_name }}</div>
 			<hr>

@@ -46,13 +46,13 @@
 
 {%- endmacro %}
 
-{% macro pagination_top(results, url) -%}
+{% macro pagination_top(results, current_url) -%}
 
     {% if results.total > 0 %}
 
         <div class="blockPaginationTop">
 
-            {{ generate_pagination(results, url) }}
+            {{ generate_pagination(results, current_url) }}
 
         </div>
 
@@ -61,7 +61,7 @@
 {% endmacro %}
 
 
-{% macro pagination_bottom(results, url) -%}
+{% macro pagination_bottom(results, current_url) -%}
 
     {% if results.total > 0 %}
 
@@ -69,7 +69,7 @@
 
             <div class="blockPaginationBottom">
 
-                {{ generate_pagination(results, url) }}
+                {{ generate_pagination(results, current_url) }}
 
             </div>
 
@@ -80,7 +80,9 @@
 {% endmacro %}
 
 
-{% macro generate_pagination(results, url) -%}
+{% macro generate_pagination(results, current_url) -%}
+
+    {% set search = request.args.get("search") if request.endpoint == "main.search"  else none %}
 
     <div class="paginationContainer">
 
@@ -98,9 +100,10 @@
 
             <div class="paginationPages">
 
-                {% if url.prev_page %}
+                {% if results.has_prev %}
 
-                    <a class="link button" href="{{ url.prev_page }}">prev</a>
+                    <a class="link button"
+                        href="{{ url_for(current_url.endpoint, in_request=in_request, page=results.prev_num, mode=current_url.mode, search=search) }}">prev</a>
 
                 {% else %}
 
@@ -114,7 +117,8 @@
 
                         {% if page != results.page %}
 
-                            <a class="paginationPageNumber" href="{{ url_for(url.endpoint, in_request=in_request, page=page, mode=url.mode) }}">{{ page }}</a>
+                            <a class="paginationPageNumber"
+                                href="{{ url_for(current_url.endpoint, in_request=in_request, page=page, mode=current_url.mode, search=search) }}">{{ page }}</a>
 
                         {% else %}
 
@@ -130,9 +134,10 @@
 
                 {%- endfor %}
 
-                {% if url.next_page %}
+                {% if results.has_next %}
 
-                    <a class="link button" href="{{ url.next_page }}">next</a>
+                    <a class="link button"
+                        href="{{ url_for(current_url.endpoint, in_request=in_request, page=results.next_num, mode=current_url.mode, search=search) }}">next</a>
 
                 {% else %}
 
@@ -273,31 +278,38 @@
 
         <div class="annotationOptions">
 
-            {% if request.endpoint == 'main.trash' %}
+            {% if request.endpoint == "main.trash" %}
 
-                <div class="link button faded pmTrigger restoreAnnotation" action="restore"
-                    message="restore annotation?" url="{{ url_for('main.restore_annotation') }}"
-                    data="{{ annotation.id }}">restore</div>
+                <div class="restoreAnnotation pmTrigger link button faded"
+                    action="restore"
+                    message="restore annotation?"
+                    url="{{ url_for('main.restore_annotation') }}"
+                    data="{{ annotation.id }}">
+                    restore
+                </div>
 
-                <div class="link button faded pmTrigger killAnnotation" action="kill"
-                    message="kill annotation?" url="{{ url_for('main.kill_annotation') }}"
-                    data="{{ annotation.id }}">kill</div>
+                <div class="killAnnotation pmTrigger link button faded"
+                    action="kill"
+                    message="kill annotation?"
+                    url="{{ url_for('main.kill_annotation') }}"
+                    data="{{ annotation.id }}">
+                    kill
+                </div>
 
             {% else %}
 
-                <a class="link button faded editAnnotation" href="{{ url_for('main.edit_annotation', in_request=annotation.id) }}">edit</a>
+                <a class="editAnnotation"
+                    href="{{ url_for('main.edit_annotation', in_request=annotation.id) }}">
+                    <div class="icon" id="iconEditAnnotation"></div>
+                </a>
 
-                <div class="link button ghost pmDisabledTrigger duplicateAnnotation" action="duplicate"
-                    message="duplicate annotation?" url="{{ url_for('main.dashboard') }}"
-                    data="{{ annotation.id }}">duplicate</div>
-
-                <div class="link button ghost pmDisabledTrigger shareAnnotation" action="share"
-                    message="share annotation?" url="{{ url_for('main.dashboard') }}"
-                    data="{{ annotation.id }}">share</div>
-
-                <div class="link button faded pmTrigger deleteAnnotation" action="delete"
-                    message="delete annotation?" url="{{ url_for('main.delete_annotation') }}"
-                    data="{{ annotation.id }}">delete</div>
+                <div class="deleteAnnotation pmTrigger"
+                    action="delete"
+                    message="delete annotation?"
+                    url="{{ url_for('main.delete_annotation') }}"
+                    data="{{ annotation.id }}">
+                    <div class="icon" id="iconDeleteAnnotation"></div>
+                </div>
 
             {% endif %}
 

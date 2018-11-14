@@ -4,7 +4,7 @@ import re
 
 from app.models import Annotation, Source, Author, Tag, Collection
 
-from flask import render_template, url_for
+from flask import render_template
 from flask_login import current_user
 from sqlalchemy import or_, and_
 
@@ -12,9 +12,7 @@ from sqlalchemy import or_, and_
 def paginated_annotations(template, endpoint, results, in_request=None, mode=None,
                           page=None, request_info=None, search_info=None):
 
-    """
-
-    Returns the Flask "render_template" function with "annotations.html".
+    """ Returns the Flask "render_template" function in a standardized fashion.
 
     endpoint:str - Current route endpoint e.g. "main.search".
 
@@ -33,9 +31,12 @@ def paginated_annotations(template, endpoint, results, in_request=None, mode=Non
 
     page:int - Current page number.
 
-    request_info: Annotation object which is serialized if available.
+    request_info:Annotation/Tag/Collection/Source/Author object - Serialized if
+    available to provide display information for current page.
 
-    search_info:
+    search_info:dict - Dictionary of parsed search query generated from
+    SearchAnnotations() in main/tools.py. Accessible by calling the"info"
+    property e.g. "SearchAnnotations({ query string }).info"
 
     """
 
@@ -44,25 +45,14 @@ def paginated_annotations(template, endpoint, results, in_request=None, mode=Non
     # Paginate results
     results = results.paginate(page=page, per_page=current_user.results_per_page, error_out=False)
 
-    # Generate previous page url
-    prev_page = None
-    if results.has_prev:
-        prev_page = url_for(endpoint, in_request=in_request, page=results.prev_num, mode=mode)
-
-    # Generate next page url
-    next_page = None
-    if results.has_next:
-        next_page = url_for(endpoint, in_request=in_request, page=results.next_num, mode=mode)
-
-    url = {
+    current_url = {
         "endpoint": endpoint,
-        "mode": mode,
-        "prev_page": prev_page,
-        "next_page": next_page,
+        "mode": mode
     }
 
-    return render_template(template, results=results, in_request=in_request, url=url,
-                           request_info=request_info, search_info=search_info)
+    return render_template(template, results=results, in_request=in_request,
+                           current_url=current_url, request_info=request_info,
+                           search_info=search_info)
 
 
 class SearchAnnotations(object):
@@ -289,7 +279,7 @@ class SearchAnnotations(object):
 
                 """
 
-                Generates an column independant or_ query for each term. Using
+                Generates an column independent or_ query for each term. Using
                 or_ searches any of the fields. This filter is then nested
                 inside an and_ or an or_ filter to compare each term in the
                 list to the other.

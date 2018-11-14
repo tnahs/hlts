@@ -40,63 +40,22 @@ window.addEventListener("load", function(){
         }
     });
 
-    // icon index
+    // create menu
 
-    const iconIndex = document.querySelector("#iconIndex");
-
-    iconIndex.addEventListener("mouseover", function() {
-
-        iconIndex.src = iconIndex.getAttribute("active");
-    });
-
-    iconIndex.addEventListener("mouseout", function() {
-
-        iconIndex.src = iconIndex.getAttribute("inactive");
-    });
-
-    // icon recent
-
-    const iconRecent = document.querySelector("#iconRecent");
-
-    iconRecent.addEventListener("mouseover", function() {
-
-        iconRecent.src = iconRecent.getAttribute("active");
-    });
-
-    iconRecent.addEventListener("mouseout", function() {
-
-        iconRecent.src = iconRecent.getAttribute("inactive");
-    });
-
-    // icon create
-
-    const iconCreateMenu = document.querySelector("#iconCreateMenu");
-    const navCreateChoices = document.querySelector("#navCreateChoices");
-
-    iconCreateMenu.addEventListener("mouseover", function() {
-
-        iconCreateMenu.src = iconCreateMenu.getAttribute("active");
-    });
-
-    iconCreateMenu.addEventListener("mouseout", function() {
-
-        if (!navCreateChoices.style.display || navCreateChoices.style.display === "none") {
-
-            iconCreateMenu.src = iconCreateMenu.getAttribute("inactive");
-        }
-    });
+    const iconCreateMenu = document.querySelector(".iconCreateMenu");
+    const createMenuChoices = document.querySelector("#createMenuChoices");
 
     iconCreateMenu.addEventListener("click", function() {
 
-        if (!navCreateChoices.style.display || navCreateChoices.style.display === "none") {
+        if (!createMenuChoices.style.display || createMenuChoices.style.display === "none") {
 
-            iconCreateMenu.src = iconCreateMenu.getAttribute("active");
-            navCreateChoices.style.display = "block";
+            iconCreateMenu.classList.add("iconCreateMenuActive");
+            createMenuChoices.style.display = "block";
         }
         else {
 
-            iconCreateMenu.src = iconCreateMenu.getAttribute("inactive");
-            navCreateChoices.style.display = "none";
+            iconCreateMenu.classList.remove("iconCreateMenuActive");
+            createMenuChoices.style.display = "none";
         }
     });
 
@@ -104,53 +63,26 @@ window.addEventListener("load", function(){
 
         if (event.target != iconCreateMenu) {
 
-            iconCreateMenu.src = iconCreateMenu.getAttribute("inactive");
-            navCreateChoices.style.display = "none";
+            iconCreateMenu.classList.remove("iconCreateMenuActive");
+            createMenuChoices.style.display = "none";
         }
     });
 
-    // icon trash
+    // user menu
 
-    const iconTrash = document.querySelector("#iconTrash");
-
-    iconTrash.addEventListener("mouseover", function() {
-
-        iconTrash.src = iconTrash.getAttribute("active");
-    });
-
-    iconTrash.addEventListener("mouseout", function() {
-
-        iconTrash.src = iconTrash.getAttribute("inactive");
-    });
-
-    // icon user
-
-    const iconUserMenu = document.querySelector("#iconUserMenu");
+    const iconUserMenu = document.querySelector(".iconUserMenu");
     const userMenuChoices = document.querySelector("#userMenuChoices");
-
-    iconUserMenu.addEventListener("mouseover", function() {
-
-        iconUserMenu.src = iconUserMenu.getAttribute("active");
-    });
-
-    iconUserMenu.addEventListener("mouseout", function() {
-
-        if (!userMenuChoices.style.display || userMenuChoices.style.display === "none") {
-
-            iconUserMenu.src = iconUserMenu.getAttribute("inactive");
-        }
-    });
 
     iconUserMenu.addEventListener("click", function() {
 
         if (!userMenuChoices.style.display || userMenuChoices.style.display === "none") {
 
-            iconUserMenu.src = iconUserMenu.getAttribute("active");
+            iconUserMenu.classList.add("iconUserMenuActive");
             userMenuChoices.style.display = "block";
         }
         else {
 
-            iconUserMenu.src = iconUserMenu.getAttribute("inactive");
+            iconUserMenu.classList.remove("iconUserMenuActive");
             userMenuChoices.style.display = "none";
         }
     });
@@ -159,30 +91,33 @@ window.addEventListener("load", function(){
 
         if (event.target != iconUserMenu) {
 
-            iconUserMenu.src = iconUserMenu.getAttribute("inactive");
+            iconUserMenu.classList.remove("iconUserMenuActive");
             userMenuChoices.style.display = "none";
         }
     });
 
+
     //--------------------------------
 
 
-    const toggleAPIKey = document.querySelector("#toggleAPIKey");
-    const apiKey = document.querySelector("#api_key");
+    const toggleApiKey = document.querySelector("#toggleApiKey");
+    const apiKey = document.querySelector("#apiKey");
 
-    if(apiKey && toggleAPIKey) {
+    if(apiKey && toggleApiKey) {
 
-        apiKey.type = "password"
+        const blurredApiKey = "API KEY HIDDEN"
 
-        toggleAPIKey.addEventListener("click", function() {
+        apiKey.innerText = blurredApiKey;
 
-            if (apiKey.type === "password") {
+        toggleApiKey.addEventListener("click", function() {
 
-                apiKey.type = "text";
+            if (apiKey.innerText === blurredApiKey) {
+
+                apiKey.innerText = apiKey.getAttribute("value");
             }
             else {
 
-                apiKey.type = "password";
+                apiKey.innerText = blurredApiKey;
             }
         });
     }
@@ -207,18 +142,18 @@ window.addEventListener("load", function(){
 
     function refreshPillColors(pillColorsData) {
 
-        const pills = document.querySelectorAll('.pill');
+        const pills = document.querySelectorAll(".pill");
 
         for (let data of pillColorsData) {
 
             for (let pill of pills) {
 
-                const pillName = pill.getAttribute('name');
+                const pillName = pill.getAttribute("name");
 
                 if (pillName == data.name){
 
                     pill.style.background = data.color;
-                    pill.style.color = 'white';
+                    pill.style.color = "white";
                 }
             }
         }

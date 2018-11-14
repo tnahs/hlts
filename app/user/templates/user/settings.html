@@ -45,9 +45,9 @@
 
                 <div class="blockContent">
 
-                    {{ render_form_field(form.api_key) }}
-
-                    <div class="toggleAPILabel link button faded" id="toggleAPIKey">Show API Key</div>
+                    <span id="toggleApiKey" class="link button">toggle api key</span>
+                    <span class="text"> ⋅ </span>
+                    <span id="apiKey" class="text faded" value="{{ form.api_key.data }}"></span>
 
                 </div>
 

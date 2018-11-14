@@ -9,7 +9,7 @@
 
         <div class="blockTitle">random annotations</div>
 
-        {{ pagination_top(results, url) }}
+        {{ pagination_top(results, current_url) }}
 
     </div>
 
@@ -37,7 +37,7 @@
 
         </div>
 
-        {{ pagination_bottom(results, url) }}
+        {{ pagination_bottom(results, current_url) }}
 
     {% endif %}
 
