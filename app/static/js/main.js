@@ -5,17 +5,17 @@ window.addEventListener("load", function(){
     /* -------------------------------------------------------------------- */
     /* Close mainFlash ------------------------------------------------- */
 
-    const flashMessages = document.querySelectorAll("mainFlash .flashMessage");
+    const mainFlashMessages = document.querySelectorAll("mainFlash .flashMessage");
 
-    if (flashMessages) {
+    if (mainFlashMessages) {
 
-        for (let flashMessage of flashMessages) {
+        for (let mainFlashMessage of mainFlashMessages) {
 
-            const flashClose = flashMessage.querySelector(".flashClose");
+            const flashClose = mainFlashMessage.querySelector(".flashClose");
 
             flashClose.addEventListener("click", function() {
 
-                flashMessage.remove()
+                mainFlashMessage.remove()
             });
         }
     }
@@ -23,8 +23,14 @@ window.addEventListener("load", function(){
     /* -------------------------------------------------------------------- */
     // Nav ---------------------------------------------------------------- */
 
+    navDropShadow()
 
     document.addEventListener("scroll", ( ) => {
+
+        navDropShadow()
+    });
+
+    function navDropShadow() {
 
         let scrollY = window.scrollY;
 
@@ -38,7 +44,7 @@ window.addEventListener("load", function(){
 
             nav.classList.remove("dropShadowBig");
         }
-    });
+    }
 
     // create menu
 
