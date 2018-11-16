@@ -79,12 +79,12 @@ nav {
 
 	display: grid;
 	grid-template-columns: max-content auto max-content;
-	grid-template-areas: "navMain navSearch navUser";
+	grid-template-areas: "navMainMenuBar navSearchMenuBar navMainMenu";
 }
 
-	mainMenu {
+	mainMenuBar {
 
-		grid-area: navMain;
+		grid-area: navMainMenuBar;
 
 		height: var(--nav-menu-height);
 		padding: 0 15px 0 30px;
@@ -96,13 +96,13 @@ nav {
 		align-items: center;
 	}
 
-	mainMenu #navDashboard {
+	mainMenuBar #buttonDashboard {
 
 		padding-right: 10px;
 	}
 
-	mainMenu .icon,
-	searchMenu .icon,
+	mainMenuBar .icon,
+	searchMenuBar .icon,
 	userMenu .icon {
 
 		width: 32px;
@@ -111,10 +111,10 @@ nav {
 		background-position: center;
 		background-repeat: no-repeat;
 
-		transition: .3s;
+		transition: background-image .3s;
 	}
 
-	mainMenu #navDashboard .icon.iconDashboard {
+	mainMenuBar #buttonDashboard .icon.iconDashboard {
 
 		width: 80px;
 		height: 30px;
@@ -123,76 +123,62 @@ nav {
 		background-image: url("../images/nav/dashboard.png");
 	}
 
-	mainMenu #navIndex .icon.iconIndex {
+	mainMenuBar #buttonIndex .icon.iconIndex {
 
 		background-image: url("../images/nav/index.png");
 	}
 
-	mainMenu #navIndex .icon.iconIndex:hover {
+	mainMenuBar #buttonIndex .icon.iconIndex:hover {
 
 		background-image: url("../images/nav/index-active.png");
 	}
 
-	mainMenu #navRecent .icon.iconRecent {
+	mainMenuBar #buttonRecent .icon.iconRecent {
 
 		background-image: url("../images/nav/recent.png");
 	}
 
-	mainMenu #navRecent .icon.iconRecent:hover {
+	mainMenuBar #buttonRecent .icon.iconRecent:hover {
 
 		background-image: url("../images/nav/recent-active.png");
 	}
 
-	mainMenu #navTrash .icon.iconTrash {
+	mainMenuBar #buttonTrash .icon.iconTrash {
 
 		background-image: url("../images/nav/trash.png");
 	}
 
-	mainMenu #navTrash .icon.iconTrash:hover {
+	mainMenuBar #buttonTrash .icon.iconTrash:hover {
 
 		background-image: url("../images/nav/trash-active.png");
 	}
 
-	mainMenu #navCreate {
+	mainMenuBar #buttonCreate {
 
 		/*  */
 	}
 
-		mainMenu #navCreate .icon.iconCreateMenu {
+		mainMenuBar #buttonCreate .icon.iconCreateMenu {
 
 			background-image: url("../images/nav/create.png");
 		}
 
-		mainMenu #navCreate .icon.iconCreateMenu:hover,
-		mainMenu #navCreate .icon.iconCreateMenu.iconCreateMenuActive {
+		mainMenuBar #buttonCreate .icon.iconCreateMenu:hover,
+		mainMenuBar #buttonCreate .icon.iconCreateMenu.iconCreateMenuActive {
 
 			cursor: pointer;
 
 			background-image: url("../images/nav/create-active.png");
 		}
 
-		mainMenu #navCreate #createMenuChoices {
+		mainMenuBar #buttonCreate #createMenuChoices {
 
 			display: none;
 			position: fixed;
 			top: 77px;
 		}
 
-		mainMenu #navCreate #createMenuChoices:before {
-
-			content: "";
-			position: absolute;
-			top: -20px;
-			left: 6px;
-			width: 0;
-			height: 0;
-			border-top: 10px solid transparent;
-			border-left: 10px solid transparent;
-			border-right: 10px solid transparent;
-			border-bottom: 10px solid hsla(220, 100%, 90%, 0.95);
-		}
-
-		mainMenu #navCreate #createMenuChoices a {
+		mainMenuBar #buttonCreate #createMenuChoices a {
 
 			/* font block */
 			font-family: var(--sans-serif-condensed-font);
@@ -208,20 +194,20 @@ nav {
 			background-color: hsla(220, 100%, 95%, 0.95);
 		}
 
-		mainMenu #navCreate #createMenuChoices a:hover {
+		mainMenuBar #buttonCreate #createMenuChoices a:hover {
 
 			background-color:  hsla(220, 100%, 90%, 0.95);
 			color: white;
 		}
 
-		mainMenu #navCreate #createMenuChoices a.disabled,
-		mainMenu #navCreate #createMenuChoices a.disabled:hover {
+		mainMenuBar #buttonCreate #createMenuChoices a.disabled,
+		mainMenuBar #buttonCreate #createMenuChoices a.disabled:hover {
 
 			cursor: default;
 			color: hsla(220, 100%, 75%, .50);
 		}
 
-		mainMenu #navCreate #createMenuChoices div {
+		mainMenuBar #buttonCreate #createMenuChoices div {
 
 			/* font block */
 			font-family: var(--sans-serif-condensed-font);
@@ -239,16 +225,16 @@ nav {
 			background-color: hsla(220, 100%, 90%, 0.95);
 		}
 
-		mainMenu #createMenuChoices hr {
+		mainMenuBar #createMenuChoices hr {
 
 			background-color: hsla(220, 100%, 92%, 0.95);
 
 			height: 2px;
 		}
 
-	searchMenu {
+	searchMenuBar {
 
-		grid-area: navSearch;
+		grid-area: navSearchMenuBar;
 
 		display: grid;
 		grid-template-columns: max-content auto;
@@ -259,12 +245,12 @@ nav {
 		background-color: hsla(220, 100%, 95%, 0.95);
 	}
 
-		searchMenu .icon.iconSearch {
+		searchMenuBar .icon.iconSearch {
 
 			background-image: url("../images/nav/search.png");
 		}
 
-		searchMenu input {
+		searchMenuBar input {
 
 			width: 100%;
 			padding-left: 10px;
@@ -281,9 +267,9 @@ nav {
 			transition: color 0.3s;
 		}
 
-	userMenu {
+	mainMenu {
 
-		grid-area: navUser;
+		grid-area: navMainMenu;
 
 		display: grid;
 		align-items: center;
@@ -294,7 +280,7 @@ nav {
 		background-color: hsla(0, 0%, 100%, .95);
 	}
 
-		userMenu .icon.iconUserMenu {
+		mainMenu .icon.iconMainMenu {
 
 			width: 40px;
 			height: 40px;
@@ -303,15 +289,15 @@ nav {
 			background-image: url("../images/nav/user.png");
 		}
 
-		userMenu .icon.iconUserMenu:hover,
-		userMenu .icon.iconUserMenu.iconUserMenuActive {
+		mainMenu .icon.iconMainMenu:hover,
+		mainMenu .icon.iconMainMenu.iconMainMenuActive {
 
 			cursor: pointer;
 
 			background-image: url("../images/nav/user-active.png");
 		}
 
-		userMenu #userMenuChoices {
+		mainMenu #mainMenuChoices {
 
 			display: none;
 			position: fixed;
@@ -319,21 +305,7 @@ nav {
 			top: 77px;
 		}
 
-		userMenu #userMenuChoices:before {
-
-			content: "";
-			position: absolute;
-			top: -20px;
-			right: 15px;
-			width: 0;
-			height: 0;
-			border-top: 10px solid transparent;
-			border-left: 10px solid transparent;
-			border-right: 10px solid transparent;
-			border-bottom: 10px solid hsla(220, 96%, 90%, 0.95);
-		}
-
-		userMenu #userMenuChoices a {
+		mainMenu #mainMenuChoices a {
 
 			/* font block */
 			font-family: var(--sans-serif-condensed-font);
@@ -351,13 +323,13 @@ nav {
 			background-color: hsla(220, 100%, 95%, 0.95);
 		}
 
-		userMenu #userMenuChoices a:hover {
+		mainMenu #mainMenuChoices a:hover {
 
 			background-color:  hsla(220, 100%, 90%, 0.95);
 			color: white;
 		}
 
-		userMenu #userMenuChoices div {
+		mainMenu #mainMenuChoices div {
 
 			/* font block */
 			font-family: var(--sans-serif-condensed-font);
@@ -375,84 +347,160 @@ nav {
 			background-color: hsla(220, 100%, 90%, 0.95);
 		}
 
-		userMenu #userMenuChoices hr {
+		mainMenu #mainMenuChoices hr {
 
 			background-color: hsla(220, 100%, 98%, 0.95);
 
 			height: 2px;
 		}
 
-	@media only screen and (max-width: 1024px) {
+	mainMenuCompact {
 
-		/* Mobile */
+		grid-area: navMainMenu;
 
+		display: none;
+		align-items: center;
+
+		cursor: pointer;
+
+		background-color: hsla(0, 0%, 100%, .95);
 	}
 
-	@media only screen and (max-width: 768px) {
+		mainMenuCompact .icon.iconMainMenuCompact {
 
-		/* Mobile */
-
-		mainMenu #navRecent,
-		mainMenu #navTrash {
-
-			display: none;
-		}
-
-		mainMenu {
-
-			grid-template-columns: repeat(3, max-content);
-		}
-
-	}
-
-	@media only screen and (max-width: 512px) {
-
-		/* Mobile */
-
-		mainMenu {
-
-			grid-template-columns: repeat(2, max-content);
-			grid-column-gap: 8px;
-		}
-
-		mainMenu #navDashboard {
-
-			padding-right: 0;
-		}
-
-		mainMenu #navIndex {
-
-			display: none;
-		}
-
-		searchMenu {
-
-			grid-template-columns: auto;
-		}
-
-		searchMenu .icon.iconSearch {
-
-			display: none
-		}
-
-		userMenu .icon.iconUserMenu {
-
-			width: 10px;
+			width: 40px;
+			height: 40px;
+			background-size: 40px 40px;
 
 			background-image: url("../images/nav/user-compact.png");
 		}
 
-		userMenu .icon.iconUserMenu:hover,
-		userMenu .icon.iconUserMenu.iconUserMenuActive {
+		mainMenuCompact .icon.iconMainMenuCompact:hover,
+		mainMenuCompact .icon.iconMainMenuCompact.iconMainMenuCompactActive {
+
+			cursor: pointer;
 
 			background-image: url("../images/nav/user-compact-active.png");
 		}
 
-		userMenu #userMenuChoices:before {
+		mainMenuCompact #mainMenuCompactChoices {
 
-			right: 5px;
+			display: none;
+			position: fixed;
+			right: 10px;
+			top: 77px;
 		}
-	}
+
+		mainMenuCompact #mainMenuCompactChoices a {
+
+			/* font block */
+			font-family: var(--sans-serif-condensed-font);
+			color: hsla(220, 100%, 75%, 1.00);
+			font-size: 9.5pt;
+			font-weight: 400;
+			letter-spacing: 1px;
+			line-height: 100%;
+			text-transform: uppercase;
+
+			text-align: right;
+
+			display: block;
+			padding: 15px 20px;
+			background-color: hsla(220, 100%, 95%, 0.95);
+		}
+
+		mainMenuCompact #mainMenuCompactChoices a:hover {
+
+			background-color:  hsla(220, 100%, 90%, 0.95);
+			color: white;
+		}
+
+		mainMenuCompact #mainMenuCompactChoices div {
+
+			/* font block */
+			font-family: var(--sans-serif-condensed-font);
+			color: hsla(220, 100%, 75%, 1.00);
+			font-size: 9.5pt;
+			font-weight: 400;
+			letter-spacing: 1px;
+			line-height: 100%;
+			text-transform: uppercase;
+
+			text-align: right;
+
+			display: block;
+			padding: 10px 20px;
+			background-color: hsla(220, 100%, 90%, 0.95);
+		}
+
+		mainMenuCompact #mainMenuCompactChoices hr {
+
+			background-color: hsla(220, 100%, 98%, 0.95);
+
+			height: 2px;
+		}
+
+		/* Mobile */
+
+		@media only screen and (max-width: 1024px) {
+
+			/* Mobile */
+
+		}
+
+		@media only screen and (max-width: 768px) {
+
+			/* Mobile */
+
+		}
+
+		@media only screen and (max-width: 512px) {
+
+			/* Mobile */
+
+			mainMenuBar {
+
+				grid-template-columns: repeat(2, max-content);
+			}
+
+			mainMenuBar #buttonDashboard {
+
+				padding-right: 0;
+			}
+
+			mainMenuBar #buttonIndex,
+			mainMenuBar #buttonRecent,
+			mainMenuBar #buttonTrash {
+
+				display: none;
+			}
+
+			mainMenu {
+
+				display: none;
+			}
+
+			mainMenuCompact {
+
+				display: grid;
+			}
+		}
+
+		@media only screen and (max-width: 320px) {
+
+			mainMenuBar {
+
+				padding: 0 15px 0 15px;
+
+				grid-template-columns: auto;
+				grid-column-gap: 0;
+			}
+
+			mainMenuBar #buttonDashboard {
+
+				display: none;
+			}
+		}
 
 main {
 
@@ -506,7 +554,7 @@ main {
 
 		cursor: pointer;
 
-		transition: .3s;
+		transition: color .3s;
 	}
 
 	mainFlash .flashMessage.flashWarning .flashClose:hover {
@@ -1033,7 +1081,7 @@ mark {
 	background-position: center;
 	background-repeat: no-repeat;
 
-	transition: .3s;
+	transition: background-image .3s;
 }
 
 .annotationContainerInteractive .annotationOptions #iconEditAnnotation {

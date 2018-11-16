@@ -47,6 +47,7 @@ Some current quirks to note while using HLTS. None of these should cause any err
 <br>
 
 + Dashboard Annotation count includes deleted items.
++ "Quote of the day" and "Topic of the day" may change when theres a change in the database.
 + Annotation counts on Index pages (Collections/Tags/Sources/Authors) include deleted items.
 + Index does not list Annotations that have no `source` or `author`.
 + When using markdown and performing a search, `this passage` does not match `this ==passage==`.
@@ -57,7 +58,7 @@ Some current quirks to note while using HLTS. None of these should cause any err
 
 <br>
 
-<a class="paddedAnchor" name="submitting-feature-suggestions"></a>
+<a class="paddedAnchor" name="changelog"></a>
 
 ## [Changelog](#changelog)
 

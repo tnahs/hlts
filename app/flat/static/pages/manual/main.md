@@ -109,7 +109,7 @@ HLTS comes with a custom text search syntax. Users are able to choose which fiel
 
 <a class="paddedAnchor" name="search-syntax-examples"></a>
 
-### [Search Syntax Examples](#syntax-examples)
+### [Search Syntax Examples](#search-syntax-examples)
 
 
 `art`
@@ -224,7 +224,10 @@ see: [Using Markdown in HLTS](/manual/markdown)
 
 ## [Backing up your data](#backing-up-your-data)
 
+
 There are two options found on the [Tools](/tools) page for backing up your data `download` and `email`. Downloading will save it to your local disk whereas emailing will send the `.hlts` file to your currently set e-mail address. Both options generate an `.hlts` file containing all your data: annotations, tags, collections and their customized settings. In case of an emergency or a migration to another app, this file can be used to completely restore all your work.
+
+>**NOTE:** One of the original objectives for HLTS was to be able to convert the user's work into a standardized format, such as JSON, and make it available for export. This would ensure that the user can always have access to their work in a small very portable text file. Although JSON isn't the most legible, it is a standardized format and would allow all the data to be migrated to another application or converted to another format. The `.hlts` file exported is just a renamed `.json` file with a specific internal structure, recognized and required by HLTS, that organizes all the application data for backup and/or later restoration.
 
 <br>
 ***
@@ -250,7 +253,8 @@ The `.hlts` file will be validated to make sure the data is in the right format 
 
 ## [API](#api)
 
-HLTS provides simple API methods to import Annotations from an external application.
+HLTS provides two simple API methods to import Annotations from an external application.
+
 <br>
 
 <a class="paddedAnchor" name="your-api-key"></a>
@@ -270,13 +274,13 @@ The API provides two methods to import Annotations. An `add` method and a `refre
 > **NOTE:** Due to server and timeout limits, all Annotation imports are submitted as background jobs. Currently this poses a bit of a problem in that errors only show up in logs which are not visible to the user. Future versions will have more interaction with background jobs.
 
 + **Add Annotations**
-    + url: `api/async/import/annotations/add`
+    + url: `[base url]/api/async/import/annotations/add`
     + The `add` method adds a new annotation only if does not currently exist. If no `id` is provided a new Annotation will be added.
 
 > **NOTE:** The only way to test if an Annotation exists is to check the Annotation's `id`. HLTS is unaware of the contents of an Annotation and will import an Annotation multiple times if it does not find an existing `id`.
 
 + **Refresh Annotations**
-    + url: `api/async/import/annotations/refresh`
+    + url: `[base url]/api/async/import/annotations/refresh`
     + The `refresh` method deletes and re-adds an Annotation if exists but only if `protected=False`. The `protected` attribute is set to `True` when a new Annotation is added by the user. However, to make refreshing an Annotation possible, imported Annotations that have the potential to be refreshed can have their `protected` attribute set to `False`. This allows the `refresh` method to remove the annotation when it detects another one with the same `id` and replace it with the updated version.
 
 
@@ -301,16 +305,16 @@ Annotation JSON Schema
 ``` json
 {
     "id": string,
-    "passage": text,
-    "notes": text,
+    "passage": string,
+    "notes": string,
     "source": {
-        "name": text,
-        "author": text
+        "name": string,
+        "author": string
     },
     "tags": list,
     "collections": list,
-    "created": date,
-    "modified": date,
+    "created": string,
+    "modified": string,
     "origin": string,
     "protected": bool,
     "deleted": bool
@@ -323,78 +327,111 @@ Annotation JSON Schema
 
 ### [Annotation Schema Details](#annotation-schema-details)
 
-+ `id`
++ id
     + **required:** false
     + **input type:** string
-    + **max:** 64
-    + **default:** uuid4
-    + **description:** Ig no `id` is provided a [uuid4](https://docs.python.org/2/library/uuid.html#uuid.uuid4) is generated.
-+ `passage`
+    + **max length:** 64
+    + **default:** [uuid4](https://docs.python.org/2/library/uuid.html#uuid.uuid4) is generated
+    + **description:** The `id` field is used as a unique identifier for each Annotation.
+
+<br>
+
++ passage
     + **required:** true
-    + **input type:** text
-    + **max:** n/a
+    + **input type:** string
+    + **max length:** n/a
     + **default:** n/a
     + **description:** n/a
-+ `notes`
-    + **required:** false
-    + **input type:** text
-    + **max:** n/a
-    + **default:** n/a
-    + **description:** n/a
-+ `source:name`
-    + **required:** false
-    + **input type:** text
-    + **max:** n/a
-    + **default:** n/a
-    + **description:** Provided text will create a `Source` object and set `Source.name` as `source:name` and `Source.author.name` as `source:author`
-+ `source:author`
-    + **required:** false
-    + **input type:** text
-    + **max:** n/a
-    + **default:** n/a
-    + **description:** Provided text will create a `Source` object and set `Source.author.name` as `source:author` and `Source.name` as `source:name`
-+ `tags`
-    + **required:** false
-    + **input type:** list
-    + **max:** n/a
-    + **default:** n/a
-    + **description:** If a `tag` in the list doesn't exist, a new `Tag` object will be created. Otherwise an existing `Tag` object will be linked to the Annotation.
-+ `collections`
-    + **required:** false
-    + **input type:** list
-    + **max:** n/a
-    + **default:** n/a
-    + **description:** If a `collection` in the list doesn't exist, a new `Collection` object will be created. Otherwise an existing `Collection` object will be linked to the Annotation.
-+ `created`
-    + **required:** false
-    + **input type:** string as [ISO 8601 date](https://www.iso.org/iso-8601-date-and-time-format.html)
-    + **max:** n/a
-    + **default:** python `datetime` object
-    + **description:** Provided [ISO 8601 date](https://www.iso.org/iso-8601-date-and-time-format.html) is converted to a python `datetime` object. Otherwise a new python `datetime` object is created at time of import.
-+ `modified`
-    + **required:** false
-    + **input type:** string as [ISO 8601 date](https://www.iso.org/iso-8601-date-and-time-format.html)
-    + **max:** n/a
-    + **default:** python `datetime` object
-    + **description:** Provided [ISO 8601 date](https://www.iso.org/iso-8601-date-and-time-format.html) is converted to a python `datetime` object. Otherwise a new python `datetime` object is created at time of import.
-+ `origin`
+
+<br>
+
++ notes
     + **required:** false
     + **input type:** string
-    + **max:** 64
+    + **max length:** n/a
+    + **default:** n/a
+    + **description:** n/a
+
+<br>
+
++ source: name
+    + **required:** false
+    + **input type:** string
+    + **max length:** n/a
+    + **default:** n/a
+    + **description:** Provided string will create a `Source` object and set `Source.name` as `source:name` and `Source.author.name` as `source:author`
+
+<br>
+
++ source: author
+    + **required:** false
+    + **input type:** string
+    + **max length:** n/a
+    + **default:** n/a
+    + **description:** Provided string will create a `Source` object and set `Source.author.name` as `source:author` and `Source.name` as `source:name`
+
+<br>
+
++ tags
+    + **required:** false
+    + **input type:** list
+    + **max length:** n/a
+    + **default:** n/a
+    + **description:** List must be a list of just tag names e.g. `["tag1", "tag2"]`. If a `tag` in the list doesn't exist, a new `Tag` object will be created. Otherwise an existing `Tag` object will be linked to the Annotation.
+
+<br>
+
++ collections
+    + **required:** false
+    + **input type:** list
+    + **max length:** n/a
+    + **default:** n/a
+    + **description:** List must be a list of just collection names e.g. `["collection1", "collection2"]`. If a `collection` in the list doesn't exist, a new `Collection` object will be created. Otherwise an existing `Collection` object will be linked to the Annotation.
+
+<br>
+
++ created
+    + **required:** false
+    + **input type:** string as [ISO 8601 date](https://www.iso.org/iso-8601-date-and-time-format.html)
+    + **max length:** n/a
+    + **default:** python `datetime` object is created at time of import
+    + **description:** Provided [ISO 8601 date](https://www.iso.org/iso-8601-date-and-time-format.html) is converted to a python `datetime` object.
+
+<br>
+
++ modified
+    + **required:** false
+    + **input type:** string as [ISO 8601 date](https://www.iso.org/iso-8601-date-and-time-format.html)
+    + **max length:** n/a
+    + **default:** python `datetime` object is created at time of import
+    + **description:** Provided [ISO 8601 date](https://www.iso.org/iso-8601-date-and-time-format.html) is converted to a python `datetime` object.
+
+<br>
+
++ origin
+    + **required:** false
+    + **input type:** string
+    + **max length:** 64
     + **default:** "user"
     + **description:** This field can be used to sort different types of imports. e.g. "user" would refer to a user-created annotation whereas "apple_books" would refer to an annotation imported from Apple Books.
-+ `protected`
+
+<br>
+
++ protected
     + **required:** false
     + **input type:** boolean
-    + **max:** n/a
+    + **max length:** n/a
     + **default:** true
-    + **description:** Determines whether or not an Annotation can be deleted during the API `refresh` method.
-+ `deleted`
+    + **description:** Determines whether or not an Annotation can be deleted during the API `refresh` method. See: [Importing Annotations](#importing-annotations)
+
+<br>
+
++ deleted
     + **required:** false
     + **input type:** boolean
-    + **max:** n/a
+    + **max length:** n/a
     + **default:** false
-    + **description:** Soft delete attribute.
+    + **description:** Soft delete attribute. Places the Annotation in the trash.
 
 <br>
 

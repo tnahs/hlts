@@ -70,29 +70,57 @@ window.addEventListener("load", function(){
 
     // user menu
 
-    const iconUserMenu = document.querySelector(".iconUserMenu");
-    const userMenuChoices = document.querySelector("#userMenuChoices");
+    const iconMainMenu = document.querySelector(".iconMainMenu");
+    const mainMenuChoices = document.querySelector("#mainMenuChoices");
 
-    iconUserMenu.addEventListener("click", function() {
+    iconMainMenu.addEventListener("click", function() {
 
-        if (!userMenuChoices.style.display || userMenuChoices.style.display === "none") {
+        if (!mainMenuChoices.style.display || mainMenuChoices.style.display === "none") {
 
-            iconUserMenu.classList.add("iconUserMenuActive");
-            userMenuChoices.style.display = "block";
+            iconMainMenu.classList.add("iconUserMenuActive");
+            mainMenuChoices.style.display = "block";
         }
         else {
 
-            iconUserMenu.classList.remove("iconUserMenuActive");
-            userMenuChoices.style.display = "none";
+            iconMainMenu.classList.remove("iconUserMenuActive");
+            mainMenuChoices.style.display = "none";
         }
     });
 
     document.addEventListener("click", function(event) {
 
-        if (event.target != iconUserMenu) {
+        if (event.target != iconMainMenu) {
 
-            iconUserMenu.classList.remove("iconUserMenuActive");
-            userMenuChoices.style.display = "none";
+            iconMainMenu.classList.remove("iconUserMenuActive");
+            mainMenuChoices.style.display = "none";
+        }
+    });
+
+    // compact menu
+
+    const iconMainMenuCompact = document.querySelector(".iconMainMenuCompact");
+    const mainMenuCompactChoices = document.querySelector("#mainMenuCompactChoices");
+
+    iconMainMenuCompact.addEventListener("click", function() {
+
+        if (!mainMenuCompactChoices.style.display || mainMenuCompactChoices.style.display === "none") {
+
+            iconMainMenuCompact.classList.add("iconMainMenuCompactActive");
+            mainMenuCompactChoices.style.display = "block";
+        }
+        else {
+
+            iconMainMenuCompact.classList.remove("iconMainMenuCompactActive");
+            mainMenuCompactChoices.style.display = "none";
+        }
+    });
+
+    document.addEventListener("click", function(event) {
+
+        if (event.target != iconMainMenuCompact) {
+
+            iconMainMenuCompact.classList.remove("iconMainMenuCompactActive");
+            mainMenuCompactChoices.style.display = "none";
         }
     });
 

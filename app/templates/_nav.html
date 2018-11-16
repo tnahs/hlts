@@ -1,21 +1,21 @@
 <nav>
 
-	<mainMenu>
+	<mainMenuBar>
 
-		<a id="navDashboard" href="{{ url_for('main.dashboard') }}">
+		<a id="buttonDashboard" href="{{ url_for('main.dashboard') }}">
 			<div class="icon iconDashboard"></div>
 		</a>
 
-		<a id="navIndex" href="{{ url_for('main.index') }}">
+		<a id="buttonIndex" href="{{ url_for('main.index') }}">
 			<div class="icon iconIndex"></div>
 		</a>
 
 
-		<a id="navRecent" href="{{ url_for('main.recent') }}">
+		<a id="buttonRecent" href="{{ url_for('main.recent') }}">
 			<div class="icon iconRecent"></div>
 		</a>
 
-		<div id="navCreate">
+		<div id="buttonCreate">
 			<div class="icon iconCreateMenu"></div>
 			<div id="createMenuChoices" class="dropShadowBig">
 				<div>create new</div>
@@ -26,13 +26,13 @@
 			</div>
 		</div>
 
-		<a id="navTrash" href="{{ url_for('main.trash') }}">
+		<a id="buttonTrash" href="{{ url_for('main.trash') }}">
 			<div class="icon iconTrash"></div>
 		</a>
 
-	</mainMenu>
+	</mainMenuBar>
 
-	<searchMenu>
+	<searchMenuBar>
 
 		{% set search = request.args.get("search") if request.endpoint == "main.search"  else "" %}
 
@@ -42,15 +42,15 @@
 			<input type="text" name="search" value="{{ search }}"/>
 		</form>
 
-	</searchMenu>
+	</searchMenuBar>
 
-	<userMenu>
+	<mainMenu>
 
-		<div class="icon iconUserMenu"></div>
-		<div id="userMenuChoices" class="dropShadowBig">
+		<div class="icon iconMainMenu"></div>
+		<div id="mainMenuChoices" class="dropShadowBig">
 			<div>signed in as {{ current_user.display_name }}</div>
 			<hr>
-			<a href="{{ url_for('flat.page', which='manual/main') }}">hlts manual</a>
+			<a href="{{ url_for('flat.page', which='manual/main') }}">manual</a>
 			<a href="{{ url_for('flat.page', which='beta/main') }}">beta notes</a>
 			<a href="{{ url_for('main.tools') }}">tools</a>
 			<hr>
@@ -58,6 +58,27 @@
 			<a href="{{ url_for('user.logout') }}">logout</a>
 		</div>
 
-	</userMenu>
+	</mainMenu>
+
+	<mainMenuCompact>
+
+		<div class="icon iconMainMenuCompact"></div>
+		<div id="mainMenuCompactChoices" class="dropShadowBig">
+			<div>signed in as {{ current_user.display_name }}</div>
+			<hr>
+			<a href="{{ url_for('main.dashboard') }}">dashboard</a>
+			<a href="{{ url_for('main.index') }}">index</a>
+			<a href="{{ url_for('main.recent') }}">recent</a>
+			<a href="{{ url_for('main.trash') }}">trash</a>
+			<hr>
+			<a href="{{ url_for('flat.page', which='manual/main') }}">manual</a>
+			<a href="{{ url_for('flat.page', which='beta/main') }}">beta notes</a>
+			<a href="{{ url_for('main.tools') }}">tools</a>
+			<hr>
+			<a href="{{ url_for('user.settings') }}">settings</a>
+			<a href="{{ url_for('user.logout') }}">logout</a>
+		</div>
+
+	</mainMenuCompact>
 
 </nav>
