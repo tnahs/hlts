@@ -62,7 +62,7 @@ Some current quirks to note while using HLTS. None of these should cause any err
 
 ## [Changelog](#changelog)
 
-+ v.1.0beta
++ v.1.0beta - 2018-12-07
     + Initial Release
 
 <br>

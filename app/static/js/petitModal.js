@@ -4,15 +4,17 @@ class PetitModal {
     constructor ({
             closeIcon = "✕",
             cancelButtonText = "cancel",
+            confirmButtonText = "ok",
             dialogBoxClasses = [],
             messageClasses = [],
             buttonClasses = [],
             warningClasses = [] } = {}) {
 
-        this.defaultTriggerClass = "pmTrigger";
+        this.defaultTriggerClass = "modalTrigger";
 
         this.closeIcon = closeIcon;
         this.cancelButtonText = cancelButtonText;
+        this.confirmButtonText = confirmButtonText;
         this.defaultModalClass = "petitModal";
         this.defaultDialogBoxClass = "pmDialogBox";
         this.defaultMessageClass = "pmMessage";
@@ -32,11 +34,10 @@ class PetitModal {
                     <div class="${this.messageClasses}"><!-- MESSAGE TEXT --></div>
                     <div class="${this.closeButtonClasses}">${this.closeIcon}</div>
                     <div class="${this.cancelButtonClasses}">${this.cancelButtonText}</div>
-                    <div class="${this.confirmButtonClasses}"><!-- CONFIRM TEXT --></div>
+                    <div class="${this.confirmButtonClasses}">${this.confirmButtonText}</div>
                 </div>
             </div>
             `;
-
 
         const body = document.querySelector("body");
         body.insertAdjacentHTML("beforeend", this.template);
@@ -47,7 +48,7 @@ class PetitModal {
         const cancelButton = petitModal.querySelector(`[class^="${this.defaultCancelButtonClass}"]`);
         const confirmButton = petitModal.querySelector(`[class^="${this.defaultConfirmButtonClass}"]`);
 
-        // Assemble PetitModal data
+        // Assemble PetitModal attributes
         this.petitModal = {
             main: petitModal,
             message: message,
@@ -76,48 +77,47 @@ class PetitModal {
 
         //
 
-        /* Creating pmTriggers
+        /* Creating modalTriggers
         *
-        * <div class="pmTrigger" data="" message="" url="" action=""></div>
+        * <div class="modalTrigger" modalSubmitData="" modalConfirmMessage="" modalSubmitUrl="" modalAction=""></div>
         *
         * */
 
-        const pmTriggers = document.querySelectorAll(`[class*="${this.defaultTriggerClass}"]`);
+        const modalTriggers = document.querySelectorAll(`[class*="${this.defaultTriggerClass}"]`);
 
-        if (pmTriggers) {
+        if (modalTriggers) {
 
-            for (let pmTrigger of pmTriggers) {
+            for (let modalTrigger of modalTriggers) {
 
-                pmTrigger.addEventListener("click", ( ) => {
+                modalTrigger.addEventListener("click", ( ) => {
 
-                    const data = pmTrigger.getAttribute("data");
-                    const url = pmTrigger.getAttribute("url");
-                    const message = pmTrigger.getAttribute("message");
-                    const action = pmTrigger.getAttribute("action");
+                    const modalAction = modalTrigger.getAttribute("modalAction");
+                    const modalSubmitData = modalTrigger.getAttribute("modalSubmitData");
+                    const modalSubmitUrl = modalTrigger.getAttribute("modalSubmitUrl");
+                    const modalConfirmMessage = modalTrigger.getAttribute("modalConfirmMessage");
 
-                    this.buildModal(data, url, message, action);
+                    this.buildModal(modalAction, modalSubmitData, modalSubmitUrl, modalConfirmMessage);
 
                 });
             }
         }
     }
 
-    buildModal(data, url, message, action) {
+    buildModal(modalAction, modalSubmitData, modalSubmitUrl, modalConfirmMessage) {
 
-        const annotationElement = document.querySelector(`[id="${data}"]`);
+        const annotationElement = document.querySelector(`[id="${modalSubmitData}"]`);
 
-        this.petitModal.message.innerText = `${message}`;
-        this.petitModal.confirmButton.innerText = action;
+        this.petitModal.message.innerText = `${modalConfirmMessage}`;
         this.petitModal.confirmButton.addEventListener("click", ( ) => {
 
-            this.submitModal(url, data, annotationElement);
+            this.submitModal(modalAction, modalSubmitUrl, modalSubmitData, annotationElement);
         });
 
         document.addEventListener("keydown", (event) => {
 
             if (event.code == "Enter") {
 
-                this.submitModal(url, data, annotationElement);
+                this.submitModal(modalAction, modalSubmitUrl, modalSubmitData, annotationElement);
 
                 event.preventDefault();
             }
@@ -140,20 +140,41 @@ class PetitModal {
         this.petitModal.main.style.visibility = "hidden";
     }
 
-    submitModal(url, data, annotationElement) {
+    submitModal(modalAction, modalSubmitUrl, modalSubmitData, annotationElement) {
 
         // FIXMEMODAL
 
-        fetch(url, {
+        fetch(modalSubmitUrl, {
             method: "POST",
             credentials: "include",
-            body: JSON.stringify({id: data}),
+            body: JSON.stringify({id: modalSubmitData}),
         })
         .then((response) => {
 
             if (response.ok) {
 
+                /* WIP Setting up modalFlash
+
+                if (modalAction == "delete") {
+
+                    const flashMessage = document.createElement('div');
+                    const flashMessageText = document.createElement('div');
+                    const flashMessageUndo = document.createElement('div');
+                    const flashMessageClose = document.createElement('div');
+                    flashMessage.appendChild(flashMessageText);
+                    flashMessage.appendChild(flashMessageUndo);
+                    flashMessage.appendChild(flashMessageClose);
+                    flashMessageText.innerText = "annotation deleted!"
+                    flashMessageUndo.innerText = "undo"
+                    flashMessageClose.innerText = "X"
+                    flashMessage.classList.add("annotationContainerDeleted")
+
+                    annotationElement.before(flashMessage);
+                }
+                */
+
                 annotationElement.remove();
+
                 this.hideModal();
             }
 

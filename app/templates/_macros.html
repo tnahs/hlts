@@ -280,35 +280,35 @@
 
             {% if request.endpoint == "main.trash" %}
 
-                <div class="restoreAnnotation pmTrigger link button faded"
-                    action="restore"
-                    message="restore annotation?"
-                    url="{{ url_for('main.restore_annotation') }}"
-                    data="{{ annotation.id }}">
-                    restore
+                <div class="restoreAnnotation modalTrigger"
+                    modalAction="restore"
+                    modalConfirmMessage="restore annotation?"
+                    modalSubmitUrl="{{ url_for('main.restore_annotation') }}"
+                    modalSubmitData="{{ annotation.id }}">
+                    <div class="icon iconRestoreAnnotation"></div>
                 </div>
 
-                <div class="killAnnotation pmTrigger link button faded"
-                    action="kill"
-                    message="kill annotation?"
-                    url="{{ url_for('main.kill_annotation') }}"
-                    data="{{ annotation.id }}">
-                    kill
+                <div class="killAnnotation modalTrigger"
+                    modalAction="kill"
+                    modalConfirmMessage="kill annotation?"
+                    modalSubmitUrl="{{ url_for('main.kill_annotation') }}"
+                    modalSubmitData="{{ annotation.id }}">
+                    <div class="icon iconKillAnnotation"></div>
                 </div>
 
             {% else %}
 
                 <a class="editAnnotation"
                     href="{{ url_for('main.edit_annotation', in_request=annotation.id) }}">
-                    <div class="icon" id="iconEditAnnotation"></div>
+                    <div class="icon iconEditAnnotation"></div>
                 </a>
 
-                <div class="deleteAnnotation pmTrigger"
-                    action="delete"
-                    message="delete annotation?"
-                    url="{{ url_for('main.delete_annotation') }}"
-                    data="{{ annotation.id }}">
-                    <div class="icon" id="iconDeleteAnnotation"></div>
+                <div class="deleteAnnotation modalTrigger"
+                    modalAction="delete"
+                    modalConfirmMessage="delete annotation?"
+                    modalSubmitUrl="{{ url_for('main.delete_annotation') }}"
+                    modalSubmitData="{{ annotation.id }}">
+                    <div class="icon iconDeleteAnnotation"></div>
                 </div>
 
             {% endif %}

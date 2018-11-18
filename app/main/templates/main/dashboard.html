@@ -10,21 +10,32 @@
 
         <div class="blockTitle">dashboard</div>
 
-    </div>
+        <div class="blockMenu">
 
-    <div class="block blockFloating">
-
-        <div class="blockLabel">{{ dash.today.strftime('%B %d, %Y') }}</div>
-
-        <div class="blockContent">
-
-            <a href="{{ url_for('main.all') }}" class="link button dashboard">{{ dash.annotation_count }} annotations</a>
-            <a href="{{ url_for('main.index', mode='tags') }}" class="link button dashboard">{{ dash.tag_count }} tags</a>
-            <a href="{{ url_for('main.index', mode='collections') }}" class="link button dashboard">{{ dash.collection_count }} collections</a>
+            <span class="text upper faded dashboardMenu">{{ dash.today.strftime('%B %d, %Y') }}</span>
+            <a class="link button dashboardMenu" href="{{ url_for('main.all') }}">{{ dash.annotation_count }} annotations</a>
+            <a class="link button dashboardMenu" href="{{ url_for('main.index', mode='tags') }}">{{ dash.tag_count }} tags</a>
+            <a class="link button dashboardMenu" href="{{ url_for('main.index', mode='collections') }}">{{ dash.collection_count }} collections</a>
 
         </div>
 
     </div>
+
+    {% if dash.daily_annotation %}
+
+        <div class="block blockFloating">
+
+            <div class="blockLabel">quote of the day</div>
+
+            <div class="blockContent">
+
+                {{ render_base_annotation(dash.daily_annotation) }}
+
+            </div>
+
+        </div>
+
+    {% endif %}
 
     {% if dash.pinned_collections or dash.pinned_tags %}
 
@@ -61,22 +72,6 @@
                 </div>
 
             {% endif %}
-
-        </div>
-
-    {% endif %}
-
-    {% if dash.daily_annotation %}
-
-        <div class="block blockFloating">
-
-            <div class="blockLabel">quote of the day</div>
-
-            <div class="blockContent">
-
-                {{ render_base_annotation(dash.daily_annotation) }}
-
-            </div>
 
         </div>
 

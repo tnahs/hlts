@@ -96,11 +96,6 @@ nav {
 		align-items: center;
 	}
 
-	mainMenuBar #buttonDashboard {
-
-		padding-right: 10px;
-	}
-
 	mainMenuBar .icon,
 	searchMenuBar .icon,
 	userMenu .icon {
@@ -116,11 +111,22 @@ nav {
 
 	mainMenuBar #buttonDashboard .icon.iconDashboard {
 
-		width: 80px;
-		height: 30px;
-		background-size: 80px 30px;
+		width: 90px;
+		height: 32px;
+		background-size: 90px 32px;
 
 		background-image: url("../images/nav/dashboard.png");
+	}
+
+	mainMenuBar #buttonDashboard .icon.iconDashboardCompact {
+
+		display: none;
+
+		width: 45px;
+		height: 32px;
+		background-size: 45px 32px;
+
+		background-image: url("../images/nav/dashboard-compact.png");
 	}
 
 	mainMenuBar #buttonIndex .icon.iconIndex {
@@ -463,9 +469,14 @@ nav {
 				grid-template-columns: repeat(2, max-content);
 			}
 
-			mainMenuBar #buttonDashboard {
+			mainMenuBar #buttonDashboard .icon.iconDashboard {
 
-				padding-right: 0;
+				display: none;
+			}
+
+			mainMenuBar #buttonDashboard .icon.iconDashboardCompact {
+
+				display: block;
 			}
 
 			mainMenuBar #buttonIndex,
@@ -886,6 +897,11 @@ a *:hover {
 	padding-bottom: 5px;
 }
 
+*.dashboardMenu {
+
+	padding-right: 15px;
+}
+
 *.link.button.dashboard:last-child {
 	padding-bottom: 0;
 }
@@ -984,7 +1000,8 @@ mark {
 	text-transform: uppercase;
 }
 
-.text.dashboard {
+.text.dashboard,
+.text.settings {
 
 	display: block;
 
@@ -1015,10 +1032,12 @@ mark {
 /* --------------------------------------------------------------------- */
 
 .annotationContainerStatic {
+
 	padding-bottom: 50px;
 }
 
 .annotationContainerStatic:last-child{
+
     padding-bottom: 0;
 }
 
@@ -1084,25 +1103,70 @@ mark {
 	transition: background-image .3s;
 }
 
-.annotationContainerInteractive .annotationOptions #iconEditAnnotation {
+.annotationContainerInteractive .annotationOptions .icon.iconEditAnnotation {
 
 	background-image: url("../images/annotation_options/edit.png");
 }
 
-.annotationContainerInteractive .annotationOptions #iconEditAnnotation:hover {
+.annotationContainerInteractive .annotationOptions .icon.iconEditAnnotation:hover {
 
 	background-image: url("../images/annotation_options/edit-active.png");
 }
 
-.annotationContainerInteractive .annotationOptions #iconDeleteAnnotation {
+.annotationContainerInteractive .annotationOptions .icon.iconDeleteAnnotation {
 
 	background-image: url("../images/annotation_options/delete.png");
 }
 
-.annotationContainerInteractive .annotationOptions #iconDeleteAnnotation:hover {
+.annotationContainerInteractive .annotationOptions .icon.iconDeleteAnnotation:hover {
 
 	background-image: url("../images/annotation_options/delete-active.png");
 }
+
+.annotationContainerInteractive .annotationOptions .icon.iconRestoreAnnotation {
+
+	background-image: url("../images/annotation_options/restore.png");
+}
+
+.annotationContainerInteractive .annotationOptions .icon.iconRestoreAnnotation:hover {
+
+	background-image: url("../images/annotation_options/restore-active.png");
+}
+
+.annotationContainerInteractive .annotationOptions .icon.iconKillAnnotation {
+
+	background-image: url("../images/annotation_options/kill.png");
+}
+
+.annotationContainerInteractive .annotationOptions .icon.iconKillAnnotation:hover {
+
+	background-image: url("../images/annotation_options/kill-active.png");
+}
+
+/* WIP Setting up modalFlash
+.annotationContainerDeleted {
+
+	margin: 15px 0;
+	padding: 15px;
+
+	background-color: hsla(220, 100%, 95%, 0.95);
+
+	font-family: var(--sans-serif-condensed-font);
+	color: hsla(220, 100%, 70%, 1.00);
+	font-size: 11pt;
+	font-weight: 400;
+	letter-spacing: 1px;
+	line-height: 100%;
+	text-transform: uppercase;
+
+	text-align: center;
+
+	display: grid;
+	grid-row-gap: 10px;
+	grid-template-columns: 1fr 1fr max-content;
+	align-items: center;
+}
+*/
 
 /* ------------------ passage ----------------- */
 
@@ -1347,6 +1411,8 @@ form *:hover::-webkit-input-placeholder {
 input,
 textarea {
 
+	border-radius: 0;
+
 	/* font block */
 	font-family: var(--sans-serif-font);
 	color: var(--input-text-color);
@@ -1585,8 +1651,8 @@ hr {
 
 		display: block;
 
-		width: 120px;
-		height: 45px;
+		width: 140px;
+		height: 50px;
 
 		margin: auto;
 	}

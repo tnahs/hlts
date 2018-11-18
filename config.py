@@ -19,7 +19,8 @@ def str_to_bool(string=None, default=None):
 
 class BaseConfig(object):
 
-    APP_VERSION = "v1.0beta"
+    APP_VERSION = "1.0.0beta"
+    DB_VERSION = "1.0.0beta"
 
     SECRET_KEY = getenv("SECRET_KEY")
     SQLALCHEMY_TRACK_MODIFICATIONS = False

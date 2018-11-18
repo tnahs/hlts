@@ -646,6 +646,7 @@ class User(db.Model, UserMixin):
             "annotations": annotations,
             "meta": {
                 "app_version": current_app.config["APP_VERSION"],
+                "db_version": current_app.config["DB_VERSION"],
                 "export_date": datetime.utcnow().isoformat(),
                 "count": {
                     "annotations": Annotation.query.count(),

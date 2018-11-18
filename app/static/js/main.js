@@ -32,11 +32,9 @@ window.addEventListener("load", function(){
 
     function navDropShadow() {
 
-        let scrollY = window.scrollY;
-
         const nav = document.querySelector("nav");
 
-        if (scrollY > 0) {
+        if (window.scrollY > 0) {
 
             nav.classList.add("dropShadowBig");
         }
