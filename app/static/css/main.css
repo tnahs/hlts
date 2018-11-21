@@ -860,12 +860,12 @@ footer .footerInfo {
 	text-transform: uppercase;
 }
 
-.headerMenuContainer .headerMenuButtonsContainer .headerMenuButton:first-of-type {
+.headerMenuContainer .headerMenuButtonsContainer .headerMenuButton:first-child {
 
 	border-left: 1px solid hsla(220, 100%, 95%, 0.95);
 }
 
-.headerMenuContainer .headerMenuButtonsContainer .headerMenuButton:last-of-type {
+.headerMenuContainer .headerMenuButtonsContainer .headerMenuButton:last-child {
 
 	border-right: 1px solid hsla(220, 100%, 95%, 0.95);
 }
@@ -892,6 +892,37 @@ footer .footerInfo {
 	background-color: hsla(220, 100%, 95%, 0.95);
 	color: hsla(220, 70%, 70%, 1.00);
 }
+
+	/* Mobile */
+
+	@media only screen and (max-width: 1024px) {
+
+		/*  */
+	}
+
+	@media only screen and (max-width: 768px) {
+
+		/*  */
+	}
+
+	@media only screen and (max-width: 512px) {
+
+		.headerMenuContainer .headerMenuButtonsContainer * {
+
+			padding: 10px 14px;
+			font-size: 10pt;
+		}
+	}
+
+	@media only screen and (max-width: 320px) {
+
+		.headerMenuContainer .headerMenuButtonsContainer * {
+
+			padding: 6px 8px;
+			font-size: 9pt;
+		}
+	}
+
 
 /*  */
 
@@ -1010,22 +1041,49 @@ footer .footerInfo {
 
 	@media only screen and (max-width: 1024px) {
 
-		/* Mobile */
+		/*  */
 	}
 
 	@media only screen and (max-width: 768px) {
 
-		/* Mobile */
 	}
 
 	@media only screen and (max-width: 512px) {
 
-		/* Mobile */
+		.paginationContainer .paginationButtonsContainer .paginationButtons .paginationButtonPrev:after {
+
+			content: "<";
+		}
+
+		.paginationContainer .paginationButtonsContainer .paginationButtons .paginationButtonNext:after {
+
+			content: ">";
+		}
+
+		.paginationContainer .paginationButtonsContainer .paginationButtons * {
+
+			padding: 12px 12px;
+			font-size: 10pt;
+		}
+
+		.paginationContainer .paginationButtonsContainer .paginationButtons .paginationButtonEllipses {
+
+			padding: 12px 5px;
+		}
 	}
 
 	@media only screen and (max-width: 320px) {
 
-		/* Mobile */
+		.paginationContainer .paginationButtonsContainer .paginationButtons * {
+
+			padding: 9px 9px;
+			font-size: 9pt;
+		}
+
+		.paginationContainer .paginationButtonsContainer .paginationButtons .paginationButtonEllipses {
+
+			padding: 9px 5px;
+		}
 	}
 
 /* globals ---------------------------------------------------------------- */
@@ -1240,9 +1298,15 @@ mark {
 .annotationContainerInteractive .annotationOptions {
 
 	padding-top: 20px;
+	font-size: 0;
 
 	display: grid;
 	grid-template-columns: max-content auto;
+}
+
+.annotationContainerInteractive .annotationOptions .annotationOptionsLeft * {
+
+	padding-right: 15px;
 }
 
 .annotationContainerInteractive .annotationOptions .annotationOptionsRight {
@@ -1252,9 +1316,9 @@ mark {
 
 .annotationContainerInteractive .annotationOptions .icon {
 
-	width: 28px;
-	height: 28px;
-	background-size: 28px 28px;
+	width: 23px;
+	height: 23px;
+	background-size: 23px 23px;
 	background-position: center;
 	background-repeat: no-repeat;
 
