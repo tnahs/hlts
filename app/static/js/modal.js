@@ -1,10 +1,10 @@
 "use strict";
 
-class PetitModal {
+class Modal {
     constructor ({
             closeIcon = "✕",
             cancelButtonText = "cancel",
-            confirmButtonText = "yes",
+            confirmButtonText = "ok",
             dialogBoxClasses = [],
             messageClasses = [],
             buttonClasses = [],
@@ -48,7 +48,7 @@ class PetitModal {
         const cancelButton = petitModal.querySelector(`[class^="${this.defaultCancelButtonClass}"]`);
         const confirmButton = petitModal.querySelector(`[class^="${this.defaultConfirmButtonClass}"]`);
 
-        // Assemble PetitModal attributes
+        // Assemble Modal attributes
         this.petitModal = {
             main: petitModal,
             message: message,
@@ -79,7 +79,7 @@ class PetitModal {
 
         /* Creating modalTriggers
         *
-        * <div class="modalTrigger" modalSubmitData="" modalConfirmMessage="" modalSubmitUrl=""></div>
+        * <div class="modalTrigger" modalSubmitData="" modalConfirmMessage="" modalSubmitUrl="" modalAction=""></div>
         *
         * */
 
@@ -91,32 +91,33 @@ class PetitModal {
 
                 modalTrigger.addEventListener("click", ( ) => {
 
+                    const modalAction = modalTrigger.getAttribute("modalAction");
                     const modalSubmitData = modalTrigger.getAttribute("modalSubmitData");
                     const modalSubmitUrl = modalTrigger.getAttribute("modalSubmitUrl");
                     const modalConfirmMessage = modalTrigger.getAttribute("modalConfirmMessage");
 
-                    this.buildModal(modalSubmitData, modalSubmitUrl, modalConfirmMessage);
+                    this.buildModal(modalAction, modalSubmitData, modalSubmitUrl, modalConfirmMessage);
 
                 });
             }
         }
     }
 
-    buildModal(modalSubmitData, modalSubmitUrl, modalConfirmMessage) {
+    buildModal(modalAction, modalSubmitData, modalSubmitUrl, modalConfirmMessage) {
 
         const annotationElement = document.querySelector(`[id="${modalSubmitData}"]`);
 
         this.petitModal.message.innerText = `${modalConfirmMessage}`;
         this.petitModal.confirmButton.addEventListener("click", ( ) => {
 
-            this.submitModal(modalSubmitUrl, modalSubmitData, annotationElement);
+            this.submitModal(modalAction, modalSubmitUrl, modalSubmitData, annotationElement);
         });
 
         document.addEventListener("keydown", (event) => {
 
             if (event.code == "Enter") {
 
-                this.submitModal(modalSubmitUrl, modalSubmitData, annotationElement);
+                this.submitModal(modalAction, modalSubmitUrl, modalSubmitData, annotationElement);
 
                 event.preventDefault();
             }
@@ -139,7 +140,7 @@ class PetitModal {
         this.petitModal.main.style.visibility = "hidden";
     }
 
-    submitModal(modalSubmitUrl, modalSubmitData, annotationElement) {
+    submitModal(modalAction, modalSubmitUrl, modalSubmitData, annotationElement) {
 
         // FIXMEMODAL
 
@@ -174,7 +175,7 @@ class PetitModal {
     }
 }
 
-const myPetitModal = new PetitModal(
+const myPetitModal = new Modal(
     {
         dialogBoxClasses: ["dropShadowBig"],
         messageClasses: ["text", "upper"],
@@ -182,4 +183,4 @@ const myPetitModal = new PetitModal(
         warningClasses: ["warning"]
     }
 )
-myPetitModal.initPetitModal()
+// myPetitModal.initPetitModal()

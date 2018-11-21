@@ -1,4 +1,5 @@
-{% from "_macros.html" import header_buttons, no_results with context %}
+{% from "_macros.html" import header_menu_start_html, header_menu_end_html,
+    header_menu_mode_buttons, no_results with context %}
 
 {% extends "_index.html" %}
 
@@ -42,31 +43,33 @@
 
     <div class="block blockFloating">
 
-        <div class="blockTitle">index</div>
+        <div class="blockHeaderMenu">
 
-        <div class="blockMenu">
-
-            {{ header_buttons(endpoint="main.index", modes=["sources", "authors", "tags", "collections"]) }}
+            {{ header_menu_start_html() }}
+                {{ header_menu_mode_buttons(endpoint="main.index", modes=["sources", "authors", "tags", "collections"]) }}
+            {{ header_menu_end_html() }}
 
         </div>
+
+        <div class="blockTitle">index</div>
 
         <div class="blockMenu">
 
             {% if request.view_args["mode"] == "sources" %}
 
-                <a class="link button" href="{{ url_for('main.bulk_edit_sources') }}">bulk edit sources</a>
+                <a class="link button faded" href="{{ url_for('main.bulk_edit_sources') }}">bulk edit sources (beta)</a>
 
             {% elif request.view_args["mode"] == "authors" %}
 
-                <a class="link button" href="{{ url_for('main.bulk_edit_authors') }}">bulk edit authors</a>
+                <a class="link button faded" href="{{ url_for('main.bulk_edit_authors') }}">bulk edit authors (beta)</a>
 
             {% elif request.view_args["mode"] == "tags" %}
 
-                <a class="link button" href="{{ url_for('main.bulk_edit_tags') }}">bulk edit tags</a>
+                <a class="link button faded" href="{{ url_for('main.bulk_edit_tags') }}">bulk edit tags (beta)</a>
 
             {% elif request.view_args["mode"] == "collections" %}
 
-                <a class="link button" href="{{ url_for('main.bulk_edit_collections') }}">bulk edit collections</a>
+                <a class="link button faded" href="{{ url_for('main.bulk_edit_collections') }}">bulk edit collections (beta)</a>
 
             {% endif %}
 
@@ -78,11 +81,7 @@
 
         <div class="block blockBleeding">
 
-            <div class="blockTitle">
-
-                no annotations found...
-
-            </div>
+            <div class="blockTitle">no annotations found...</div>
 
         </div>
 

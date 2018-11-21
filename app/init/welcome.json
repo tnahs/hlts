@@ -54,9 +54,9 @@
             ],
             "created": "",
             "modified": "",
-            "origin": "beta",
-            "protected": false,
-            "deleted": false
+            "origin": "user",
+            "is_protected": false,
+            "in_trash": false
         },
         {
             "id": "",
@@ -72,9 +72,9 @@
             ],
             "created": "",
             "modified": "",
-            "origin": "beta",
-            "protected": false,
-            "deleted": false
+            "origin": "user",
+            "is_protected": false,
+            "in_trash": false
         }
     ]
 }

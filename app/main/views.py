@@ -138,16 +138,6 @@ def dashboard():
     return render_template("main/dashboard.html", dash=dash)
 
 
-@main.route("/all/")
-@main.route("/all/page/<int:page>")
-@login_required
-def all(page=1):
-
-    results = Annotation.get_all()
-
-    return paginated_annotations(template="main/all.html", endpoint="main.all", results=results, page=page)
-
-
 @main.route("/index/")
 @main.route("/index/<string:mode>")
 @login_required
@@ -193,7 +183,7 @@ def index(mode=None):
 @login_required
 def recent(mode=None, page=1):
 
-    default_mode = "imported"
+    default_mode = "all"
 
     query = Annotation.get_recently_modified(days=current_user.recent_days)
 
@@ -201,15 +191,19 @@ def recent(mode=None, page=1):
 
         request.view_args["mode"] = default_mode
 
-        results = query.filter_by(protected=False)
+        results = Annotation.get_all()
+
+    elif mode == "created":
+
+        results = query.filter_by(origin=AppDefaults.ORIGIN)
 
     elif mode == "edited":
 
-        results = query.filter_by(protected=True)
+        results = query.filter_by(is_protected=True)
 
-    elif mode == "added":
+    elif mode == "imported":
 
-        results = query.filter_by(origin=AppDefaults.ORIGIN)
+        results = query.filter_by(is_protected=False)
 
     else:
 
@@ -223,7 +217,7 @@ def recent(mode=None, page=1):
 @login_required
 def trash(page=1):
 
-    results = Annotation.get_deleted()
+    results = Annotation.get_in_trash()
 
     return paginated_annotations(template="main/trash.html", endpoint="main.trash", results=results, page=page)
 
@@ -232,8 +226,8 @@ def trash(page=1):
 @login_required
 def empty_trash():
 
-    for deleted in Annotation.get_deleted():
-        db.session.delete(deleted)
+    for trashed in Annotation.get_in_trash():
+        trashed.delete()
 
     db.session.commit()
 
@@ -247,13 +241,47 @@ Misc pages
 """
 
 
-@main.route("/random/")
+@main.route("/random/<string:mode>")
 @login_required
-def random():
+def random(mode=None):
 
-    results = Annotation.get_random(count=5)
+    default_mode = "annotation"
 
-    return paginated_annotations(template="main/random.html", endpoint="main.random", results=results)
+    if mode == "default" or mode == default_mode:
+
+        request.view_args["mode"] = default_mode
+
+        results = Annotation.get_random(count=1)
+        request_info = None
+
+    elif mode == "tag":
+
+        annotation_count = Annotation.query.count()
+        tag_count = Tag.query.count()
+
+        if annotation_count and tag_count:
+
+            random_tag_id = rng.randint(0, tag_count)
+
+            try:
+                tag = Tag.query.offset(random_tag_id).first()
+                results = tag.annotations \
+                    .order_by(func.random()) \
+                    .limit(current_user.results_per_page) \
+                    .from_self()
+                request_info = tag
+
+            except:
+                tag = None
+                results = Annotation.query.filter_by(id=None)
+                request_info = None
+
+    else:
+
+        return redirect(url_for("main.random", mode="default"))
+
+    return paginated_annotations(template="main/random.html", endpoint="main.random",
+        results=results, request_info=request_info)
 
 
 """
@@ -349,9 +377,9 @@ def new_annotation():
         db.session.add(annotation)
         db.session.commit()
 
-        flash("new annotation added!", "flashSuccess")
+        flash("new annotation created!", "flashSuccess")
 
-        return redirect(url_for("main.recent", mode="added"))
+        return redirect(url_for("main.recent", mode="created"))
 
     return render_template("main/new_annotation.html", form=form)
 
@@ -362,9 +390,9 @@ def edit_annotation(in_request):
 
     annotation = Annotation.query_by_id(in_request, error404=True)
 
-    if annotation.deleted:
+    if annotation.in_trash:
 
-        flash("annotation is deleted! restore before editing!", "flashWarning")
+        flash("annotation is in trash! restore before editing!", "flashWarning")
 
         return redirect(home_url())
 
@@ -401,9 +429,9 @@ def edit_annotation(in_request):
     return render_template("main/edit_annotation.html", form=form, id=in_request)
 
 
-@main.route("/delete_annotation/", methods=["POST"])
+@main.route("/trash_annotation/", methods=["POST"])
 @login_required
-def delete_annotation():
+def trash_annotation():
 
     in_request = request.get_json(force=True)
 
@@ -413,7 +441,7 @@ def delete_annotation():
 
     # FIXMEMODAL
     if annotation:
-        annotation.delete()
+        annotation.trash()
         db.session.commit()
 
     return jsonify({"result": "success"})
@@ -437,9 +465,9 @@ def restore_annotation():
     return jsonify({"result": "success"})
 
 
-@main.route("/kill_annotation/", methods=["POST"])
+@main.route("/delete_annotation/", methods=["POST"])
 @login_required
-def kill_annotation():
+def delete_annotation():
 
     in_request = request.get_json(force=True)
 
@@ -449,7 +477,7 @@ def kill_annotation():
 
     # FIXMEMODAL
     if annotation:
-        annotation.kill()
+        annotation.delete()
         db.session.commit()
 
     return jsonify({"result": "success"})

@@ -1,4 +1,4 @@
-{% from "_macros.html" import render_form_field %}
+{% from "_macros.html" import header_menu_start_html, header_menu_end_html, render_form_field %}
 
 {% extends "_index.html" %}
 
@@ -12,16 +12,18 @@
 
         <div class="block blockFloating">
 
-            <div class="blockTitle">edit annotation</div>
+            <div class="blockHeaderMenu">
 
-            <div class="blockMenu">
-
-                <button class="link button form" type="submit">update</button>
-                        <a class="link button form" href="{{ HOME_URL }}">cancel</a>
-                <button class="link button form" type="reset">reset</button>
-                <button class="link button form" type="submit" name="duplicate">duplicate</button>
+                {{ header_menu_start_html() }}
+                    <button class="headerMenuButton" type="submit">update</button>
+                         <a class="headerMenuButton" href="{{ HOME_URL }}">cancel</a>
+                    <button class="headerMenuButton" type="reset">reset</button>
+                    <button class="headerMenuButton" type="submit" name="duplicate">duplicate</button>
+                {{ header_menu_end_html() }}
 
             </div>
+
+            <div class="blockTitle">edit annotation</div>
 
         </div>
 
@@ -49,7 +51,8 @@
                         {{ form.created.label }}: {{ form.created.data.strftime('%B %d, %Y') }}<br>
                         {{ form.modified.label }}: {{ form.modified.data.strftime('%B %d, %Y') }}<br>
                         {{ form.origin.label }}: {{ form.origin.data }}<br>
-                        {{ form.protected.label }}: {{ form.protected.data }}<br>
+                        {{ form.is_protected.label }}: {{ form.is_protected.data }}<br>
+                        {{ form.in_trash.label }}: {{ form.in_trash.data }}<br>
                         {{ form.id.label }}: {{ form.id.data }}<br>
 
                     </div>

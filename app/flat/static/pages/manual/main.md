@@ -281,7 +281,7 @@ The API provides two methods to import Annotations. An `add` method and a `refre
 
 + **Refresh Annotations**
     + url: `[base url]/api/async/import/annotations/refresh`
-    + The `refresh` method deletes and re-adds an Annotation if exists but only if `protected=False`. The `protected` attribute is set to `True` when a new Annotation is added by the user. However, to make refreshing an Annotation possible, imported Annotations that have the potential to be refreshed can have their `protected` attribute set to `False`. This allows the `refresh` method to remove the annotation when it detects another one with the same `id` and replace it with the updated version.
+    + The `refresh` method deletes and re-adds an Annotation if exists but only if `is_protected=False`. The `is_protected` attribute is set to `True` when a new Annotation is added by the user. However, to make refreshing an Annotation possible, imported Annotations that have the potential to be refreshed can have their `is_protected` attribute set to `False`. This allows the `refresh` method to remove the annotation when it detects another one with the same `id` and replace it with the updated version.
 
 
 <br>
@@ -316,8 +316,8 @@ Annotation JSON Schema
     "created": string,
     "modified": string,
     "origin": string,
-    "protected": bool,
-    "deleted": bool
+    "is_protected": bool,
+    "in_trash": bool
 }
 ```
 
@@ -417,7 +417,7 @@ Annotation JSON Schema
 
 <br>
 
-+ protected
++ is_protected
     + **required:** false
     + **input type:** boolean
     + **max length:** n/a
@@ -426,7 +426,7 @@ Annotation JSON Schema
 
 <br>
 
-+ deleted
++ in_trash
     + **required:** false
     + **input type:** boolean
     + **max length:** n/a
@@ -461,8 +461,8 @@ A valid JSON Annotation.
         "created": "2017-11-01T22:35:56.799645",
         "modified": "2017-12-10T22:31:31.432650",
         "origin": "ibooks",
-        "protected": false,
-        "deleted": false
+        "is_protected": false,
+        "in_trash": false
     }
 ]
 ```

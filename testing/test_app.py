@@ -383,8 +383,8 @@ def test_annotation(session):
     session.commit()
 
     assert a1.passage == data["passage"]
-    assert a1.deleted is False
-    assert a1.protected is True
+    assert a1.in_trash is False
+    assert a1.is_protected is True
     assert a1.is_tagged is False
     assert a1.in_collection is False
     assert a1.tags == []
@@ -399,13 +399,13 @@ def test_annotation(session):
     """
 
     a1.edit()
-    assert a1.protected is True
+    assert a1.is_protected is True
 
     a1.delete()
-    assert a1.deleted is True
+    assert a1.in_trash is True
 
     a1.restore()
-    assert a1.deleted is False
+    assert a1.in_trash is False
 
     a1.refresh_tags(tags=data["tags"])
     assert len(a1.tags) == len(data["tags"])
@@ -431,7 +431,7 @@ def test_annotation(session):
     assert a1.source.name == updated_data["source"]
     assert a1.source.author.name == updated_data["author"]
 
-    a1.kill()
+    a1.delete()
     session.commit()
 
     a1 = Annotation.query_by_id(data["id"])
@@ -478,8 +478,8 @@ def test_bulk_import(session):
             "created": None,
             "modified": None,
             "origin": "testing",
-            "protected": False,
-            "deleted": False
+            "is_protected": False,
+            "in_trash": False
         }
 
         a = Annotation()
@@ -496,8 +496,8 @@ def test_bulk_import(session):
         assert a.source.author.name == author
         assert len(a.tags) == len(tags)
         assert len(a.collections) == len(collections)
-        assert a.protected is False
-        assert a.deleted is False
+        assert a.is_protected is False
+        assert a.in_trash is False
 
         if tags:
             for name in tags:
@@ -512,7 +512,7 @@ def test_bulk_import(session):
     assert Annotation.query.count() == number_of_annotations
 
     for annotation in Annotation.query.all():
-        annotation.kill()
+        annotation.delete()
 
     session.commit()
     assert Annotation.query.count() == 0

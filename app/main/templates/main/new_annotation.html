@@ -1,4 +1,4 @@
-{% from "_macros.html" import render_form_field %}
+{% from "_macros.html" import header_menu_start_html, header_menu_end_html, render_form_field %}
 
 {% extends "_index.html" %}
 
@@ -12,15 +12,17 @@
 
         <div class="block blockFloating">
 
-            <div class="blockTitle">new annotation</div>
+            <div class="blockHeaderMenu">
 
-            <div class="blockMenu">
-
-                    <button class="link button form" type="submit">add</button>
-                        <a class="link button form" href="{{ HOME_URL }}">cancel</a>
-                    <button class="link button form" type="reset" >reset</button>
+                {{ header_menu_start_html() }}
+                    <button class="headerMenuButton" type="submit">add</button>
+                         <a class="headerMenuButton" href="{{ HOME_URL }}">cancel</a>
+                    <button class="headerMenuButton" type="reset" >reset</button>
+                {{ header_menu_end_html() }}
 
             </div>
+
+            <div class="blockTitle">new annotation</div>
 
         </div>
 

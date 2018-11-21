@@ -1,12 +1,33 @@
-{% macro header_buttons(endpoint, modes) -%}
+{% macro header_menu_mode_buttons(endpoint, modes) -%}
 
-	{% for mode in modes %}
+    {% for mode in modes %}
 
-		{% set current = "current" if request.view_args["mode"] == mode else "" %}
+        {% set current = "headerMenuButtonCurrent" if request.view_args["mode"] == mode else "" %}
 
-		<a class="link button header {{ current }}" href="{{ url_for(endpoint, mode=mode) }}">{{ mode }}</a>
+        <a class="headerMenuButton {{ current }}" href="{{ url_for(endpoint, mode=mode) }}">{{ mode }}</a>
 
-	{% endfor %}
+    {% endfor %}
+
+{%- endmacro %}
+
+{% macro header_menu_start_html() -%}
+
+    <div class="headerMenuContainer">
+        <div class="headerMenuSpacerLeft"></div>
+        <div class="headerMenuButtonsContainer">
+
+            {# BUTTONS GO HERE. THEN CALL header_menu_end() #}
+
+{%- endmacro %}
+
+
+{% macro header_menu_end_html() -%}
+
+            {# CALL header_menu_start() THEN BUTTONS GO HERE. #}
+
+        </div>
+        <div class="headerMenuSpacerRight"></div>
+    </div>
 
 {%- endmacro %}
 
@@ -45,6 +66,7 @@
     </div>
 
 {%- endmacro %}
+
 
 {% macro pagination_top(results, current_url) -%}
 
@@ -86,64 +108,64 @@
 
     <div class="paginationContainer">
 
-        <div class="paginationInfo">
-
-            <div class="paginationMatches">
-
-                {{ results.total }} result{% if results.total != 1 %}s{% endif %}
-
-            </div>
-
-        </div>
+        <div class="paginationResults">{{ results.total }} result{% if results.total != 1 %}s{% endif %}</div>
 
         {% if results.total > results.per_page %}
 
-            <div class="paginationPages">
+            <div class="paginationButtonsContainer">
 
-                {% if results.has_prev %}
+                <div class="paginationSpacerLeft"></div>
 
-                    <a class="link button"
-                        href="{{ url_for(current_url.endpoint, in_request=in_request, page=results.prev_num, mode=current_url.mode, search=search) }}">prev</a>
+                <div class="paginationButtons">
 
-                {% else %}
+                    {% if results.has_prev %}
 
-                    <span class="text upper faded">prev</span>
-
-                {% endif %}
-
-                {%- for page in results.iter_pages(left_edge=1, left_current=1, right_current=2, right_edge=1) %}
-
-                    {% if page %}
-
-                        {% if page != results.page %}
-
-                            <a class="paginationPageNumber"
-                                href="{{ url_for(current_url.endpoint, in_request=in_request, page=page, mode=current_url.mode, search=search) }}">{{ page }}</a>
-
-                        {% else %}
-
-                            <span class="paginationPageNumber currentPage">{{ page }}</span>
-
-                        {% endif %}
+                        <a class="paginationButtonPrev"
+                            href="{{ url_for(current_url.endpoint, in_request=in_request, page=results.prev_num, mode=current_url.mode, search=search) }}"><!-- prev or < based on browser width --></a>
 
                     {% else %}
 
-                        <span class="paginationEllipsis faded">…</span>
+                        <span class="paginationButtonPrev paginationButtonDisabled"><!-- prev or < based on browser width --></span>
 
                     {% endif %}
 
-                {%- endfor %}
+                    {%- for page in results.iter_pages(left_edge=1, left_current=1, right_current=2, right_edge=1) %}
 
-                {% if results.has_next %}
+                        {% if page %}
 
-                    <a class="link button"
-                        href="{{ url_for(current_url.endpoint, in_request=in_request, page=results.next_num, mode=current_url.mode, search=search) }}">next</a>
+                            {% if page != results.page %}
 
-                {% else %}
+                                <a class="paginationButtonNumber"
+                                    href="{{ url_for(current_url.endpoint, in_request=in_request, page=page, mode=current_url.mode, search=search) }}">{{ page }}</a>
 
-                    <span class="text upper faded">next</span>
+                            {% else %}
 
-                {% endif %}
+                                <a class="paginationButtonNumberCurrent">{{ page }}</a>
+
+                            {% endif %}
+
+                        {% else %}
+
+                            <span class="paginationButtonEllipses">⋮</span>
+
+                        {% endif %}
+
+                    {%- endfor %}
+
+                    {% if results.has_next %}
+
+                        <a class="paginationButtonNext"
+                            href="{{ url_for(current_url.endpoint, in_request=in_request, page=results.next_num, mode=current_url.mode, search=search) }}"><!-- next or > based on browser width --></a>
+
+                    {% else %}
+
+                        <span class="paginationButtonNext paginationButtonDisabled"><!-- next or > based on browser width --></span>
+
+                    {% endif %}
+
+                </div>
+
+                <div class="paginationSpacerRight"></div>
 
             </div>
 
@@ -154,7 +176,7 @@
 {%- endmacro %}
 
 
-{% macro attribution_from_source_obj(source) -%}
+{% macro attribution_from_source_obj(source, show_author=false) -%}
 
     {# Renders source from Source.serialize() output. #}
 
@@ -168,15 +190,19 @@
 
     {% endif %}
 
-    {% if (source.name and source.author.name) or not (source.name and source.author.name) %} ⋅ {% endif %}
+    {% if show_author %}
 
-    {% if source.author.name %}
+        {% if (source.name and source.author.name) or not (source.name and source.author.name) %} ⋅ {% endif %}
 
-        {{ source.author.name }}
+        {% if source.author.name %}
 
-    {% else %}
+            {{ source.author.name }}
 
-        {{ AUTHOR_NONE.NAME }}
+        {% else %}
+
+            {{ AUTHOR_NONE.NAME }}
+
+        {% endif %}
 
     {% endif %}
 
@@ -235,7 +261,15 @@
 
     {% for annotation in results.items %}
 
-        {{ render_interactive_annotation(annotation) }}
+        <div class="block blockFloating">
+
+            <div class="blockContent">
+
+                {{ render_interactive_annotation(annotation) }}
+
+            </div>
+
+        </div>
 
     {% endfor %}
 
@@ -280,35 +314,55 @@
 
             {% if request.endpoint == "main.trash" %}
 
-                <div class="restoreAnnotation modalTrigger"
-                    modalAction="restore"
-                    modalConfirmMessage="restore annotation?"
-                    modalSubmitUrl="{{ url_for('main.restore_annotation') }}"
-                    modalSubmitData="{{ annotation.id }}">
-                    <div class="icon iconRestoreAnnotation"></div>
+                <div class="annotationOptionsLeft">
+
+                    <div id="restoreAnnotation" class="modalTrigger"
+                        modalSubmitUrl="{{ url_for('main.restore_annotation') }}"
+                        modalSubmitData="{{ annotation.id }}"
+                        modalConfirmMessage="restore annotation?">
+                        <div class="icon iconRestoreAnnotation"></div>
+                    </div>
+
                 </div>
 
-                <div class="killAnnotation modalTrigger"
-                    modalAction="kill"
-                    modalConfirmMessage="kill annotation?"
-                    modalSubmitUrl="{{ url_for('main.kill_annotation') }}"
-                    modalSubmitData="{{ annotation.id }}">
-                    <div class="icon iconKillAnnotation"></div>
+                <div class="annotationOptionsRight">
+
+                    <div id="deleteAnnotation" class="modalTrigger"
+                        modalSubmitUrl="{{ url_for('main.delete_annotation') }}"
+                        modalSubmitData="{{ annotation.id }}"
+                        modalConfirmMessage="permanently delete annotation?">
+                        <div class="icon iconDeleteAnnotation"></div>
+                    </div>
+
                 </div>
 
             {% else %}
 
-                <a class="editAnnotation"
-                    href="{{ url_for('main.edit_annotation', in_request=annotation.id) }}">
-                    <div class="icon iconEditAnnotation"></div>
-                </a>
+                <div class="annotationOptionsLeft">
 
-                <div class="deleteAnnotation modalTrigger"
-                    modalAction="delete"
-                    modalConfirmMessage="delete annotation?"
-                    modalSubmitUrl="{{ url_for('main.delete_annotation') }}"
-                    modalSubmitData="{{ annotation.id }}">
-                    <div class="icon iconDeleteAnnotation"></div>
+                    <a id="editAnnotation" href="{{ url_for('main.edit_annotation', in_request=annotation.id) }}">
+                        <div class="icon iconEditAnnotation"></div>
+                    </a>
+
+                    <span id="duplicateAnnotation" href="#">
+                        <div class="icon iconDuplicateAnnotation iconDisabled"></div>
+                    </span>
+
+                    <span id="shareAnnotation" href="#">
+                        <div class="icon iconShareAnnotation iconDisabled"></div>
+                    </span>
+
+                </div>
+
+                <div class="annotationOptionsRight">
+
+                    <div id="trashAnnotation" class="modalTrigger"
+                        modalSubmitUrl="{{ url_for('main.trash_annotation') }}"
+                        modalSubmitData="{{ annotation.id }}"
+                        modalConfirmMessage="move annotation to trash?">
+                        <div class="icon iconTrashAnnotation"></div>
+                    </div>
+
                 </div>
 
             {% endif %}

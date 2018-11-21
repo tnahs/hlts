@@ -49,7 +49,8 @@ class AnnotationForm(FlaskForm):
     created = StringField(render_kw={"readonly": True})
     modified = StringField(render_kw={"readonly": True})
     origin = StringField(render_kw={"readonly": True})
-    protected = StringField(render_kw={"readonly": True})
+    is_protected = StringField(render_kw={"readonly": True})
+    in_trash = StringField(render_kw={"readonly": True})
 
     def __init__(self, *args, **kwargs):
         super(AnnotationForm, self).__init__(*args, **kwargs)

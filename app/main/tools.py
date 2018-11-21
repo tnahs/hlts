@@ -228,7 +228,7 @@ class SearchAnnotations(object):
         """
 
         custom_query = Annotation.query \
-            .filter_by(deleted=False) \
+            .filter_by(in_trash=False) \
             .join(Source) \
             .join(Author)
 

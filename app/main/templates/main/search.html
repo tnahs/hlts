@@ -26,11 +26,7 @@
 
         <div class="block blockFloating">
 
-            <div class="blockTitle">
-
-                no matching annotations found...
-
-            </div>
+            <div class="blockTitle">no matching annotations found...</div>
 
         </div>
 
@@ -54,15 +50,7 @@
 
         </div>
 
-        <div class="block blockBleeding">
-
-            <div class="blockContent">
-
-                {{ render_multiple_interactive_annotations(results) }}
-
-            </div>
-
-        </div>
+        {{ render_multiple_interactive_annotations(results) }}
 
         {{ pagination_bottom(results, current_url) }}
 

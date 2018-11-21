@@ -13,7 +13,7 @@
         <div class="blockMenu">
 
             <span class="text upper faded dashboardMenu">{{ dash.today.strftime('%B %d, %Y') }}</span>
-            <a class="link button dashboardMenu" href="{{ url_for('main.all') }}">{{ dash.annotation_count }} annotations</a>
+            <a class="link button dashboardMenu" href="{{ url_for('main.recent', mode='all') }}">{{ dash.annotation_count }} annotations</a>
             <a class="link button dashboardMenu" href="{{ url_for('main.index', mode='tags') }}">{{ dash.tag_count }} tags</a>
             <a class="link button dashboardMenu" href="{{ url_for('main.index', mode='collections') }}">{{ dash.collection_count }} collections</a>
 

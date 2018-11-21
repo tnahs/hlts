@@ -1,4 +1,5 @@
-{% from "_macros.html" import pagination_top, pagination_bottom, render_multiple_interactive_annotations with context %}
+{% from "_macros.html" import header_menu_start_html, header_menu_end_html, header_menu_mode_buttons,
+    pagination_top, pagination_bottom, render_multiple_interactive_annotations with context %}
 
 {% extends "_index.html" %}
 
@@ -7,7 +8,27 @@
 
     <div class="block blockFloating">
 
-        <div class="blockTitle">random annotations</div>
+        <div class="blockHeaderMenu">
+
+            {{ header_menu_start_html() }}
+                {{ header_menu_mode_buttons(endpoint="main.random", modes=["annotation", "tag"]) }}
+            {{ header_menu_end_html() }}
+
+        </div>
+
+        <div class="blockTitle">
+
+            {% if request.view_args["mode"] == "annotation" %}
+
+                one random annotation
+
+            {% elif request.view_args["mode"] == "tag" %}
+
+                tag ⋅ {{ current_user.results_per_page }} results max : <a class="accent" href="{{ url_for('main.tag', in_request=request_info.name) }}">{{ request_info.name }}</a>
+
+            {% endif %}
+
+        </div>
 
         {{ pagination_top(results, current_url) }}
 
@@ -17,25 +38,13 @@
 
         <div class="block blockBleeding">
 
-            <div class="blockTitle">
-
-                no annotations found...
-
-            </div>
+            <div class="blockTitle">no annotations found...</div>
 
         </div>
 
     {% else %}
 
-        <div class="block blockBleeding">
-
-            <div class="blockContent">
-
-                {{ render_multiple_interactive_annotations(results) }}
-
-            </div>
-
-        </div>
+        {{ render_multiple_interactive_annotations(results) }}
 
         {{ pagination_bottom(results, current_url) }}
 

@@ -46,15 +46,20 @@ Some current quirks to note while using HLTS. None of these should cause any err
 
 <br>
 
-+ Dashboard Annotation count includes deleted items.
++ Dashboard Annotation count includes items in trash.
 + "Quote of the day" and "Topic of the day" may change when theres a change in the database.
-+ Annotation counts on Index pages (Collections/Tags/Sources/Authors) include deleted items.
++ Annotation counts on Index pages (Collections/Tags/Sources/Authors) include items in trash.
 + Index does not list Annotations that have no `source` or `author`.
-+ When using markdown and performing a search, `this passage` does not match `this ==passage==`.
-+ Annotation editor textarea resets the scroll position of the page on input (keypress inside the textarea) when there's lots of text in editor.
++ When using Markdown and performing a search, `this passage` does not match `this ==passage==`.
++ Typing in the textarea in the Annotation Add/Edit page resets the scroll position of the page on input (keypress inside the textarea) when there's lots of text in editor.
 + Bulk Collection/Tag/Source/Author editor displays all items as "pinned" after single item is submitted. Hard refresh is required to show correct properties.
 + Searching certain odd strings such as `P : word` does some funky stuff with text highlighting the matches.
 + If Tag or Collection name does not start with a letter or number it will not appear on the Index page.
++ After an Annotation is trashed/restored/deleted or the trash emptied, the page Annotation count will be wrong.
++ Whenever entering Tags or Collections on Annotation Add/Edit page, there is a slight delay while data is fetched. This will be fixed in later versions.
++ The [Random Annotation/Tag](/random/default) page is very beta and not very interactive at the moment.
++ All the [Bulk Editing](/manual/main/#bulk-editing) pages are very beta. Please be careful. There still isn't proper handling of duplicate/conflicting names.
+
 
 <br>
 
@@ -62,8 +67,19 @@ Some current quirks to note while using HLTS. None of these should cause any err
 
 ## [Changelog](#changelog)
 
-+ v.1.0beta - 2018-12-07
-    + Initial Release
++ **Main App**
+    + v1.0.0beta - 2018-11-07
+        + Initial Release
+
+<br>
+
++ **Database Model**
+    + v1.0.0beta - 2018-11-07
+        + Initial Release
+    + v1.1.0beta - 2018-12-20
+        + `deleted` renamed to `in_trash`.
+        + `protected` renamed to `is_protected`.
+        + `api_key` string length reduced to 32 characters.
 
 <br>
 

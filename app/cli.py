@@ -335,7 +335,7 @@ def register_cli(app):
 
             # Remove all annotations
             for annotation in Annotation.query.all():
-                annotation.kill()
+                annotation.delete()
 
             try:
                 db.session.commit()

@@ -1,4 +1,4 @@
-{% from "_macros.html" import render_form_field %}
+{% from "_macros.html" import header_menu_start_html, header_menu_end_html, render_form_field %}
 
 {% extends "_index.html" %}
 
@@ -9,9 +9,16 @@
 
         <div class="block blockFloating">
 
-            <div class="blockTitle">user settings</div>
+            <div class="blockHeaderMenu">
 
-            <div class="blockMenu"><button class="link button" type="submit">update</button></div>
+                {{ header_menu_start_html() }}
+                    <button class="headerMenuButton" type="submit">update</button>
+                    <span class="headerMenuButton headerMenuButtonDisabled">restore defaults</span>
+                {{ header_menu_end_html() }}
+
+            </div>
+
+            <div class="blockTitle">user settings</div>
 
         </div>
 

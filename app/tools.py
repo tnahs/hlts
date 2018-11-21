@@ -67,11 +67,11 @@ class AsyncImport(object):
 
                 if existing:
 
-                    if existing.protected:
+                    if existing.is_protected:
 
                         continue
 
-                    elif not existing.protected:
+                    elif not existing.is_protected:
 
                         db.session.delete(existing)
                         db.session.commit()

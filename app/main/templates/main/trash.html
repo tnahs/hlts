@@ -1,4 +1,5 @@
-{% from "_macros.html" import pagination_top, pagination_bottom, render_multiple_interactive_annotations with context %}
+{% from "_macros.html" import header_menu_start_html, header_menu_end_html,
+    pagination_top, pagination_bottom, render_multiple_interactive_annotations with context %}
 
 {% extends "_index.html" %}
 
@@ -7,13 +8,16 @@
 
     <div class="block blockFloating">
 
-        <div class="blockTitle">trash</div>
+        <div class="blockHeaderMenu">
 
-        <div class="blockMenu">
-
-            <a class="link button" href="{{ url_for('main.empty_trash') }}">empty trash</a>
+            {{ header_menu_start_html() }}
+            <a class="headerMenuButton" href="{{ url_for('main.empty_trash') }}">empty trash</a>
+            <a class="headerMenuButton headerMenuButtonDisabled" href="#">restore all</a>
+            {{ header_menu_end_html() }}
 
         </div>
+
+        <div class="blockTitle">trash</div>
 
         {{ pagination_top(results, current_url) }}
 
@@ -23,25 +27,13 @@
 
         <div class="block blockBleeding">
 
-            <div class="blockTitle">
-
-                no deleted annotations found...
-
-            </div>
+            <div class="blockTitle">no annotations in trash...</div>
 
         </div>
 
     {% else %}
 
-        <div class="block blockBleeding">
-
-            <div class="blockContent">
-
-                {{ render_multiple_interactive_annotations(results) }}
-
-            </div>
-
-        </div>
+        {{ render_multiple_interactive_annotations(results) }}
 
         {{ pagination_bottom(results, current_url) }}
 

@@ -168,16 +168,16 @@ class AnnotationQueryMixin(object):
     def get_all():
 
         results = Annotation.query \
-            .filter_by(deleted=False) \
+            .filter_by(in_trash=False) \
             .order_by(Annotation.modified.desc())
 
         return results
 
     @staticmethod
-    def get_deleted():
+    def get_in_trash():
 
         results = Annotation.query \
-            .filter_by(deleted=True) \
+            .filter_by(in_trash=True) \
             .order_by(Annotation.modified.desc())
 
         return results
@@ -186,7 +186,7 @@ class AnnotationQueryMixin(object):
     def get_random(count):
 
         results = Annotation.query \
-            .filter_by(deleted=False) \
+            .filter_by(in_trash=False) \
             .order_by(func.random()) \
             .limit(count) \
             .from_self()
@@ -200,7 +200,7 @@ class AnnotationQueryMixin(object):
         recent = today - timedelta(days=days)
 
         results = Annotation.query \
-            .filter_by(deleted=False) \
+            .filter_by(in_trash=False) \
             .filter(Annotation.modified > recent) \
             .order_by(Annotation.modified.desc())
 
@@ -213,7 +213,7 @@ class AnnotationQueryMixin(object):
         recent = today - timedelta(days=days)
 
         results = Annotation.query \
-            .filter_by(deleted=False) \
+            .filter_by(in_trash=False) \
             .filter(Annotation.created > recent) \
             .order_by(Annotation.created.desc())
 
@@ -234,7 +234,7 @@ class AnnotationQueryMixin(object):
     def query_by_source_id(in_request):
 
         results = Annotation.query \
-            .filter_by(source_id=in_request, deleted=False) \
+            .filter_by(source_id=in_request, in_trash=False) \
             .order_by(Annotation.modified.desc())
 
         return results
@@ -243,7 +243,7 @@ class AnnotationQueryMixin(object):
     def query_by_author_id(in_request):
 
         results = Annotation.query \
-            .filter_by(deleted=False) \
+            .filter_by(in_trash=False) \
             .join(Annotation.source) \
             .filter(Source.author_id == in_request) \
             .order_by(Annotation.modified.desc())
@@ -261,13 +261,13 @@ class AnnotationQueryMixin(object):
             return Annotation.query.filter_by(id=None)
 
         results = Annotation.query \
-            .filter_by(deleted=False) \
+            .filter_by(in_trash=False) \
             .filter(Annotation.tags.contains(tag)) \
             .order_by(Annotation.modified.desc())
 
         """ Alternate method to get tagged annotations
         results = tag.annotations \
-            .filter_by(deleted=False) \
+            .filter_by(in_trash=False) \
             .order_by(Annotation.modified.desc())
         """
 
@@ -284,13 +284,13 @@ class AnnotationQueryMixin(object):
             return Annotation.query.filter_by(id=None)
 
         results = Annotation.query \
-            .filter_by(deleted=False) \
+            .filter_by(in_trash=False) \
             .filter(Annotation.collections.contains(collection)) \
             .order_by(Annotation.modified.desc())
 
         """ Alternate method to get tagged annotations
         results = collection.annotations \
-            .filter_by(deleted=False) \
+            .filter_by(in_trash=False) \
             .order_by(Annotation.modified.desc())
         """
 
@@ -445,7 +445,7 @@ class User(db.Model, UserMixin):
     results_per_page = db.Column(db.Integer, default=AppDefaults.RESULTS_PER_PAGE)
     recent_days = db.Column(db.Integer, default=AppDefaults.RECENT_DAYS)
 
-    api_key = db.Column(db.String(64), unique=True, index=True)
+    api_key = db.Column(db.String(32), unique=True, index=True)
 
     def __init__(self, *args, **kwargs):
         super(User, self).__init__(*args, **kwargs)
@@ -458,7 +458,7 @@ class User(db.Model, UserMixin):
 
     @staticmethod
     def generate_api_key():
-        return binascii.hexlify(os.urandom(32)).decode()
+        return binascii.hexlify(os.urandom(16)).decode()
 
     def new_api_key(self):
         self.api_key = self.generate_api_key()
@@ -1060,8 +1060,8 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
     modified = db.Column(db.DateTime, nullable=False, index=True, default=datetime.utcnow)
 
     origin = db.Column(db.String(64), nullable=False, default=AppDefaults.ORIGIN)
-    protected = db.Column(db.Boolean, nullable=False, default=True)
-    deleted = db.Column(db.Boolean, default=False)
+    is_protected = db.Column(db.Boolean, nullable=False, default=True)
+    in_trash = db.Column(db.Boolean, default=False)
 
     def __init__(self, id=None, *args, **kwargs):
         super(Annotation, self).__init__(*args, **kwargs)
@@ -1167,32 +1167,33 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
 
     def edit(self):
 
-        self.protected = True
+        self.is_protected = True
         self.modified = datetime.utcnow()
 
     def duplicate(self):
 
-        self.protected = True
+        self.is_protected = True
         self.modified = datetime.utcnow()
         self.passage = u"DUPLICATE\n\n{0}".format(self.passage)
 
-    def delete(self):
-        """ soft delete
+    def trash(self):
+        """ place in trash
         """
-        self.deleted = True
+        self.in_trash = True
 
     def restore(self):
-        """ restore soft delete
+        """ remove from trash
         """
-        self.deleted = False
+        self.in_trash = False
         self.modified = datetime.utcnow()
 
-    def kill(self):
+    def delete(self):
         """ delete
         """
         self.source_id = None
         self.tags = []
         self.collections = []
+
         db.session.delete(self)
 
     def serialize(self):
@@ -1212,8 +1213,8 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
             "created": self.created.isoformat(),
             "modified": self.modified.isoformat(),
             "origin": self.origin,
-            "protected": self.protected,
-            "deleted": self.deleted
+            "is_protected": self.is_protected,
+            "in_trash": self.in_trash
         }
 
         return data
@@ -1235,8 +1236,8 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
         if data["modified"]:
             self.modified = dateparser(data["modified"])
 
-        self.protected = data["protected"]
-        self.deleted = data["deleted"]
+        self.is_protected = data["is_protected"]
+        self.in_trash = data["in_trash"]
         self.origin = data["origin"]
 
         self.refresh_source(

@@ -16,10 +16,14 @@
 			<div class="icon iconRecent"></div>
 		</a>
 
+		<a id="buttonRandom" href="{{ url_for('main.random', mode='default') }}">
+			<div class="icon iconRandom"></div>
+		</a>
+
 		<div id="buttonCreate">
 			<div class="icon iconCreateMenu"></div>
 			<div id="createMenuChoices" class="dropShadowBig">
-				<div>create new</div>
+				<div>create a new</div>
 				<hr>
 				<a href="{{ url_for('main.new_annotation') }}">annotation</a>
 				<a class="disabled" href="#">collection</a>
@@ -70,6 +74,7 @@
 			<a href="{{ url_for('main.dashboard') }}">dashboard</a>
 			<a href="{{ url_for('main.index') }}">index</a>
 			<a href="{{ url_for('main.recent') }}">recent</a>
+			<a href="{{ url_for('main.random', mode='default') }}">random</a>
 			<a href="{{ url_for('main.trash') }}">trash</a>
 			<hr>
 			<a href="{{ url_for('flat.page', which='manual/main') }}">manual</a>

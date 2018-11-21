@@ -1,4 +1,5 @@
-{% from "_macros.html" import header_buttons, pagination_top, pagination_bottom, render_multiple_interactive_annotations with context %}
+{% from "_macros.html" import header_menu_start_html, header_menu_end_html, header_menu_mode_buttons,
+    pagination_top, pagination_bottom, render_multiple_interactive_annotations with context %}
 
 {% extends "_index.html" %}
 
@@ -7,11 +8,33 @@
 
     <div class="block blockFloating">
 
-        <div class="blockTitle">recent : past {{ current_user.recent_days }} days</div>
+        <div class="blockHeaderMenu">
 
-        <div class="blockMenu">
+            {{ header_menu_start_html() }}
+                {{ header_menu_mode_buttons(endpoint="main.recent", modes=["all", "created", "edited", "imported"]) }}
+            {{ header_menu_end_html() }}
 
-            {{ header_buttons(endpoint="main.recent", modes=["added", "edited", "imported"]) }}
+        </div>
+
+        <div class="blockTitle">
+
+            {% if request.view_args["mode"] == "all" %}
+
+                all annotations : sorted by most recent
+
+            {% elif request.view_args["mode"] == "created" %}
+
+                recent : created in the past {{ current_user.recent_days }} days
+
+            {% elif request.view_args["mode"] == "edited" %}
+
+                recent : edited in the past {{ current_user.recent_days }} days
+
+            {% elif request.view_args["mode"] == "imported" %}
+
+                recent : imported in the past {{ current_user.recent_days }} days
+
+            {% endif %}
 
         </div>
 
@@ -25,7 +48,23 @@
 
             <div class="blockTitle">
 
-                no recent annotations found...
+                {% if request.view_args["mode"] == "all" %}
+
+                    no annotations found...
+
+                {% elif request.view_args["mode"] == "created" %}
+
+                    no recently created annotations found...
+
+                {% elif request.view_args["mode"] == "edited" %}
+
+                    no recently edited annotations found...
+
+                {% elif request.view_args["mode"] == "imported" %}
+
+                    no recently imported annotations found...
+
+                {% endif %}
 
             </div>
 
@@ -33,15 +72,7 @@
 
     {% else %}
 
-        <div class="block blockBleeding">
-
-            <div class="blockContent">
-
-                {{ render_multiple_interactive_annotations(results) }}
-
-            </div>
-
-        </div>
+        {{ render_multiple_interactive_annotations(results) }}
 
         {{ pagination_bottom(results, current_url) }}
 

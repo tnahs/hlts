@@ -190,34 +190,5 @@ window.addEventListener("load", function(){
             }
         }
     }
-
-    /* -------------------------------- show/hide annotation options -------------------------------- */
-
-    const annotationContainersInteractive = document.querySelectorAll(".annotationContainerInteractive");
-
-    for (let annotationContainer of annotationContainersInteractive) {
-
-        annotationContainer.addEventListener("mouseover", function(){ activate(annotationContainer) });
-        annotationContainer.addEventListener("mouseout", function(){ deactivate(annotationContainer) });
-    }
-
-    function activate(annotationContainer) {
-
-        annotationContainer.classList.add("annotationContainerInteractiveVisible");
-        annotationContainer.classList.add("dropShadowBig");
-
-        const options = annotationContainer.lastElementChild;
-        options.style.opacity = "1";
-    }
-
-    function deactivate(annotationContainer) {
-
-        annotationContainer.classList.remove("annotationContainerInteractiveVisible");
-        annotationContainer.classList.remove("dropShadowBig");
-
-        const options = annotationContainer.lastElementChild;
-        options.style.opacity = "0";
-    }
-
 });
 

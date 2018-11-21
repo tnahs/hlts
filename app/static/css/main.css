@@ -19,7 +19,7 @@
 	--sans-serif-font:'Barlow Semi Condensed', sans-serif;
 	--monospace-font:'Source Code Pro', monospace;
 
-	--body-bg-color: hsl(0, 0%, 95%);
+	--body-bg-color: hsl(0, 0%, 97%);
 
 	--nav-menu-height: 65px;
 
@@ -91,14 +91,14 @@ nav {
 		background-color: hsla(0, 0%, 100%, .95);
 
 		display: grid;
-		grid-template-columns: repeat(5, auto);
+		grid-template-columns: repeat(6, auto);
 		grid-column-gap: 10px;
 		align-items: center;
 	}
 
 	mainMenuBar .icon,
 	searchMenuBar .icon,
-	userMenu .icon {
+	mainMenu .icon {
 
 		width: 32px;
 		height: 32px;
@@ -111,9 +111,9 @@ nav {
 
 	mainMenuBar #buttonDashboard .icon.iconDashboard {
 
-		width: 90px;
+		width: 80px;
 		height: 32px;
-		background-size: 90px 32px;
+		background-size: 80px 32px;
 
 		background-image: url("../images/nav/dashboard.png");
 	}
@@ -147,6 +147,16 @@ nav {
 	mainMenuBar #buttonRecent .icon.iconRecent:hover {
 
 		background-image: url("../images/nav/recent-active.png");
+	}
+
+	mainMenuBar #buttonRandom .icon.iconRandom {
+
+		background-image: url("../images/nav/random.png");
+	}
+
+	mainMenuBar #buttonRandom .icon.iconRandom:hover {
+
+		background-image: url("../images/nav/random-active.png");
 	}
 
 	mainMenuBar #buttonTrash .icon.iconTrash {
@@ -195,6 +205,9 @@ nav {
 			line-height: 100%;
 			text-transform: uppercase;
 
+			-webkit-transition: background-color .2s, color .2s; /* Safari */
+			transition: background-color .2s, color .2s;
+
 			display: block;
 			padding: 15px 20px;
 			background-color: hsla(220, 100%, 95%, 0.95);
@@ -203,7 +216,7 @@ nav {
 		mainMenuBar #buttonCreate #createMenuChoices a:hover {
 
 			background-color:  hsla(220, 100%, 90%, 0.95);
-			color: white;
+			color: hsla(220, 100%, 75%, 1.00);
 		}
 
 		mainMenuBar #buttonCreate #createMenuChoices a.disabled,
@@ -233,14 +246,16 @@ nav {
 
 		mainMenuBar #createMenuChoices hr {
 
-			background-color: hsla(220, 100%, 92%, 0.95);
+			background-color: white;
 
-			height: 2px;
+			height: 1px;
 		}
 
 	searchMenuBar {
 
 		grid-area: navSearchMenuBar;
+
+		transition: background-color .5s;
 
 		display: grid;
 		grid-template-columns: max-content auto;
@@ -250,6 +265,18 @@ nav {
 		padding-left: 15px;
 		background-color: hsla(220, 100%, 95%, 0.95);
 	}
+
+		searchMenuBar:focus-within,
+		searchMenuBar:hover {
+
+			background-color: hsla(220, 100%, 90%, 0.95);
+		}
+
+		searchMenuBar:focus-within input,
+		searchMenuBar:hover input {
+
+			color: hsla(220, 70%, 70%, 1.00);
+		}
 
 		searchMenuBar .icon.iconSearch {
 
@@ -315,7 +342,7 @@ nav {
 
 			/* font block */
 			font-family: var(--sans-serif-condensed-font);
-			color: hsla(220, 100%, 75%, 1.00);
+			color: hsla(220, 100%, 80%, 1.00);
 			font-size: 9.5pt;
 			font-weight: 400;
 			letter-spacing: 1px;
@@ -323,6 +350,9 @@ nav {
 			text-transform: uppercase;
 
 			text-align: right;
+
+			-webkit-transition: background-color .2s, color .2s; /* Safari */
+			transition: background-color .2s, color .2s;
 
 			display: block;
 			padding: 15px 20px;
@@ -332,14 +362,14 @@ nav {
 		mainMenu #mainMenuChoices a:hover {
 
 			background-color:  hsla(220, 100%, 90%, 0.95);
-			color: white;
+			color: hsla(220, 70%, 70%, 1.00);
 		}
 
 		mainMenu #mainMenuChoices div {
 
 			/* font block */
 			font-family: var(--sans-serif-condensed-font);
-			color: hsla(220, 100%, 75%, 1.00);
+			color: hsla(220, 70%, 70%, 1.00);
 			font-size: 9.5pt;
 			font-weight: 400;
 			letter-spacing: 1px;
@@ -357,7 +387,7 @@ nav {
 
 			background-color: hsla(220, 100%, 98%, 0.95);
 
-			height: 2px;
+			height: 1px;
 		}
 
 	mainMenuCompact {
@@ -401,7 +431,7 @@ nav {
 
 			/* font block */
 			font-family: var(--sans-serif-condensed-font);
-			color: hsla(220, 100%, 75%, 1.00);
+			color: hsla(220, 100%, 80%, 1.00);
 			font-size: 9.5pt;
 			font-weight: 400;
 			letter-spacing: 1px;
@@ -409,6 +439,9 @@ nav {
 			text-transform: uppercase;
 
 			text-align: right;
+
+			-webkit-transition: background-color .2s, color .2s; /* Safari */
+			transition: background-color .2s, color .2s;
 
 			display: block;
 			padding: 15px 20px;
@@ -418,14 +451,14 @@ nav {
 		mainMenuCompact #mainMenuCompactChoices a:hover {
 
 			background-color:  hsla(220, 100%, 90%, 0.95);
-			color: white;
+			color: hsla(220, 70%, 70%, 1.00);
 		}
 
 		mainMenuCompact #mainMenuCompactChoices div {
 
 			/* font block */
 			font-family: var(--sans-serif-condensed-font);
-			color: hsla(220, 100%, 75%, 1.00);
+			color: hsla(220, 70%, 70%, 1.00);
 			font-size: 9.5pt;
 			font-weight: 400;
 			letter-spacing: 1px;
@@ -441,9 +474,9 @@ nav {
 
 		mainMenuCompact #mainMenuCompactChoices hr {
 
-			background-color: hsla(220, 100%, 98%, 0.95);
+			background-color: white;
 
-			height: 2px;
+			height: 1px;
 		}
 
 		/* Mobile */
@@ -481,6 +514,7 @@ nav {
 
 			mainMenuBar #buttonIndex,
 			mainMenuBar #buttonRecent,
+			mainMenuBar #buttonRandom,
 			mainMenuBar #buttonTrash {
 
 				display: none;
@@ -552,13 +586,13 @@ main {
 	mainFlash .flashMessage.flashSuccess {
 
 		background-color: hsla(220, 100%, 95%, 0.95);
-		color: hsla(220, 100%, 70%, 1.00);
+		color: hsla(220, 100%, 75%, 1.00);
 	}
 
 	mainFlash .flashMessage.flashWarning {
 
 		background-color: hsla(0, 100%, 96%, 0.95);
-		color: hsla(0, 100%, 70%, 1.00);
+		color: hsla(0, 100%, 75%, 1.00);
 	}
 
 	mainFlash .flashMessage .flashClose {
@@ -629,9 +663,11 @@ footer .footerInfo {
 
 	display: grid;
 	grid-template-columns:
-		  [blockLabel] minmax(max-content, 1fr)
+		   [full-start
+		   blockLabel] minmax(max-content, 1fr)
 		[blockContent] minmax(256px, 1024px)
-		  [blockEmpty] minmax(0, 1fr);
+		  [blockEmpty] minmax(0, 1fr)
+		    [full-end];
 
 	background-color: white;
 }
@@ -679,37 +715,32 @@ footer .footerInfo {
 
 		padding-top: 0;
 		padding-left: 40px;
-		padding-bottom: 25px;
+		padding-bottom: 15px;
 		padding-right: 40px;
+	}
+
+	.block > .blockHeaderMenu {
+
+		grid-column: full;
 	}
 
 	.block > .blockPaginationTop {
 
-		grid-column: blockContent;
-
-		padding-top: 0;
-		padding-left: 25px;
-		padding-bottom: 25px;
-		padding-right: 25px;
-
+		grid-column: full;
 	}
 
 	.block > .blockPaginationBottom {
 
-		grid-column: blockContent;
+		grid-column: full;
 
-		padding-top: 25px;
-		padding-left: 25px;
-		padding-bottom: 25px;
-		padding-right: 25px;
-
+		padding-top: 15px;
 	}
 
 	.block > .blockTitle {
 
 		grid-column: blockContent;
 
-		padding: 25px;
+		padding: 15px;
 
 		/* font block */
 		font-family: var(--sans-serif-condensed-font);
@@ -727,7 +758,7 @@ footer .footerInfo {
 
 			margin: auto;
 			width: 75%;
-			padding-top: 15px;
+			padding-top: 5px;
 		}
 
 		.titleDetailContainer.titleDescription {
@@ -774,29 +805,54 @@ footer .footerInfo {
 
 		.block > .blockContent {
 
-			/* text-align: center; */
+			/*  */
 		}
 
 	}
 
 /* pagination ------------------------------------------------------------- */
 
-.paginationContainer {
+.headerMenuContainer {
 
-	text-align: center;
+	border-bottom: 1px solid hsla(220, 100%, 95%, 0.95);
+
+	display: grid;
+	grid-template-areas: "headerMenuSpacer  headerMenuButtons  headerMenuSpacer";
+	grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
 }
 
-.paginationContainer .paginationPages,
-.paginationContainer .paginationInfo,
-.paginationContainer .paginationPages .paginationPageNumber,
-.paginationContainer .paginationPages .paginationEllipsis,
-.paginationContainer .paginationInfo .paginationMatches {
+.headerMenuContainer .headerMenuSpacerLeft,
+.headerMenuContainer .headerMenuSpacerRight {
+
+	grid-area: "headerMenuSpacer";
+}
+
+.headerMenuContainer .headerMenuButtonsContainer {
+
+	grid-area: "headerMenuButtons";
+}
+
+.headerMenuContainer .headerMenuButtonsContainer {
+
+	font-size: 0; /* IMPORTANT: removes spacing between elements */
+}
+
+.headerMenuContainer .headerMenuButtonsContainer * {
+
+	background-color: white;
+
+	transition: background-color .3s;
+
+	padding: 12px 16px;
+
+	/* border-left: .5px solid hsla(220, 100%, 95%, 0.95); */
+	/* border-right: 1px solid hsla(220, 100%, 95%, 0.95); */
 
 	display: inline-block;
 
 	/* font block */
 	font-family: var(--sans-serif-condensed-font);
-	color: rgba(0, 0, 0, 0.5);
+	color: rgba(0, 0, 0, 0.4);
 	font-size: 11pt;
 	font-weight: 400;
 	letter-spacing: 1px;
@@ -804,43 +860,173 @@ footer .footerInfo {
 	text-transform: uppercase;
 }
 
-.paginationContainer .paginationPages .paginationPageNumber {
+.headerMenuContainer .headerMenuButtonsContainer .headerMenuButton:first-of-type {
 
-	padding: 0 7px;
+	border-left: 1px solid hsla(220, 100%, 95%, 0.95);
 }
 
-.paginationContainer .paginationPages .paginationEllipsis {
+.headerMenuContainer .headerMenuButtonsContainer .headerMenuButton:last-of-type {
 
-	padding: 0;
+	border-right: 1px solid hsla(220, 100%, 95%, 0.95);
 }
 
-.paginationContainer .paginationInfo .paginationMatches {
+.headerMenuContainer .headerMenuButtonsContainer .headerMenuButton:hover {
 
+	background-color: hsla(220, 100%, 90%, 0.95);
+}
+
+.headerMenuContainer .headerMenuButtonsContainer .headerMenuButton.headerMenuButtonDisabled {
+
+	cursor: default;
+
+	color: rgba(0, 0, 0, 0.2) !important;
+}
+
+.headerMenuContainer .headerMenuButtonsContainer .headerMenuButton.headerMenuButtonDisabled:hover {
+
+	background-color: unset !important;
+}
+
+.headerMenuContainer .headerMenuButtonsContainer .headerMenuButton.headerMenuButtonCurrent {
+
+	background-color: hsla(220, 100%, 95%, 0.95);
+	color: hsla(220, 70%, 70%, 1.00);
+}
+
+/*  */
+
+.paginationContainer .paginationResults {
+
+	text-align: center;
+
+	padding-top: 0;
+	padding-left: 25px;
+	padding-bottom: 15px;
+	padding-right: 25px;
+
+	/* font block */
+	font-family: var(--sans-serif-condensed-font);
 	color: rgba(0, 0, 0, 0.25);
+	font-size: 11pt;
+	font-weight: 400;
+	letter-spacing: 1px;
+	line-height: 100%;
+	text-transform: uppercase;
 }
 
-.paginationContainer .paginationInfo .paginationMatches::after {
-	content: " ⋅ "
+.paginationContainer .paginationButtonsContainer {
+
+	border-top: 1px solid hsla(220, 100%, 95%, 0.95);
+
+	display: grid;
+	grid-template-areas: "paginationSpacer  paginationButtons  paginationSpacer";
+	grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
 }
 
-.paginationContainer .paginationPages .paginationPageNumber.currentPage,
-.paginationContainer .paginationPages .paginationPageNumber:hover {
+.paginationContainer .paginationButtonsContainer .paginationSpacerLeft,
+.paginationContainer .paginationButtonsContainer .paginationSpacerRight {
 
-	color: hsla(220, 100%, 75%, 1.00);
+	grid-area: "paginationSpacer";
+
+	/* background-color: hsla(220, 100%, 95%, 0.95); */
 }
 
-@media only screen and (max-width: 768px) {
+.paginationContainer .paginationButtonsContainer .paginationButtons {
 
-	.paginationContainer .paginationInfo .paginationMatches::after {
-		content: ""
+	font-size: 0; /* IMPORTANT: removes spacing between elements */
+
+	grid-area: "paginationButtons";
+}
+
+.paginationContainer .paginationButtonsContainer .paginationButtons * {
+
+	background-color: white;
+
+	transition: background-color .3s;
+
+	padding: 18px 22px;
+
+	display: inline-block;
+
+	/* font block */
+	font-family: var(--sans-serif-condensed-font);
+	color: rgba(0, 0, 0, 0.4);
+	font-size: 11pt;
+	font-weight: 400;
+	letter-spacing: 1px;
+	line-height: 100%;
+	text-transform: uppercase;
+}
+
+.paginationContainer .paginationButtonsContainer .paginationButtons .paginationButtonPrev,
+.paginationContainer .paginationButtonsContainer .paginationButtons .paginationButtonNext {
+
+	border-right: 1px solid hsla(220, 100%, 95%, 0.95);
+	border-left: 1px solid hsla(220, 100%, 95%, 0.95);
+}
+
+.paginationContainer .paginationButtonsContainer .paginationButtons .paginationButtonPrev:hover,
+.paginationContainer .paginationButtonsContainer .paginationButtons .paginationButtonNext:hover,
+.paginationContainer .paginationButtonsContainer .paginationButtons .paginationButtonNumber:hover {
+
+	background-color: hsla(220, 100%, 90%, 0.95);
+	color: hsla(220, 70%, 70%, 1.00);
+}
+
+.paginationContainer .paginationButtonsContainer .paginationButtons .paginationButtonPrev:after {
+
+	content: "prev";
+}
+
+.paginationContainer .paginationButtonsContainer .paginationButtons .paginationButtonNext:after {
+
+	content: "next";
+}
+
+.paginationContainer .paginationButtonsContainer .paginationButtons .paginationButtonNumberCurrent {
+
+	background-color: hsla(220, 100%, 95%, 0.95);
+	color: hsla(220, 70%, 70%, 1.00);
+}
+
+.paginationContainer .paginationButtonsContainer .paginationButtons .paginationButtonEllipses {
+
+	padding: 18px 5px;
+
+	color: rgba(0, 0, 0, 0.3);
+}
+
+.paginationContainer .paginationButtonsContainer .paginationButtons *.paginationButtonDisabled {
+
+	color: rgba(0, 0, 0, 0.2) !important;
+}
+
+.paginationContainer .paginationButtonsContainer .paginationButtons *.paginationButtonDisabled:hover {
+
+	background-color: unset !important;
+}
+
+	/* Mobile */
+
+	@media only screen and (max-width: 1024px) {
+
+		/* Mobile */
 	}
 
-	.paginationContainer .paginationPages {
+	@media only screen and (max-width: 768px) {
 
-		display: block;
-		padding-top: 25px;
+		/* Mobile */
 	}
-}
+
+	@media only screen and (max-width: 512px) {
+
+		/* Mobile */
+	}
+
+	@media only screen and (max-width: 320px) {
+
+		/* Mobile */
+	}
 
 /* globals ---------------------------------------------------------------- */
 
@@ -1044,50 +1230,22 @@ mark {
 .annotationContainerInteractive {
 
 	transition: .3s;
-
-	-webkit-box-shadow: 2px 2px 0px 0px rgba(0,0,0,0);
-	-moz-box-shadow: 2px 2px 0px 0px rgba(0,0,0,0);
-	box-shadow: 2px 2px 0px 0px rgba(0,0,0,0);
 }
-
-	.annotationContainerInteractiveVisible {
-
-		background-color: hsl(0, 0%, 95%);
-	 }
-
-	.annotationContainerInteractiveVisible .pill {
-
-		background-color: white;
-	}
-
-	.annotationContainerInteractiveVisible .annotation {
-
-		border-bottom: solid 2px  hsl(0, 0%, 85%) !important;
-	}
 
 .annotationContainerInteractive .annotation {
 
-	padding: 15px;
-
-	border-bottom: solid 2px hsla(0,0%,0%,0);
-
-	transition: .3s;
+	/*  */
 }
 
 .annotationContainerInteractive .annotationOptions {
 
-	padding: 10px;
-
-	opacity: 0;
-
-	transition: .3s;
+	padding-top: 20px;
 
 	display: grid;
-	grid-template-columns: repeat(2, auto);
+	grid-template-columns: max-content auto;
 }
 
-.annotationContainerInteractive .annotationOptions .deleteAnnotation,
-.annotationContainerInteractive .annotationOptions .killAnnotation {
+.annotationContainerInteractive .annotationOptions .annotationOptionsRight {
 
 	justify-self: end;
 }
@@ -1100,73 +1258,67 @@ mark {
 	background-position: center;
 	background-repeat: no-repeat;
 
+	display: inline-block;
+
 	transition: background-image .3s;
+
+	cursor: pointer;
 }
 
-.annotationContainerInteractive .annotationOptions .icon.iconEditAnnotation {
+.annotationContainerInteractive .annotationOptions .icon.iconDisabled {
+
+	cursor: default;
+}
+
+.annotationContainerInteractive .annotationOptions #editAnnotation .icon.iconEditAnnotation {
 
 	background-image: url("../images/annotation_options/edit.png");
 }
 
-.annotationContainerInteractive .annotationOptions .icon.iconEditAnnotation:hover {
+.annotationContainerInteractive .annotationOptions #editAnnotation .icon.iconEditAnnotation:hover {
 
 	background-image: url("../images/annotation_options/edit-active.png");
 }
 
-.annotationContainerInteractive .annotationOptions .icon.iconDeleteAnnotation {
+.annotationContainerInteractive .annotationOptions #shareAnnotation .icon.iconShareAnnotation {
 
-	background-image: url("../images/annotation_options/delete.png");
+	background-image: url("../images/annotation_options/share-disabled.png");
 }
 
-.annotationContainerInteractive .annotationOptions .icon.iconDeleteAnnotation:hover {
+.annotationContainerInteractive .annotationOptions #duplicateAnnotation .icon.iconDuplicateAnnotation {
 
-	background-image: url("../images/annotation_options/delete-active.png");
+	background-image: url("../images/annotation_options/duplicate-disabled.png");
 }
 
-.annotationContainerInteractive .annotationOptions .icon.iconRestoreAnnotation {
+.annotationContainerInteractive .annotationOptions #trashAnnotation .icon.iconTrashAnnotation {
+
+	background-image: url("../images/annotation_options/trash.png");
+}
+
+.annotationContainerInteractive .annotationOptions #trashAnnotation .icon.iconTrashAnnotation:hover {
+
+	background-image: url("../images/annotation_options/trash-active.png");
+}
+
+.annotationContainerInteractive .annotationOptions #restoreAnnotation .icon.iconRestoreAnnotation {
 
 	background-image: url("../images/annotation_options/restore.png");
 }
 
-.annotationContainerInteractive .annotationOptions .icon.iconRestoreAnnotation:hover {
+.annotationContainerInteractive .annotationOptions #restoreAnnotation .icon.iconRestoreAnnotation:hover {
 
 	background-image: url("../images/annotation_options/restore-active.png");
 }
 
-.annotationContainerInteractive .annotationOptions .icon.iconKillAnnotation {
+.annotationContainerInteractive .annotationOptions #deleteAnnotation .icon.iconDeleteAnnotation {
 
-	background-image: url("../images/annotation_options/kill.png");
+	background-image: url("../images/annotation_options/delete.png");
 }
 
-.annotationContainerInteractive .annotationOptions .icon.iconKillAnnotation:hover {
+.annotationContainerInteractive .annotationOptions #deleteAnnotation .icon.iconDeleteAnnotation:hover {
 
-	background-image: url("../images/annotation_options/kill-active.png");
+	background-image: url("../images/annotation_options/delete-active.png");
 }
-
-/* WIP Setting up modalFlash
-.annotationContainerDeleted {
-
-	margin: 15px 0;
-	padding: 15px;
-
-	background-color: hsla(220, 100%, 95%, 0.95);
-
-	font-family: var(--sans-serif-condensed-font);
-	color: hsla(220, 100%, 70%, 1.00);
-	font-size: 11pt;
-	font-weight: 400;
-	letter-spacing: 1px;
-	line-height: 100%;
-	text-transform: uppercase;
-
-	text-align: center;
-
-	display: grid;
-	grid-row-gap: 10px;
-	grid-template-columns: 1fr 1fr max-content;
-	align-items: center;
-}
-*/
 
 /* ------------------ passage ----------------- */
 
@@ -1757,7 +1909,7 @@ loginFlash .flashMessage {
 
 	/* font block */
 	font-family: var(--sans-serif-condensed-font);
-	color: hsl(0, 100%, 80%) !important;;
+	color: hsl(0, 100%, 80%) !important;
 	font-size: 11pt;
 	font-weight: 400;
 	letter-spacing: 1px;

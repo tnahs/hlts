@@ -1,0 +1,112 @@
+* {
+    border: 1px solid red;
+}
+
+.appModal {
+
+	/* opacity: 0; */
+	/* visibility: hidden; */
+
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1000;
+	background-color: hsla(220, 100%, 90%, .80);
+
+	transition: .2s ease-in-out;
+
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: 100vh;
+	align-items: center;
+    justify-items: center;
+}
+
+.appModal .appModalContainer {
+
+    background-color: white;
+}
+
+.appModal .appModalTopBar {
+
+    padding: 20px;
+
+    border-bottom: solid 2px  hsl(0, 0%, 85%);
+
+	display: grid;
+    grid-template-areas: "modalTopMessage modalTopClose"
+}
+
+.appModal .appModalTopBar .appModalTopBarMessage {
+
+	grid-area: modalTopMessage;
+    justify-self: start;
+}
+
+.appModal .appModalTopBar .appModalTopBarClose {
+
+	grid-area: modalTopClose;
+    justify-self: end;
+}
+
+.appModal .appModalDialog {
+
+    padding: 20px;
+
+	display: grid;
+    grid-template-areas: "modalDialogMessage modalDialogMessage"
+                         "modalDialogCancel  modalDialogConfirm"
+}
+
+.appModal .appModalDialog .appModalDialogMessage {
+
+    padding-bottom: 20px;
+
+    max-width: 300px;
+
+	grid-area: modalDialogMessage;
+}
+
+.appModal .appModalDialog .appModalDialogCancelButton {
+
+    grid-area: modalDialogCancel;
+    justify-self: start;
+}
+
+.appModal .appModalDialog .appModalDialogConfirmButton {
+
+    grid-area: modalDialogConfirm;
+    justify-self: end;
+}
+
+/* Mobile */
+
+@media only screen and (max-width: 1024px) {
+
+    /* Mobile */
+
+}
+
+@media only screen and (max-width: 768px) {
+
+    /* Mobile */
+
+}
+
+@media only screen and (max-width: 512px) {
+
+    /* Mobile */
+}
+
+@media only screen and (max-width: 320px) {
+
+    /* Mobile */
+
+    .appModal .appModalDialog .appModalDialogMessage {
+
+        max-width: 200px;
+    }
+
+}
