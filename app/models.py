@@ -441,11 +441,13 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(256))
     is_admin = db.Column(db.Boolean, default=AppDefaults.IS_ADMIN)
 
+    api_key = db.Column(db.String(32), unique=True, index=True)
+
     theme_index = db.Column(db.Integer, default=AppDefaults.THEME_INDEX)
     results_per_page = db.Column(db.Integer, default=AppDefaults.RESULTS_PER_PAGE)
     recent_days = db.Column(db.Integer, default=AppDefaults.RECENT_DAYS)
 
-    api_key = db.Column(db.String(32), unique=True, index=True)
+    # show_beta_prompt = db.Column(db.Boolean, default=True)
 
     def __init__(self, *args, **kwargs):
         super(User, self).__init__(*args, **kwargs)
@@ -1210,11 +1212,13 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
             },
             "tags": [tag.name for tag in self.tags],
             "collections": [collection.name for collection in self.collections],
-            "created": self.created.isoformat(),
-            "modified": self.modified.isoformat(),
-            "origin": self.origin,
-            "is_protected": self.is_protected,
-            "in_trash": self.in_trash
+            "metadata": {
+                "created": self.created.isoformat(),
+                "modified": self.modified.isoformat(),
+                "origin": self.origin,
+                "is_protected": self.is_protected,
+                "in_trash": self.in_trash
+            }
         }
 
         return data
@@ -1230,15 +1234,15 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
         self.passage = data["passage"]
         self.notes = data["notes"]
 
-        if data["created"]:
-            self.created = dateparser(data["created"])
+        if data["metadata"]["created"]:
+            self.created = dateparser(data["metadata"]["created"])
 
-        if data["modified"]:
-            self.modified = dateparser(data["modified"])
+        if data["metadata"]["modified"]:
+            self.modified = dateparser(data["metadata"]["modified"])
 
-        self.is_protected = data["is_protected"]
-        self.in_trash = data["in_trash"]
-        self.origin = data["origin"]
+        self.is_protected = data["metadata"]["is_protected"]
+        self.in_trash = data["metadata"]["in_trash"]
+        self.origin = data["metadata"]["origin"]
 
         self.refresh_source(
             source_name=data["source"]["name"],

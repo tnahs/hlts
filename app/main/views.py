@@ -212,35 +212,6 @@ def recent(mode=None, page=1):
     return paginated_annotations(template="main/recent.html", endpoint="main.recent", results=results, page=page, mode=mode)
 
 
-@main.route("/trash/")
-@main.route("/trash/page/<int:page>")
-@login_required
-def trash(page=1):
-
-    results = Annotation.get_in_trash()
-
-    return paginated_annotations(template="main/trash.html", endpoint="main.trash", results=results, page=page)
-
-
-@main.route("/empty_trash/")
-@login_required
-def empty_trash():
-
-    for trashed in Annotation.get_in_trash():
-        trashed.delete()
-
-    db.session.commit()
-
-    return redirect(url_for("main.trash"))
-
-
-"""
-
-Misc pages
-
-"""
-
-
 @main.route("/random/<string:mode>")
 @login_required
 def random(mode=None):
@@ -282,6 +253,28 @@ def random(mode=None):
 
     return paginated_annotations(template="main/random.html", endpoint="main.random",
         results=results, request_info=request_info)
+
+
+@main.route("/trash/")
+@main.route("/trash/page/<int:page>")
+@login_required
+def trash(page=1):
+
+    results = Annotation.get_in_trash()
+
+    return paginated_annotations(template="main/trash.html", endpoint="main.trash", results=results, page=page)
+
+
+@main.route("/empty_trash/")
+@login_required
+def empty_trash():
+
+    for trashed in Annotation.get_in_trash():
+        trashed.delete()
+
+    db.session.commit()
+
+    return redirect(url_for("main.trash"))
 
 
 """
@@ -696,3 +689,30 @@ def ajax_authors():
     result = Author.query_to_multiple_dict(query)
 
     return jsonify(result)
+
+
+"""
+
+Beta pages
+
+"""
+
+
+@main.route("/ajax/hide_beta_prompt", methods=["POST", "GET"])
+@login_required
+def ajax_hide_beta_prompt():
+
+    current_user.show_beta_prompt = False
+    db.session.commit()
+
+    return jsonify({"result": "success"})
+
+
+@main.route("/ajax/show_beta_prompt", methods=["POST", "GET"])
+@login_required
+def ajax_show_beta_prompt():
+
+    current_user.show_beta_prompt = True
+    db.session.commit()
+
+    return jsonify({"result": "success"})

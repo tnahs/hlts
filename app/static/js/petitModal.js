@@ -162,7 +162,6 @@ class PetitModal {
 
             console.log(error);
         });
-
     }
 
     windowClick(event) {

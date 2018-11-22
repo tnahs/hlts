@@ -6,6 +6,8 @@
 
 {% block main %}
 
+    <script src="{{ url_for('static', filename='js/beta.js') }}"></script>
+
     <div class="block blockFloating">
 
         <div class="blockTitle">dashboard</div>
@@ -20,6 +22,29 @@
         </div>
 
     </div>
+
+    {% if current_user.show_beta_prompt %}
+
+        <div id="betaPrompt">
+
+            <div class="betaPromptContainer">
+
+                <div class="betaPromptContent">
+
+                    <div class="betaPromptMessage">
+                        welcome to the hlts beta! before getting started please read the <a class="link button" href="/beta/welcome">beta welcome</a> message!
+                        <br>
+                        <br>
+                        having trouble finding your way around? <a class="link button" href="#">read the manual!</a>
+                    </div>
+                    <div class="betaPromptHideButton">✕</div>
+                </div>
+
+            </div>
+
+        </div>
+
+    {% endif %}
 
     {% if dash.daily_annotation %}
 

@@ -663,11 +663,11 @@ footer .footerInfo {
 
 	display: grid;
 	grid-template-columns:
-		   [full-start
+		   [blockFull-start
 		   blockLabel] minmax(max-content, 1fr)
 		[blockContent] minmax(256px, 1024px)
 		  [blockEmpty] minmax(0, 1fr)
-		    [full-end];
+		    [blockFull-end];
 
 	background-color: white;
 }
@@ -721,17 +721,17 @@ footer .footerInfo {
 
 	.block > .blockHeaderMenu {
 
-		grid-column: full;
+		grid-column: blockFull;
 	}
 
 	.block > .blockPaginationTop {
 
-		grid-column: full;
+		grid-column: blockFull;
 	}
 
 	.block > .blockPaginationBottom {
 
-		grid-column: full;
+		grid-column: blockFull;
 
 		padding-top: 15px;
 	}
@@ -2106,3 +2106,41 @@ loginFlash .flashMessage .flashClose {
 	color: white;
 }
 
+/*  */
+
+#betaPrompt .betaPromptContainer {
+
+	margin: 25px;
+}
+
+#betaPrompt .betaPromptContent {
+
+	display: grid;
+	grid-template-columns: 1fr max-content;
+	align-items: center;
+
+	padding: 25px;
+
+	background-color: hsla(220, 100%, 95%, 0.95);
+
+	/* font block */
+	font-family: var(--sans-serif-condensed-font);
+	color: hsla(220, 100%, 75%, 1.00);
+	font-size: 11pt;
+	font-weight: 400;
+	letter-spacing: 1px;
+	line-height: 125%;
+	text-transform: uppercase;
+
+	text-align: center;
+}
+
+#betaPrompt .betaPromptMessage {
+
+	/* max-width: 500px; */
+}
+
+#betaPrompt .betaPromptHideButton {
+
+	padding-left: 15px;
+}
