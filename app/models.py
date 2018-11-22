@@ -140,7 +140,7 @@ class ToDictMixin(object):
             "results": [
                 item.serialize() for item in results.items
             ],
-            "meta": {
+            "metadata": {
                 "in_request": in_request,
                 "per_page": per_page,
                 "page": page,
@@ -646,7 +646,7 @@ class User(db.Model, UserMixin):
         data = {
             "user": self.serialize(),
             "annotations": annotations,
-            "meta": {
+            "metadata": {
                 "app_version": current_app.config["APP_VERSION"],
                 "db_version": current_app.config["DB_VERSION"],
                 "export_date": datetime.utcnow().isoformat(),

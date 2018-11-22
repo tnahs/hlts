@@ -313,11 +313,13 @@ Annotation JSON Schema
     },
     "tags": list,
     "collections": list,
-    "created": string,
-    "modified": string,
-    "origin": string,
-    "is_protected": bool,
-    "in_trash": bool
+    "metadata" {
+        "created": string,
+        "modified": string,
+        "origin": string,
+        "is_protected": bool,
+        "in_trash": bool
+    }
 }
 ```
 
@@ -390,7 +392,7 @@ Annotation JSON Schema
 
 <br>
 
-+ created
++ metadata: created
     + **required:** false
     + **input type:** string as [ISO 8601 date](https://www.iso.org/iso-8601-date-and-time-format.html)
     + **max length:** n/a
@@ -399,7 +401,7 @@ Annotation JSON Schema
 
 <br>
 
-+ modified
++ metadata: modified
     + **required:** false
     + **input type:** string as [ISO 8601 date](https://www.iso.org/iso-8601-date-and-time-format.html)
     + **max length:** n/a
@@ -408,7 +410,7 @@ Annotation JSON Schema
 
 <br>
 
-+ origin
++ metadata: origin
     + **required:** false
     + **input type:** string
     + **max length:** 64
@@ -417,7 +419,7 @@ Annotation JSON Schema
 
 <br>
 
-+ is_protected
++ metadata: is_protected
     + **required:** false
     + **input type:** boolean
     + **max length:** n/a
@@ -426,7 +428,7 @@ Annotation JSON Schema
 
 <br>
 
-+ in_trash
++ metadata: in_trash
     + **required:** false
     + **input type:** boolean
     + **max length:** n/a
@@ -458,11 +460,13 @@ A valid JSON Annotation.
         "collections": [
             "star"
         ],
-        "created": "2017-11-01T22:35:56.799645",
-        "modified": "2017-12-10T22:31:31.432650",
-        "origin": "ibooks",
-        "is_protected": false,
-        "in_trash": false
+        "metadata" {
+            "created": "2017-11-01T22:35:56.799645",
+            "modified": "2017-12-10T22:31:31.432650",
+            "origin": "ibooks",
+            "is_protected": false,
+            "in_trash": false
+        }
     }
 ]
 ```
