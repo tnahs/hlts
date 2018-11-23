@@ -12,7 +12,7 @@ And a quick word on the UI. Most of the focus on this beta has been to get the i
 
 <br>
 
-That's it for the essentials! And note, every designed element from the database model to the UI is "work in progress" and very much open for critique and feedback so please don't hesitate to contact us with your questions/comments!
+That's it for the essentials! Oh and, what does "HLTS" mean? It's a shorted version of "highlights". It's the "code name" for the app, but not at all the final name which is open for suggestions. Likewise for any other element from the API to database model to the UI. All the work you see is a "work in progress" and very much open for critique and feedback so please don't hesitate to contact us with your questions/comments!
 
 <br>
 

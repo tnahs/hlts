@@ -2,18 +2,18 @@
 
 window.addEventListener("load", function(){
 
-    const betaPromptHideButton = document.querySelector(".betaPromptHideButton");
+    const betaNotificationHideButton = document.querySelector(".betaNotificationHideButton");
 
-    betaPromptHideButton.addEventListener("click", function() {
+    betaNotificationHideButton.addEventListener("click", function() {
 
-        betaPromptHide()
+        betaNotificationHide()
     });
 
-    function betaPromptHide() {
+    function betaNotificationHide() {
 
-        const betaPrompt = document.querySelector("#betaPrompt");
+        const betaNotification = document.querySelector("#betaNotification");
 
-        fetch("/ajax/hide_beta_prompt", {
+        fetch("/ajax/hide_beta_notification", {
             method: "POST",
             credentials: "include"
         })
@@ -21,7 +21,7 @@ window.addEventListener("load", function(){
 
             if (response.ok) {
 
-                betaPrompt.remove();
+                betaNotification.remove();
             }
 
         })

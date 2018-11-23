@@ -14,11 +14,11 @@ class LoginForm(FlaskForm):
 
     username = StringField(
         validators=[InputRequired()],
-        render_kw={'placeholder': 'username'})
+        render_kw={"placeholder": "username"})
     password = PasswordField(
         validators=[InputRequired()],
-        render_kw={'placeholder': 'password'})
-    remember = BooleanField('remember me')
+        render_kw={"placeholder": "password"})
+    remember = BooleanField("keep me logged in")
 
     def validate_username(self, field):
 
@@ -46,20 +46,19 @@ class UserForm(FlaskForm):
     id = HiddenField()
     username = StringField(
         validators=[InputRequired()],
-        render_kw={'placeholder': 'username'})
+        render_kw={"placeholder": "username"})
     fullname = StringField(
-        render_kw={'placeholder': 'full name'})
+        render_kw={"placeholder": "full name"})
     email = StringField(
         validators=[InputRequired()],
-        render_kw={'placeholder': 'e-mail'})
+        render_kw={"placeholder": "e-mail"})
     results_per_page = StringField(
         validators=[InputRequired()],
-        render_kw={'placeholder': 'results per page'})
+        render_kw={"placeholder": "results per page"})
     recent_days = StringField(
         validators=[InputRequired()],
-        render_kw={'placeholder': 'recent days'})
-    api_key = StringField(render_kw={'readonly': True})
-    # theme_index = SelectField('theme', choices=AppDefaults.THEME_CHOICES)
+        render_kw={"placeholder": "recent days"})
+    api_key = StringField(render_kw={"readonly": True})
 
     def __init__(self, *args, **kwargs):
         super(UserForm, self).__init__(*args, **kwargs)

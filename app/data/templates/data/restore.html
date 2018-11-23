@@ -1,4 +1,7 @@
+{% from "_macros.html" import header_menu_start_html, header_menu_end_html with context %}
+
 {% extends "_index.html" %}
+
 
 {% block main %}
 
@@ -16,28 +19,24 @@
 
     <form method="POST" action="{{ url_for('data.restore_user_data') }}" enctype=multipart/form-data>
 
-        <div class="block blockBleeding">
+        <div class="block blockFloating">
+
+            <div class="blockHeaderMenu">
+
+                {{ header_menu_start_html() }}
+                    <button class="headerMenuButton" type="submit">restore</button>
+                {{ header_menu_end_html() }}
+
+            </div>
 
             <div class="blockContent">
 
                 {{ form_restore.csrf_token }}
+                {{ form_restore.confirm }}{{ form_restore.confirm.label }}
 
-                {{ form_restore.confirm }} <span class="text upper">confirm</span>
-
-                <br>
                 <br>
 
                 {{ form_restore.hlts_file }}
-
-            </div>
-
-        </div>
-
-        <div class="block blockFloating">
-
-            <div class="blockContent">
-
-                <button class="link button" type="submit">restore</button>
 
             </div>
 

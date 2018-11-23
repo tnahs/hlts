@@ -1,5 +1,5 @@
 title: HLTS Beta Notes
-date: 2018-11-06
+date: 2018-11-22
 
 <a class="paddedAnchor" name="table-of-contents"></a>
 
@@ -68,18 +68,20 @@ Some current quirks to note while using HLTS. None of these should cause any err
 ## [Changelog](#changelog)
 
 + **Main App**
-    + v1.0.0beta - 2018-11-07
+    + `v1.0.0beta - 2018-11-07`
         + Initial Release
 
 <br>
 
 + **Database Model**
-    + v1.0.0beta - 2018-11-07
+    + `v1.0.0beta - 2018-11-07`
         + Initial Release
-    + v1.1.0beta - 2018-12-20
+    + `v1.1.0beta - 2018-11-23`
         + `deleted` renamed to `in_trash`.
         + `protected` renamed to `is_protected`.
         + `api_key` string length reduced to 32 characters.
+        + Added `show_beta_notification` to db model.
+        + Annotation JSON schema updated to include "metadata".
 
 <br>
 

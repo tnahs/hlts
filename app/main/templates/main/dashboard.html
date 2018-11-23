@@ -23,26 +23,9 @@
 
     </div>
 
-    {% if current_user.show_beta_prompt %}
+    {% if current_user.show_beta_notification %}
 
-        <div id="betaPrompt">
-
-            <div class="betaPromptContainer">
-
-                <div class="betaPromptContent">
-
-                    <div class="betaPromptMessage">
-                        welcome to the hlts beta! before getting started please read the <a class="link button" href="/beta/welcome">beta welcome</a> message!
-                        <br>
-                        <br>
-                        having trouble finding your way around? <a class="link button" href="#">read the manual!</a>
-                    </div>
-                    <div class="betaPromptHideButton">✕</div>
-                </div>
-
-            </div>
-
-        </div>
+        {% include "_beta_notification.html" %}
 
     {% endif %}
 

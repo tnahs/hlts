@@ -9,4 +9,4 @@ class RestoreDataForm(FlaskForm):
     """ annotation form
     """
     hlts_file = FileField(validators=[InputRequired()])
-    confirm = BooleanField(validators=[InputRequired()])
+    confirm = BooleanField("confirm", validators=[InputRequired()])

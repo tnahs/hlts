@@ -491,28 +491,25 @@ def bulk_edit_tags():
 
     if form.validate_on_submit():
 
-        tag = Tag.query.get(form.id.data)
+        if "delete_tag" in request.form:
 
-        tag.edit(form.data)
+            tag = Tag.query.get(request.form["id"])
 
-        db.session.commit()
+            db.session.delete(tag)
+
+            db.session.commit()
+
+        else:
+
+            tag = Tag.query.get(form.id.data)
+
+            tag.edit(form.data)
+
+            db.session.commit()
 
     results = Tag.query.order_by(Tag.pinned.desc(), Tag.name)
 
     return render_template("main/bulk_edit_tags.html", results=results, form=form)
-
-
-@main.route("/delete_tag", methods=["POST", "GET"])
-@login_required
-def delete_tag():
-
-    id = request.form["id"]
-    tag = Tag.query.get(id)
-
-    db.session.delete(tag)
-    db.session.commit()
-
-    return redirect(url_for("main.bulk_edit_tags"))
 
 
 @main.route("/edit/collections", methods=["POST", "GET"])
@@ -523,28 +520,25 @@ def bulk_edit_collections():
 
     if form.validate_on_submit():
 
-        collection = Collection.query.get(form.id.data)
+        if "delete_collection" in request.form:
 
-        collection.edit(form.data)
+            collection = Collection.query.get(request.form["id"])
 
-        db.session.commit()
+            db.session.delete(collection)
+
+            db.session.commit()
+
+        else:
+
+            collection = Collection.query.get(form.id.data)
+
+            collection.edit(form.data)
+
+            db.session.commit()
 
     results = Collection.query.order_by(Collection.pinned.desc(), Collection.name)
 
     return render_template("main/bulk_edit_collections.html", results=results, form=form)
-
-
-@main.route("/delete_collection", methods=["POST", "GET"])
-@login_required
-def delete_collection():
-
-    id = request.form["id"]
-    collection = Collection.query.get(id)
-
-    db.session.delete(collection)
-    db.session.commit()
-
-    return redirect(url_for("main.bulk_edit_collections"))
 
 
 @main.route("/edit/sources", methods=["POST", "GET"])
@@ -698,21 +692,21 @@ Beta pages
 """
 
 
-@main.route("/ajax/hide_beta_prompt", methods=["POST", "GET"])
+@main.route("/ajax/hide_beta_notification", methods=["POST", "GET"])
 @login_required
-def ajax_hide_beta_prompt():
+def ajax_hide_beta_notification():
 
-    current_user.show_beta_prompt = False
+    current_user.show_beta_notification = False
     db.session.commit()
 
     return jsonify({"result": "success"})
 
 
-@main.route("/ajax/show_beta_prompt", methods=["POST", "GET"])
+@main.route("/ajax/show_beta_notification", methods=["POST", "GET"])
 @login_required
-def ajax_show_beta_prompt():
+def ajax_show_beta_notification():
 
-    current_user.show_beta_prompt = True
+    current_user.show_beta_notification = True
     db.session.commit()
 
     return jsonify({"result": "success"})

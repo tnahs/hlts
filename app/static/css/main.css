@@ -69,6 +69,29 @@ body {
 	background-color: var(--body-bg-color);
 }
 
+body::after {
+	/* Pre-load active-state images */
+	content:
+		url("../images/nav/dashboard-compact.png")
+		url("../images/nav/index-active.png")
+		url("../images/nav/recent-active.png")
+		url("../images/nav/random-active.png")
+		url("../images/nav/create-active.png")
+		url("../images/nav/trash-active.png")
+		url("../images/nav/user-active.png")
+		url("../images/nav/user-compact-active.png")
+		url("../images/annotation_options/edit-active.png")
+		url("../images/annotation_options/trash-active.png")
+		url("../images/annotation_options/restore-active.png")
+		url("../images/annotation_options/delete-active.png");
+
+	  position:absolute;
+	  width:0;
+	  height:0;
+	  overflow:hidden;
+	  z-index:-1;
+}
+
 nav {
 
 	width: 100%;
@@ -619,14 +642,15 @@ footer {
 
 	padding-top: 15px;
 
-	background-color: hsla(220, 100%, 90%, 0.95);
-	box-shadow: 0 50vh 0 50vh hsla(220, 100%, 90%, 0.95);
+	background-color: hsla(220, 100%, 95%, 0.95);
+	box-shadow: 0 50vh 0 50vh hsla(220, 100%, 95%, 0.95);
 
 	text-align: center;
-	color: hsla(220, 100%, 75%, 1.00);
+	color: hsla(220, 100%, 80%, 1.00);
 }
 
-footer > a {
+footer > a,
+footer > span {
 	display: inline-block;
 
 	padding: 7px;
@@ -641,22 +665,9 @@ footer > a {
 	text-transform: uppercase;
 }
 
-footer .footerInfo {
+footer > a:hover {
 
-	margin: auto;
-	padding: 10px 25px;
-	max-width: 500px;
-
-	/* font block */
-	font-family: var(--sans-serif-condensed-font);
-	color: hsla(220, 100%, 75%, 1.00);
-	font-size: 11pt;
-	font-weight: 400;
-	letter-spacing: 1px;
-	line-height: 110%;
-	text-transform: none;
-
-	text-align: justify;
+	color: hsla(220, 85%, 65%, 1.00) !important;
 }
 
 .block {
@@ -705,6 +716,8 @@ footer .footerInfo {
 		grid-column: blockContent;
 
 		padding: 25px;
+
+		font-size: 0;
 	}
 
 	.block > .blockMenu {
@@ -1181,6 +1194,11 @@ a *:hover {
 	color: hsla(220, 100%, 75%, 1.00) !important;
 }
 
+.accentFaded {
+
+	color: hsla(220, 100%, 85%, 1.00) !important;
+}
+
 .faded {
 
 	color: rgba(0, 0, 0, 0.25) !important;
@@ -1404,10 +1422,15 @@ mark {
 /* ----------------- metadata ----------------- */
 
 .annotation .annotationMetaData {
-	margin: 10px 0 0 5px;
+
+	font-size: 0;
+
+	margin-top: 5px;
+	/* margin-left; 5px; */
 }
 
 .annotation .annotationMetaData .annotationAttribution {
+
 	display: inline-block;
 
 	margin-bottom: 6px;
@@ -1423,10 +1446,12 @@ mark {
 }
 
 .annotation .annotationMetaData .annotationAttribution a {
+
 	color: var(--annotation-metadata-text-color);
 }
 
 .annotation .annotationMetaData .annotationAttribution a:hover {
+
 	color: hsla(220, 100%, 75%, 1.00);
 }
 
@@ -1450,6 +1475,7 @@ mark {
 /* --------------------------------------------------------------------- */
 
 .markdown p:first-of-type {
+
 	margin-top: 0;
 }
 
@@ -1709,18 +1735,49 @@ hr {
 
 /* --------------------------------------------------------------------- */
 
-#bulkEditor form {
+#bulkEditor {
 
-	margin: 10px 0;
+	margin: 0 25px;
+
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	grid-gap: 25px;
 }
 
-#bulkEditor input {
+#bulkEditor input[type="text"],
+#bulkEditor textarea {
 
 	margin: 2px 0;
 	padding: 6px 10px;
 
 	line-height: 150%;
+	width: 100%;
 	background-color: hsl(0, 0%, 95%);
+}
+
+#bulkEditor textarea {
+
+	min-height: 50px;
+}
+
+#bulkEditor .bulkUpdateButton {
+
+	padding-top: 5px;
+	padding-left: 5px;
+}
+
+#bulkEditor .bulkEditPill {
+
+	margin: 10px 0 0 0;
+}
+
+#bulkEditor #bulkDeleteForm {
+
+	display: inline-block;
+
+	padding-top: 10px;
+	padding-left: 5px;
+
 }
 
 /* --------------------------------------------------------------------- */
@@ -1780,16 +1837,18 @@ hr {
 
 .pill.collection {
 
-	margin: 2px 0;
+	margin: 2px 2px;
 	padding: 6px 12px;
 
-	border-radius: 999px;
+	border-radius: 8px;
 }
 
 .pill.tag {
 
-	margin: 2px 0;
+	margin: 2px 2px;
 	padding: 6px 8px;
+
+	border-radius: 1px;
 }
 
 .pill.selected {
@@ -1880,26 +1939,12 @@ hr {
 
 	#userWelcome .welcomeContainer .loginForm .loginRemember {
 
-		padding: 7px;
-
-		/* font block */
-		font-family: var(--sans-serif-condensed-font);
-		color: hsl(0, 0%, 80%);
-		font-size: 10pt;
-		font-weight: 400;
-		letter-spacing: 1px;
-		line-height: 100%;
-		text-transform: uppercase;
+		padding: 5px;
 
 	}
 
 		.loginRemember label {
 
-			padding-left: 5px;
-
-			vertical-align: bottom;
-			position: relative;
-			top: 1px;
 		}
 
 	#userWelcome .welcomeContainer .loginFormOptions {
@@ -2017,11 +2062,6 @@ loginFlash .flashMessage .flashClose {
 
 #noResults {
 
-	/* display: grid;
-	grid-template-columns: 1fr;
-	grid-template-rows: 30vh;
-	align-items: center;
-	justify-items: center; */
 }
 
 #noResults .noResultsContainer {
@@ -2037,6 +2077,13 @@ loginFlash .flashMessage .flashClose {
 
 #flatPage {
 
+}
+
+#flatPage .flatContent {
+
+	/* used to counteract line-height */
+	margin-top: -4px;
+
 	/* font block */
 	font-family: var(--sans-serif-font);
 	color: var(--body-text-color);
@@ -2045,12 +2092,6 @@ loginFlash .flashMessage .flashClose {
 	letter-spacing: unset;
 	line-height: 150%;
 	text-transform: unset;
-}
-
-#flatPage .flatContent {
-
-	/* used to counteract line-height */
-	margin-top: -4px;
 }
 
 #flatPage .flatTitle {
@@ -2108,18 +2149,18 @@ loginFlash .flashMessage .flashClose {
 
 /*  */
 
-#betaPrompt .betaPromptContainer {
+#betaNotification {
 
 	margin: 25px;
 }
 
-#betaPrompt .betaPromptContent {
+#betaNotification .betaNotificationContainer {
 
 	display: grid;
 	grid-template-columns: 1fr max-content;
 	align-items: center;
 
-	padding: 25px;
+	padding: 15px;
 
 	background-color: hsla(220, 100%, 95%, 0.95);
 
@@ -2130,17 +2171,90 @@ loginFlash .flashMessage .flashClose {
 	font-weight: 400;
 	letter-spacing: 1px;
 	line-height: 125%;
-	text-transform: uppercase;
+	text-transform: unset;
 
 	text-align: center;
 }
 
-#betaPrompt .betaPromptMessage {
+#betaNotification .betaNotificationMessage {
 
-	/* max-width: 500px; */
+	justify-self: center;
+
+	max-width: 800px;
+
+	/* used to counteract line-height */
+	margin-top: -4px;
 }
 
-#betaPrompt .betaPromptHideButton {
+#betaNotification .betaNotificationMessage a {
+
+	color: hsla(220, 85%, 65%, 1.00);
+	text-decoration: underline;
+}
+
+#betaNotification .betaNotificationHideButton {
+
+	align-self: baseline;
 
 	padding-left: 15px;
+	line-height: 100%;
+
+	cursor: pointer;
+
+	transition: color .2s;
+}
+
+#betaNotification .betaNotificationHideButton:hover {
+
+	color: hsla(220, 100%, 65%, 1.00);
+}
+
+input[type="checkbox"] {
+
+	-webkit-appearance: none;
+	   -moz-appearance: none;
+	        appearance: none;
+
+	display: inline-block;
+
+	background-color: hsl(0, 0%, 95%);
+
+	position: relative;
+	top: 0;
+	height: 15px;
+	width: 15px;
+	border: 0;
+
+	cursor: pointer;
+	outline: none;
+}
+
+input[type="checkbox"]:hover {
+
+	background-color: hsla(220, 100%, 95%, 0.95);
+}
+
+input[type="checkbox"]:checked {
+
+	background-color: hsla(220, 100%, 90%, 0.95);
+
+	-webkit-box-shadow: inset 2px 2px 0px 0px hsla(220, 100%, 80%, 0.95);
+	   -moz-box-shadow: inset 2px 2px 0px 0px hsla(220, 100%, 80%, 0.95);
+	        box-shadow: inset 2px 2px 0px 0px hsla(220, 100%, 80%, 0.95);
+}
+
+label {
+
+	/* font block */
+	font-family: var(--sans-serif-condensed-font);
+	color: hsl(0, 0%, 80%);
+	font-size: 10pt;
+	font-weight: 400;
+	letter-spacing: .5px;
+	line-height: 100%;
+	text-transform: uppercase;
+
+	padding-left: 5px;
+	position: relative;
+	bottom: 3px;
 }

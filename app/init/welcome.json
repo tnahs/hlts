@@ -52,11 +52,13 @@
             "collections": [
                 "star"
             ],
-            "created": "",
-            "modified": "",
-            "origin": "user",
-            "is_protected": false,
-            "in_trash": false
+            "metadata": {
+                "created": "",
+                "modified": "",
+                "origin": "user",
+                "is_protected": false,
+                "in_trash": false
+            }
         },
         {
             "id": "",
@@ -70,11 +72,13 @@
             "collections": [
                 "star"
             ],
-            "created": "",
-            "modified": "",
-            "origin": "user",
-            "is_protected": false,
-            "in_trash": false
+            "metadata": {
+                "created": "",
+                "modified": "",
+                "origin": "user",
+                "is_protected": false,
+                "in_trash": false
+            }
         }
     ]
 }

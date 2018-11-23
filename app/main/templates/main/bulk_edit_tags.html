@@ -1,4 +1,5 @@
-{% from "_macros.html" import pagination with context %}
+{% from "_macros.html" import header_menu_start_html, header_menu_end_html with context %}
+
 
 {% extends "_index.html" %}
 
@@ -11,60 +12,41 @@
 
     </div>
 
-    <div class="block blockBleeding">
+    <div id="bulkEditor">
 
-        <div class="blockContent">
+        {% for tag in results %}
 
-            <div id="bulkEditor">
+            <form method="POST" action="{{ url_for('main.bulk_edit_tags') }}">
 
-                {% for tag in results %}
+                <div class="block blockBleeding">
 
-                    <form method="POST" action="{{ url_for('main.bulk_edit_tags') }}">
+                    <div class="blockHeaderMenu">
 
-                        {{ form.csrf_token }}
-                        {{ form.id(value=tag.id) }}
-                        {{ form.name(value=tag.name) }}
-                        {{ form.color(value=tag.color) }}
-                        {{ form.description(value=tag.description) }}
+                        {{ header_menu_start_html() }}
+                            <button class="headerMenuButton" type="submit">update</button>
+                            <button class="headerMenuButton" type="submit" name="delete_tag">delete</button>
+                        {{ header_menu_end_html() }}
 
-                        &nbsp;
+                    </div>
 
-                        <span class="text upper faded">{{ form.pinned.label }}:</span> {{ form.pinned(checked=tag.pinned) }}
-
-                        &nbsp;
-
-                        <div class="pill tag" name="{{ tag.name }}">{{ tag.name }} ⋅ {{ tag.frequency }}</div>
-
-                        {% if form.errors %}
-                            {% if tag.id | string == form.errors["name"][0] %}
-                                ERROR!
-                            {% endif %}
-                        {% endif %}
-
-                        <br>
-
-                        <button class="link button" type="submit">update</button>
-
-                    </form>
-
-                    <form method="POST" action="{{ url_for('main.delete_tag') }}">
-
-                        <button class="link button" type="submit">delete</button>
-
-                        &nbsp;
+                    <div class="blockContent">
 
                         {{ form.csrf_token }}
                         {{ form.id(value=tag.id) }}
 
-                    </form>
+                        {{ form.pinned(checked=tag.pinned) }}{{ form.pinned.label }}
+                        <br>{{ form.name(value=tag.name) }}
+                        <br>{{ form.color(value=tag.color) }}
+                        <br>{{ form.description(value=tag.description) }}
+                        <br><div class="pill tag bulkEditPill" name="{{ tag.name }}">{{ tag.name }} ⋅ {{ tag.frequency }}</div>
 
-                    <hr>
+                    </div>
 
-                {% endfor %}
+                </div>
 
-            </div>
+            </form>
 
-        </div>
+        {% endfor %}
 
     </div>
 

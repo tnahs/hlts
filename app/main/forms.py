@@ -102,7 +102,7 @@ class TagForm(FlaskForm):
         validators=[InputRequired()],
         render_kw={"placeholder": "name"})
     color = StringField(render_kw={"placeholder": "color"})
-    description = StringField(render_kw={"placeholder": "description"})
+    description = TextAreaField(render_kw={"placeholder": "description"})
 
     def validate_name(self, field):
 
@@ -123,7 +123,7 @@ class CollectionForm(FlaskForm):
         validators=[InputRequired()],
         render_kw={"placeholder": "name"})
     color = StringField(render_kw={"placeholder": "color"})
-    description = StringField(render_kw={"placeholder": "description"})
+    description = TextAreaField(render_kw={"placeholder": "description"})
 
     def validate_name(self, field):
 

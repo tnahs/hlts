@@ -77,7 +77,7 @@ medKit div[id$="medKitSuggestionSelected"] {
 
 medKit .medKitPill {
 
-	margin: 3px !important;
+	/*  */
 }
 
 medKit .medKitPill:hover {

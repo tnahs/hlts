@@ -313,7 +313,7 @@ Annotation JSON Schema
     },
     "tags": list,
     "collections": list,
-    "metadata" {
+    "metadata": {
         "created": string,
         "modified": string,
         "origin": string,
@@ -460,7 +460,7 @@ A valid JSON Annotation.
         "collections": [
             "star"
         ],
-        "metadata" {
+        "metadata": {
             "created": "2017-11-01T22:35:56.799645",
             "modified": "2017-12-10T22:31:31.432650",
             "origin": "ibooks",

@@ -1,9 +1,7 @@
 <footer>
+    <span>HLTS 2018 {{ config["APP_VERSION"] }} </span> |
     <a href="{{ url_for('main.dashboard') }}">dashboard</a> |
     <a href="{{ url_for('flat.page', which='manual/main') }}"">manual</a> |
-    <a href="{{ url_for('flat.page', which='beta/welcome') }}">beta welcome</a> |
+    <a href="{{ url_for('flat.page', which='beta/main') }}">beta notes</a> |
     <a href="{{ url_for('flat.page', which='misc/contact') }}">contact</a>
-    <div class="footerInfo">
-        Ut faucibus ligula sit amet turpis varius ultricies. Pellentesque sagittis ligula vel fermentum aliquam. Ut lorem massa, ornare eget nibh eu, eleifend tincidunt felis.
-    </div>
 </footer>
