@@ -447,7 +447,7 @@ class User(db.Model, UserMixin):
     results_per_page = db.Column(db.Integer, default=AppDefaults.RESULTS_PER_PAGE)
     recent_days = db.Column(db.Integer, default=AppDefaults.RECENT_DAYS)
 
-    show_beta_notification = db.Column(db.Boolean, default=True)
+    show_dashboard_notification = db.Column(db.Boolean, default=True)
 
     def __init__(self, *args, **kwargs):
         super(User, self).__init__(*args, **kwargs)

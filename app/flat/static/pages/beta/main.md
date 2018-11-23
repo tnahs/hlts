@@ -80,7 +80,7 @@ Some current quirks to note while using HLTS. None of these should cause any err
         + `deleted` renamed to `in_trash`.
         + `protected` renamed to `is_protected`.
         + `api_key` string length reduced to 32 characters.
-        + Added `show_beta_notification` to db model.
+        + Added `show_dashboard_notification` to db model.
         + Annotation JSON schema updated to include "metadata".
 
 <br>

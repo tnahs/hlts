@@ -67,7 +67,9 @@ def restore_user_data():
                 return redirect(url_for("data.restore_user_data"))
 
             else:
-                flash("restored user settings and {0} annotations".format(restore.annotation_count), "flashSuccess")
+                flash("restored user settings. "
+                      "{0} annotations restoring in the background."
+                      .format(restore.annotation_count), "flashSuccess")
                 return redirect(home_url())
 
     return render_template("data/restore.html", form_restore=form_restore)

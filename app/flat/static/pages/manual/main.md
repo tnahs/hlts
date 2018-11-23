@@ -237,11 +237,11 @@ There are two options found on the [Tools](/tools) page for backing up your data
 
 ## [Restoring Your Data](#restoring-your-data)
 
-To restore your data go to the [Restore User Data](/restore_user_data) page (Also accessible through the [Tools](/tools) page). Click `Choose File` and select your latest `.hlts` file. Check the `Confirm` box and then press `Restore`.
+To restore your data go to the [Restore User Data](/restore_user_data) page (Also accessible through the [Tools](/tools) page). Click `Choose File` and select your latest `.hlts` file. Check the `Confirm` box and then press `Upload`.
 
-The `.hlts` file will be validated to make sure the data is in the right format otherwise it will fail. In the case it fails please [Contact Us](/misc/contact).
+The `.hlts` file will be validated to make sure the data is in the right format otherwise it will fail. In the case that it fails please [Contact Us](/misc/contact).
 
-> **NOTE:** Due to server and timeout limits, all Annotation imports are submitted as background jobs. Currently this poses a bit of a problem in that errors only show up in logs which are not very visible to the user. Future versions will have more interaction with background jobs.
+> **NOTE:** Due to server and timeout limits, all Annotation imports are submitted as background jobs. Currently this poses a bit of a problem in that errors and completion messages only show up in the logs which are not very visible to the user. During the import, the app will still be functional but it is advised to let the process finish before proceeding. Not the most graceful solution, but repeatedly refreshing the [Dashboard](/dashboard) will allow the user to see if new Annotations are still being imported in the background. Future versions will have more interaction with background jobs.
 
 **WARNING:** Restoring user data will **erase all your user settings and annotations** and replace them with what is found in the uploaded `.hlts` file. Please make sure to have a proper backup before proceeding.
 

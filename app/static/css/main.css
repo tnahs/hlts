@@ -1166,7 +1166,7 @@ a *:hover {
 *.link.button.warning,
 *.link.button.warning:hover {
 
-	color: var(--accent-warning);
+	color: hsla(0, 100%, 75%, 1.00);
 }
 
 *.link.button.faded:hover {
@@ -1186,8 +1186,9 @@ a *:hover {
 
 .warning {
 
-	color: var(--accent-warning) !important;
+	color: hsla(0, 100%, 75%, 1.00) !important;
 }
+
 
 .accent {
 
@@ -1212,6 +1213,11 @@ a *:hover {
 .white {
 
 	color:white !important;
+}
+
+.forceCenter {
+
+	text-align: center !important;
 }
 
 .marked {
@@ -1939,13 +1945,10 @@ hr {
 
 	#userWelcome .welcomeContainer .loginForm .loginRemember {
 
-		padding: 5px;
+		padding-top: 5px;
+		padding-left: 5px;
 
 	}
-
-		.loginRemember label {
-
-		}
 
 	#userWelcome .welcomeContainer .loginFormOptions {
 
@@ -2149,12 +2152,12 @@ loginFlash .flashMessage .flashClose {
 
 /*  */
 
-#betaNotification {
+#dashboardNotification {
 
 	margin: 25px;
 }
 
-#betaNotification .betaNotificationContainer {
+#dashboardNotification .dashboardNotificationContainer {
 
 	display: grid;
 	grid-template-columns: 1fr max-content;
@@ -2176,7 +2179,7 @@ loginFlash .flashMessage .flashClose {
 	text-align: center;
 }
 
-#betaNotification .betaNotificationMessage {
+#dashboardNotification .dashboardNotificationMessage {
 
 	justify-self: center;
 
@@ -2186,13 +2189,13 @@ loginFlash .flashMessage .flashClose {
 	margin-top: -4px;
 }
 
-#betaNotification .betaNotificationMessage a {
+#dashboardNotification .dashboardNotificationMessage a {
 
 	color: hsla(220, 85%, 65%, 1.00);
 	text-decoration: underline;
 }
 
-#betaNotification .betaNotificationHideButton {
+#dashboardNotification .dashboardNotificationHideButton {
 
 	align-self: baseline;
 
@@ -2204,7 +2207,7 @@ loginFlash .flashMessage .flashClose {
 	transition: color .2s;
 }
 
-#betaNotification .betaNotificationHideButton:hover {
+#dashboardNotification .dashboardNotificationHideButton:hover {
 
 	color: hsla(220, 100%, 65%, 1.00);
 }
@@ -2220,9 +2223,10 @@ input[type="checkbox"] {
 	background-color: hsl(0, 0%, 95%);
 
 	position: relative;
-	top: 0;
-	height: 15px;
-	width: 15px;
+	/* top: 5px; */
+	/* margin-bottom: 5px; */
+	height: 20px;
+	width: 20px;
 	border: 0;
 
 	cursor: pointer;
@@ -2243,7 +2247,7 @@ input[type="checkbox"]:checked {
 	        box-shadow: inset 2px 2px 0px 0px hsla(220, 100%, 80%, 0.95);
 }
 
-label {
+input[type="checkbox"] + label {
 
 	/* font block */
 	font-family: var(--sans-serif-condensed-font);
@@ -2251,10 +2255,49 @@ label {
 	font-size: 10pt;
 	font-weight: 400;
 	letter-spacing: .5px;
+	line-height: 150%;
+	text-transform: uppercase;
+
+	padding-left: 6px;
+	position: relative;
+	bottom: 5px;
+}
+
+/*  */
+
+input[type="file"] {
+
+	display: block;
+	margin: 0;
+	padding: 0;
+	width: 0;
+	height: 0;
+	outline: none;
+	opacity: 0;
+	z-index: -1;
+}
+
+input[type="file"] + label {
+
+	font-family: var(--sans-serif-condensed-font);
+	color: hsla(220, 100%, 75%, 1.00);
+	font-size: 11pt;
+	font-weight: 400;
+	letter-spacing: 1px;
 	line-height: 100%;
 	text-transform: uppercase;
 
-	padding-left: 5px;
-	position: relative;
-	bottom: 3px;
+	display: block;
+	height: 200px;
+	line-height: 200px;
+	text-align: center;
+
+	margin: 20px 0;
+
+	border: 2px dashed hsla(0, 0%, 90%, 1);
+}
+
+input[type="checkbox"]#confirm {
+
+	margin-left: 10px;
 }

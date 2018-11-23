@@ -128,6 +128,41 @@ window.addEventListener("load", function(){
         }
     });
 
+    /**
+     *
+     */
+
+    const dashboardNotificationHideButton = document.querySelector("#dashboardNotificationHideButton");
+
+    if (dashboardNotificationHideButton) {
+
+        dashboardNotificationHideButton.addEventListener("click", function() {
+
+            dashboardNotificationHide()
+        });
+    }
+
+    function dashboardNotificationHide() {
+
+        const dashboardNotification = document.querySelector("#dashboardNotification");
+
+        fetch("/ajax/hide_dashboard_notification", {
+            method: "POST",
+            credentials: "include"
+        })
+        .then((response) => {
+
+            if (response.ok) {
+
+                dashboardNotification.remove();
+            }
+
+        })
+        .catch((error) => {
+
+            console.log(error);
+        });
+    }
 
     //--------------------------------
 
@@ -151,6 +186,24 @@ window.addEventListener("load", function(){
 
                 apiKey.innerText = blurredApiKey;
             }
+        });
+    }
+
+    /**
+     *
+     */
+
+    const fileUploaderId = "hlts_file";
+    const fileUploaderInput = document.querySelector(`#${fileUploaderId}`)
+    const fileUploaderLabel = document.querySelector(`label[for=${fileUploaderId}]`)
+
+    if (fileUploaderInput && fileUploaderLabel) {
+
+        fileUploaderInput.addEventListener("change", function() {
+
+            const selectedFileName = fileUploaderInput.value.split("\\").pop();
+            fileUploaderLabel.style.textTransform = "none";
+            fileUploaderLabel.innerHTML = selectedFileName
         });
     }
 

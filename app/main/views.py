@@ -692,21 +692,21 @@ Beta pages
 """
 
 
-@main.route("/ajax/hide_beta_notification", methods=["POST", "GET"])
+@main.route("/ajax/hide_dashboard_notification", methods=["POST", "GET"])
 @login_required
-def ajax_hide_beta_notification():
+def ajax_hide_dashboard_notification():
 
-    current_user.show_beta_notification = False
+    current_user.show_dashboard_notification = False
     db.session.commit()
 
     return jsonify({"result": "success"})
 
 
-@main.route("/ajax/show_beta_notification", methods=["POST", "GET"])
+@main.route("/ajax/show_dashboard_notification", methods=["POST", "GET"])
 @login_required
-def ajax_show_beta_notification():
+def ajax_show_dashboard_notification():
 
-    current_user.show_beta_notification = True
+    current_user.show_dashboard_notification = True
     db.session.commit()
 
     return jsonify({"result": "success"})

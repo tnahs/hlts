@@ -6,7 +6,11 @@
 
 {% block main %}
 
-    <script src="{{ url_for('static', filename='js/beta.js') }}"></script>
+    {% if current_user.show_dashboard_notification %}
+
+        {% include "_dashboard_notification.html" %}
+
+    {% endif %}
 
     <div class="block blockFloating">
 
@@ -22,12 +26,6 @@
         </div>
 
     </div>
-
-    {% if current_user.show_beta_notification %}
-
-        {% include "_beta_notification.html" %}
-
-    {% endif %}
 
     {% if dash.daily_annotation %}
 

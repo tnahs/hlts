@@ -5,46 +5,39 @@
 
 {% block main %}
 
-    <div class="block blockFloating">
+    <form method="POST" action="{{ url_for('data.restore_user_data') }}" enctype=multipart/form-data>
 
-        <span class="blockLabel">restore from json</span>
+        <div class="block blockFloating">
 
-        <div class="blockContent">
-
-            <span class="text upper warning">warning: this will delete all current annotations!</span>
+            <div class="blockTitle">restore from json</div>
 
         </div>
-
-    </div>
-
-    <form method="POST" action="{{ url_for('data.restore_user_data') }}" enctype=multipart/form-data>
 
         <div class="block blockFloating">
 
             <div class="blockHeaderMenu">
 
                 {{ header_menu_start_html() }}
-                    <button class="headerMenuButton" type="submit">restore</button>
+                    <button class="headerMenuButton" type="submit">upload</button>
+                    <button class="headerMenuButton" type="reset">reset</button>
                 {{ header_menu_end_html() }}
 
             </div>
 
             <div class="blockContent">
 
+                <div class="text upper accent forceCenter">before proceeding please read about <a class="link button" href="/manual/main/#restoring-your-data">restoring your data</a></div>
+
                 {{ form_restore.csrf_token }}
+                {{ form_restore.hlts_file }}{{ form_restore.hlts_file.label }}
+
                 {{ form_restore.confirm }}{{ form_restore.confirm.label }}
-
-                <br>
-
-                {{ form_restore.hlts_file }}
 
             </div>
 
         </div>
 
     </form>
-
-
 
 {% endblock %}
 
