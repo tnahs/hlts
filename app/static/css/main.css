@@ -606,6 +606,11 @@ main {
 		text-align: center;
 	}
 
+	.flashMessage ~ .flashMessage {
+
+		border-top: solid 1px white;
+	}
+
 	mainFlash .flashMessage.flashSuccess {
 
 		background-color: hsla(220, 100%, 95%, 0.95);

@@ -4,9 +4,9 @@ window.addEventListener('load', function(){
 
     /* --------------------------------------------------------------------- */
 
-    autoExpandTexarea()
+    autoExpandTextarea()
 
-    function autoExpandTexarea() {
+    function autoExpandTextarea() {
 
         const textareas = document.querySelectorAll("textarea")
 

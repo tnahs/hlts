@@ -61,6 +61,8 @@ def settings():
 
         db.session.commit()
 
+        flash("user settings updated", "flashSuccess")
+
     return render_template("user/settings.html", form=form)
 
 
@@ -78,6 +80,6 @@ def change_password():
 
         db.session.commit()
 
-        flash("password changed!", "flashSuccess")
+        flash("password updated", "flashSuccess")
 
     return render_template("user/change_password.html", form=form)

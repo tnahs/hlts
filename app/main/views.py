@@ -370,7 +370,7 @@ def new_annotation():
         db.session.add(annotation)
         db.session.commit()
 
-        flash("new annotation created!", "flashSuccess")
+        flash("new annotation created", "flashSuccess")
 
         return redirect(url_for("main.recent", mode="created"))
 
@@ -385,7 +385,8 @@ def edit_annotation(in_request):
 
     if annotation.in_trash:
 
-        flash("annotation is in trash! restore before editing!", "flashWarning")
+        flash("annotation is in trash", "flashWarning")
+        flash("restore before editing", "flashWarning")
 
         return redirect(home_url())
 
@@ -402,7 +403,7 @@ def edit_annotation(in_request):
             db.session.add(annotation)
             db.session.commit()
 
-            flash("annotation duplicated!", "flashSuccess")
+            flash("annotation duplicated", "flashSuccess")
 
             return redirect(url_for("main.edit_annotation", in_request=annotation.id))
 
@@ -413,7 +414,7 @@ def edit_annotation(in_request):
 
             db.session.commit()
 
-            flash("annotation edited!", "flashSuccess")
+            flash("annotation edited", "flashSuccess")
 
             return redirect(url_for("main.recent", mode="edited"))
 

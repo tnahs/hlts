@@ -32,7 +32,7 @@ def email_user_data():
 
     export.email()
 
-    flash("e-mailed HLTS data to {0}!".format(current_user.email), "flashSuccess")
+    flash("e-mailed HLTS data to {0}".format(current_user.email), "flashSuccess")
 
     return redirect(url_for("main.tools"))
 
@@ -68,8 +68,8 @@ def restore_user_data():
                 return redirect(url_for("data.restore_user_data"))
 
             else:
-                flash("restored user settings. "
-                      "{0} annotations currently restoring in the background."
+                flash("restored user settings", "flashSuccess")
+                flash("{0} annotations currently restoring in the background"
                       .format(restore.annotation_count), "flashSuccess")
                 return redirect(home_url())
 
