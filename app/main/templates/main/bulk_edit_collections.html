@@ -36,7 +36,11 @@
                         {{ form.pinned(checked=collection.pinned) }}{{ form.pinned.label }}
                         {{ form.name(value=collection.name) }}
                         {{ form.color(value=collection.color) }}
+
+                        {# This is a hack to populate the textarea #}
+                        {% set _ = form.description.process_data(collection.description) %}
                         {{ form.description(value=collection.description) }}
+
                         <br><div class="pill collection bulkEditPill" name="{{ collection.name }}">{{ collection.name }} ⋅ {{ collection.frequency }}</div>
 
                     </div>

@@ -467,6 +467,11 @@ class User(db.Model, UserMixin):
 
     def set_password(self, raw_password):
 
+        self.password = bcrypt.generate_password_hash(raw_password)
+
+    def validate_password(self, raw_password):
+        """ Validates password and sets it
+        """
         min_length = 6
         max_length = 32
 
@@ -475,7 +480,17 @@ class User(db.Model, UserMixin):
                 "password must be {0}-{1} characters"
                 .format(min_length, max_length))
 
-        self.password = bcrypt.generate_password_hash(raw_password)
+        self.set_password(raw_password)
+
+    def change_password(self, new_password, confirm_password):
+        """ Confirms new password and confirmation are identical.
+        Then validates the new password and sets it.
+        """
+
+        if new_password != confirm_password:
+            raise ValueError("passwords do not match")
+
+        self.validate_password(new_password)
 
     def check_password(self, raw_password):
 

@@ -5,9 +5,9 @@ from . import user
 from app import db
 from app.models import User
 from app.tools import is_safe_url, home_url
-from app.user.forms import LoginForm, UserForm
+from app.user.forms import LoginForm, UserForm, ChangePasswordForm
 
-from flask import request, redirect, url_for, render_template
+from flask import request, redirect, url_for, render_template, flash
 from flask_login import login_required, login_user, logout_user, current_user
 
 
@@ -61,4 +61,23 @@ def settings():
 
         db.session.commit()
 
-    return render_template('user/settings.html', form=form)
+    return render_template("user/settings.html", form=form)
+
+
+@user.route("/change_password/", methods=["POST", "GET"])
+@login_required
+def change_password():
+
+    form = ChangePasswordForm(obj=current_user)
+
+    if form.validate_on_submit():
+
+        user = User.query.get(form.id.data)
+
+        user.set_password(form.new_password.data)
+
+        db.session.commit()
+
+        flash("password changed!", "flashSuccess")
+
+    return render_template("user/change_password.html", form=form)

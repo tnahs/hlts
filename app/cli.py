@@ -40,7 +40,7 @@ def register_cli(app):
         user = User(username=getenv("DEFAULT_APPUSER_USERNAME"),
                     email=getenv("DEFAULT_APPUSER_EMAIL"),
                     is_admin=False)
-        user.set_password(getenv("DEFAULT_APPUSER_PASSWORD"))
+        user.validate_password(getenv("DEFAULT_APPUSER_PASSWORD"))
 
         try:
             db.session.add(user)
@@ -67,7 +67,7 @@ def register_cli(app):
         user = User(username=getenv("ADMIN_APPUSER_USERNAME"),
                     email=getenv("ADMIN_APPUSER_EMAIL"),
                     is_admin=True)
-        user.set_password(getenv("ADMIN_APPUSER_PASSWORD"))
+        user.validate_password(getenv("ADMIN_APPUSER_PASSWORD"))
 
         try:
             db.session.add(user)
@@ -118,6 +118,14 @@ def register_cli(app):
 
         else:
             click.echo("Added welcome annotations!")
+
+    def show_current_users():
+
+        users = User.query.all()
+        click.echo("Current users:")
+        click.echo("------------------------------")
+        click.echo(users)
+        click.echo("------------------------------")
 
     """ CLI Methods """
 
@@ -171,7 +179,7 @@ def register_cli(app):
         is_admin = click.prompt("Admin?", type=bool, default=False)
 
         user = User(username=username, email=email, is_admin=is_admin)
-        user.set_password(password)
+        user.validate_password(password)
 
         db.session.add(user)
 
@@ -198,6 +206,8 @@ def register_cli(app):
         name="delete_user",
         help="Delete single user.")
     def delete_user():
+
+        show_current_users()
 
         click.echo("Delete user...")
 
@@ -236,6 +246,8 @@ def register_cli(app):
         help="Edit single user.")
     def edit_user():
 
+        show_current_users()
+
         click.echo("Edit User...")
 
         username = click.prompt("Username")
@@ -250,7 +262,7 @@ def register_cli(app):
 
             if click.confirm("Change Password?"):
                 new_password = click.prompt("New Password (6-32 characters)", hide_input=True, confirmation_prompt=True)
-                user.set_password(new_password)
+                user.validate_password(new_password)
 
             if click.confirm("Change Email?"):
                 new_email = click.prompt("New Email")
@@ -287,6 +299,8 @@ def register_cli(app):
         name="generate_new_api_key",
         help="Generate new token.")
     def generate_new_api_key():
+
+        show_current_users()
 
         click.echo("Generate new API key...")
 
@@ -356,3 +370,23 @@ def register_cli(app):
 
             run_drop_db()
             run_init_db()
+
+    @app.cli.command(
+        name="show_dashboard_notification",
+        help="Show Dashboard Notification.")
+    def show_dashboard_notification():
+
+        show_current_users()
+
+        username = click.prompt("Username")
+
+        user = User.query.filter_by(username=username).first()
+
+        if user and click.confirm("User exists! Show dashboard notification?", abort=True):
+
+            user.show_dashboard_notification = True
+            click.echo("Now showing dashboard notification for {0}".format(user.username))
+
+        else:
+
+            click.echo("User does not exist!")

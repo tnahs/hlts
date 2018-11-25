@@ -72,14 +72,14 @@ class ExportUserData(object):
             sender=sender,
             recipients=recipients)
 
-        message.attach(self.user_data_filename, "text/json", self.user_data_attachment)
-
-        self.send_user_data(message)
+        self.send_email(message, self.user_data_filename, self.user_data_attachment)
 
     @async_threaded
-    def send_user_data(self, message):
+    def send_email(self, message, filename, data):
 
         with self.app.app_context():
+
+            message.attach(filename, "text/json", data)
 
             mail.send(message)
 

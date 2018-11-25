@@ -1,4 +1,4 @@
-{% from "_macros.html" import pagination with context %}
+{% from "_macros.html" import header_menu_start_html, header_menu_end_html with context %}
 
 {% extends "_index.html" %}
 
@@ -11,36 +11,36 @@
 
     </div>
 
-    <div class="block blockBleeding">
+    <div id="bulkEditor">
 
-        <div class="blockContent">
+        {% for source in results %}
 
-            <div id="bulkEditor">
+            <form method="POST" action="{{ url_for('main.bulk_edit_sources') }}">
 
-                {% for source in results %}
+                <div class="block blockBleeding">
 
-                    <form method="POST" action="{{ url_for('main.bulk_edit_sources') }}">
+                    <div class="blockHeaderMenu">
 
-                        <button class="link button" type="submit">update</button>
+                        {{ header_menu_start_html() }}
+                            <button class="headerMenuButton" type="submit">update</button>
+                        {{ header_menu_end_html() }}
+
+                    </div>
+
+                    <div class="blockContent">
 
                         {{ form.csrf_token }}
                         {{ form.id(value=source.id) }}
                         {{ form.name(value=source.name) }}
                         {{ form.author_name(value=source.author.name) }}
 
-                        {% if form.errors %}
-                            {% if source.id == form.errors["name"][0] %}
-                                ERROR!
-                            {% endif %}
-                        {% endif %}
+                    </div>
 
-                    </form>
+                </div>
 
-                {% endfor %}
+            </form>
 
-            </div>
-
-        </div>
+        {% endfor %}
 
     </div>
 

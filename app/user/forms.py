@@ -27,7 +27,7 @@ class LoginForm(FlaskForm):
 
         except ValueError as error:
             flash(error, "flashWarning")
-            raise ValidationError()
+            raise ValidationError(error)
 
     def validate_password(self, field):
 
@@ -38,7 +38,7 @@ class LoginForm(FlaskForm):
 
             except ValueError as error:
                 flash(error, "flashWarning")
-                raise ValidationError()
+                raise ValidationError(error)
 
 
 class UserForm(FlaskForm):
@@ -75,7 +75,7 @@ class UserForm(FlaskForm):
 
         except AssertionError as error:
             flash(error, "flashWarning")
-            raise ValidationError()
+            raise ValidationError(error)
 
     def validate_fullname(self, field):
 
@@ -84,7 +84,7 @@ class UserForm(FlaskForm):
 
         except AssertionError as error:
             flash(error, "flashWarning")
-            raise ValidationError()
+            raise ValidationError(error)
 
     def validate_email(self, field):
 
@@ -93,7 +93,7 @@ class UserForm(FlaskForm):
 
         except AssertionError as error:
             flash(error, "flashWarning")
-            raise ValidationError()
+            raise ValidationError(error)
 
     def validate_results_per_page(self, field):
 
@@ -102,7 +102,7 @@ class UserForm(FlaskForm):
 
         except AssertionError as error:
             flash(error, "flashWarning")
-            raise ValidationError()
+            raise ValidationError(error)
 
     def validate_recent_days(self, field):
 
@@ -111,4 +111,49 @@ class UserForm(FlaskForm):
 
         except AssertionError as error:
             flash(error, "flashWarning")
+            raise ValidationError(error)
+
+
+class ChangePasswordForm(FlaskForm):
+
+    id = HiddenField()
+    old_password = PasswordField(
+        validators=[InputRequired()],
+        render_kw={"placeholder": "old password"})
+    new_password = PasswordField(
+        validators=[InputRequired()],
+        render_kw={"placeholder": "new password"})
+    confirm_password = PasswordField(
+        validators=[InputRequired()],
+        render_kw={"placeholder": "confirm password"})
+
+    def __init__(self, *args, **kwargs):
+        super(ChangePasswordForm, self).__init__(*args, **kwargs)
+
+        user = kwargs.get("obj", None)
+
+        if user is not None:
+            self.user = user
+
+    def validate_old_password(self, field):
+
+        try:
+            self.user.check_password(field.data)
+
+        except ValueError as error:
+            flash(error, "flashWarning")
+            raise ValidationError(error)
+
+    def validate_new_password(self, field):
+
+        try:
+            self.user.change_password(field.data, self.confirm_password.data)
+
+        except (ValueError, AssertionError) as error:
+            flash(error, "flashWarning")
+            raise ValidationError(error)
+
+    def validate_confirm_password(self, field):
+
+        if self.new_password.errors:
             raise ValidationError()

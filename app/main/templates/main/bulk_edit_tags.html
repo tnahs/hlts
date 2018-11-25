@@ -1,6 +1,5 @@
 {% from "_macros.html" import header_menu_start_html, header_menu_end_html with context %}
 
-
 {% extends "_index.html" %}
 
 
@@ -37,7 +36,11 @@
                         {{ form.pinned(checked=tag.pinned) }}{{ form.pinned.label }}
                         <br>{{ form.name(value=tag.name) }}
                         <br>{{ form.color(value=tag.color) }}
-                        <br>{{ form.description(value=tag.description) }}
+
+                        {# This is a hack to populate the textarea #}
+                        {% set _ = form.description.process_data(tag.description) %}
+                        {{ form.description(value=tag.description) }}
+
                         <br><div class="pill tag bulkEditPill" name="{{ tag.name }}">{{ tag.name }} ⋅ {{ tag.frequency }}</div>
 
                     </div>

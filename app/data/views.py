@@ -29,6 +29,7 @@ def email_user_data():
     app = current_app._get_current_object()
 
     export = ExportUserData(user=current_user, context=app)
+
     export.email()
 
     flash("e-mailed HLTS data to {0}!".format(current_user.email), "flashSuccess")
@@ -68,7 +69,7 @@ def restore_user_data():
 
             else:
                 flash("restored user settings. "
-                      "{0} annotations restoring in the background."
+                      "{0} annotations currently restoring in the background."
                       .format(restore.annotation_count), "flashSuccess")
                 return redirect(home_url())
 

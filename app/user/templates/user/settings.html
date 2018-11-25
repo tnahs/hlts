@@ -9,15 +9,6 @@
 
         <div class="block blockFloating">
 
-            <div class="blockHeaderMenu">
-
-                {{ header_menu_start_html() }}
-                    <button class="headerMenuButton" type="submit">update</button>
-                      <span class="headerMenuButton headerMenuButtonDisabled">restore defaults</span>
-                {{ header_menu_end_html() }}
-
-            </div>
-
             <div class="blockTitle">user settings</div>
 
         </div>
@@ -26,16 +17,26 @@
 
             <div class="block blockBleeding">
 
-                {{ form.csrf_token }}
+                <div class="blockHeaderMenu">
+
+                    {{ header_menu_start_html() }}
+                        <button class="headerMenuButton" type="submit">update</button>
+                          <span class="headerMenuButton headerMenuButtonDisabled">restore defaults</span>
+                    {{ header_menu_end_html() }}
+
+                </div>
 
                 <div class="blockLabel">login</div>
 
                 <div class="blockContent">
 
+                    {{ form.csrf_token }}
                     {{ render_form_field(form.id) }}
                     {{ render_form_field(form.username) }}
                     {{ render_form_field(form.fullname) }}
                     {{ render_form_field(form.email) }}
+
+                    <a class="link button changePassword" href="{{ url_for('user.change_password') }}">change password</a>
 
                 </div>
 
