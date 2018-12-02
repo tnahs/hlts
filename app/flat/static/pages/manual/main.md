@@ -1,5 +1,5 @@
 title: HLTS Manual
-date: 2018-11-06
+date: 2018-11-22
 
 <!-- ![](/manual/static/images/sc1.png) -->
 
