@@ -60,6 +60,18 @@
 
                 </div>
 
+                {% if not current_user.show_dashboard_notification %}
+
+                    <div class="blockLabel">dashboard</div>
+
+                    <div class="blockContent">
+
+                        <a class="text upper settings" href="{{ url_for('main.show_dashboard_notification') }}">show notification</a>
+
+                    </div>
+
+                {% endif %}
+
                 <div class="blockLabel">version</div>
 
                 <div class="blockContent">

@@ -8,7 +8,12 @@
 
     {% if current_user.show_dashboard_notification %}
 
-        {% include "_dashboard_notification.html" %}
+        <div id="dashboardNotification">
+            <div class="dashboardNotificationContainer">
+                <div class="dashboardNotificationMessage">{{ dash.notification.body | markdown }}</div>
+                <div id="dashboardNotificationHideButton">✕</div>
+            </div>
+        </div>
 
     {% endif %}
 

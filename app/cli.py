@@ -145,7 +145,6 @@ def register_cli(app):
         name="init_beta",
         help="Create default user and welcome annotations.")
     def init_beta():
-        run_create_default_user()
         run_create_welcome_annotations()
 
     @app.cli.command(
@@ -370,6 +369,7 @@ def register_cli(app):
 
             run_drop_db()
             run_init_db()
+            run_create_default_user()
 
     @app.cli.command(
         name="show_dashboard_notification",

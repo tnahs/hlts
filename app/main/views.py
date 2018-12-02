@@ -7,7 +7,7 @@ from datetime import datetime
 
 import app.defaults as AppDefaults
 
-from app import db
+from app import db, pages
 from app.models import Annotation, Source, Author, Tag, Collection
 from app.tools import home_url, SortIt
 from app.main.tools import SearchAnnotations, paginated_annotations
@@ -49,16 +49,18 @@ Menubar pages
 @login_required
 def dashboard():
 
+    notification = pages.get("dashboard/notification")
+
     today = datetime.utcnow()
 
     recent_days = current_user.recent_days
 
-    pinned_collections = current_user.pinned_collections
-    pinned_tags = current_user.pinned_tags
-
     annotation_count = Annotation.query.count()
     tag_count = Tag.query.count()
     collection_count = Collection.query.count()
+
+    pinned_tags = current_user.pinned_tags
+    pinned_collections = current_user.pinned_collections
 
     daily_annotation = None
     daily_topic = None
@@ -120,22 +122,43 @@ def dashboard():
             daily_topic_annotations = []
 
     dash = {
+        "notification": notification,
         "today": today,
-        "pinned_collections": pinned_collections,
-        "pinned_tags": pinned_tags,
         "annotation_count": annotation_count,
         "tag_count": tag_count,
         "collection_count": collection_count,
+        "pinned_tags": pinned_tags,
+        "pinned_collections": pinned_collections,
         "recent_tags": recent_tags,
         "recent_collections": recent_collections,
         "recent_sources": recent_sources,
         "recent_authors": recent_authors,
         "daily_annotation": daily_annotation,
         "daily_topic": daily_topic,
-        "daily_topic_annotations": daily_topic_annotations
+        "daily_topic_annotations": daily_topic_annotations,
     }
 
     return render_template("main/dashboard.html", dash=dash)
+
+
+@main.route("/ajax/hide_dashboard_notification", methods=["POST", "GET"])
+@login_required
+def ajax_hide_dashboard_notification():
+
+    current_user.show_dashboard_notification = False
+    db.session.commit()
+
+    return jsonify({"result": "success"})
+
+
+@main.route("/show_dashboard_notification", methods=["POST", "GET"])
+@login_required
+def show_dashboard_notification():
+
+    current_user.show_dashboard_notification = True
+    db.session.commit()
+
+    return redirect(url_for("main.dashboard"))
 
 
 @main.route("/index/")
@@ -684,30 +707,3 @@ def ajax_authors():
     result = Author.query_to_multiple_dict(query)
 
     return jsonify(result)
-
-
-"""
-
-Beta pages
-
-"""
-
-
-@main.route("/ajax/hide_dashboard_notification", methods=["POST", "GET"])
-@login_required
-def ajax_hide_dashboard_notification():
-
-    current_user.show_dashboard_notification = False
-    db.session.commit()
-
-    return jsonify({"result": "success"})
-
-
-@main.route("/ajax/show_dashboard_notification", methods=["POST", "GET"])
-@login_required
-def ajax_show_dashboard_notification():
-
-    current_user.show_dashboard_notification = True
-    db.session.commit()
-
-    return jsonify({"result": "success"})

@@ -183,7 +183,7 @@ class AnnotationQueryMixin(object):
         return results
 
     @staticmethod
-    def get_random(count):
+    def get_random(count=1):
 
         results = Annotation.query \
             .filter_by(in_trash=False) \
@@ -456,7 +456,7 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
 
-        return u"<User id:{0} username:{1}>".format(self.id, self.username)
+        return u"<{0.__class__.__name__} id:{0.id} username:{0.username}>".format(self)
 
     @staticmethod
     def generate_api_key():
@@ -733,7 +733,7 @@ class Collection(db.Model, ToDictMixin, PingedMixin, RestoreMixin):
 
     def __repr__(self):
 
-        return u"<Collection id:{0} name:{1}>".format(self.id, self.name)
+        return u"<{0.__class__.__name__} id:{0.id} name:{0.name}>".format(self)
 
     @validates("name")
     def validate_name(self, key, name):
@@ -820,7 +820,7 @@ class Tag(db.Model, ToDictMixin, PingedMixin, RestoreMixin):
 
     def __repr__(self):
 
-        return u"<Tag id:{0} name:{1}>".format(self.id, self.name)
+        return u"<{0.__class__.__name__} id:{0.id} name:{0.name}>".format(self)
 
     @validates("name")
     def validate_name(self, key, name):
@@ -908,7 +908,7 @@ class Source(db.Model, ToDictMixin, PingedMixin):
 
     def __repr__(self):
 
-        return u"<Source id:{0} name:{1} author:{2}>".format(self.id, self.name, self.author)
+        return u"<{0.__class__.__name__} id:{0.id} name:{0.name} author:{0.author.name}>".format(self)
 
     def validate_source(self, name, author_name):
 
@@ -1005,7 +1005,7 @@ class Author(db.Model, ToDictMixin, PingedMixin):
 
     def __repr__(self):
 
-        return u"<Author id:{0} name:{1}>".format(self.id, self.name)
+        return u"<{0.__class__.__name__} id:{0.id} name:{0.name}>".format(self)
 
     @validates("name")
     def validate_name(self, key, name):
@@ -1088,7 +1088,7 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
 
     def __repr__(self):
 
-        return u"<Annotation id:{0}>".format(self.id)
+        return u"<{0.__class__.__name__} id:{0.id}>".format(self)
 
     @property
     def is_tagged(self):
@@ -1191,7 +1191,7 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
 
         self.is_protected = True
         self.modified = datetime.utcnow()
-        self.passage = u"DUPLICATE\n\n{0}".format(self.passage)
+        self.passage = u"DUPLICATE\n\n{0.passage}".format(self)
 
     def trash(self):
         """ place in trash
