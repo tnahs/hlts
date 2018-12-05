@@ -9,7 +9,7 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
 def str_to_bool(string=None, default=None):
-    """ Used to convert environment variables to python boolean objects."""
+    """ Convert environment variables to python boolean objects."""
 
     if string:
         return bool(strtobool(string))
