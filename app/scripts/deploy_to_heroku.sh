@@ -129,7 +129,7 @@ function deploy_herokuapp {
     echo "1. Connect $APP_NAME to HLTS repo."
     echo "2. Initialize Database, User and Beta:"
     echo "   ----------------------------------"
-    echo "   heroku run flask db upgrade --app $APP_NAME"
+    echo "   heroku run flask init_db --app $APP_NAME"
     echo "   heroku run flask create_app_user --app $APP_NAME"
     echo "   heroku run flask init_beta --app $APP_NAME"
     echo "   ----------------------------------"
