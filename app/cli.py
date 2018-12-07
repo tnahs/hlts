@@ -37,10 +37,10 @@ def register_cli(app):
 
     def run_create_default_user():
 
-        user = User(username=getenv("DEFAULT_APPUSER_USERNAME"),
-                    email=getenv("DEFAULT_APPUSER_EMAIL"),
+        user = User(username=getenv("USER_USERNAME"),
+                    email=getenv("USER_EMAIL"),
                     is_admin=False)
-        user.validate_password(getenv("DEFAULT_APPUSER_PASSWORD"))
+        user.validate_password(getenv("USER_PASSWORD"))
 
         try:
             db.session.add(user)
@@ -64,10 +64,10 @@ def register_cli(app):
 
     def run_create_admin():
 
-        user = User(username=getenv("ADMIN_APPUSER_USERNAME"),
-                    email=getenv("ADMIN_APPUSER_EMAIL"),
+        user = User(username=getenv("ADMIN_USERNAME"),
+                    email=getenv("ADMIN_EMAIL"),
                     is_admin=True)
-        user.validate_password(getenv("ADMIN_APPUSER_PASSWORD"))
+        user.validate_password(getenv("ADMIN_PASSWORD"))
 
         try:
             db.session.add(user)
