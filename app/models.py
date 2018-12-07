@@ -512,7 +512,7 @@ class User(db.Model, UserMixin):
     @validates("username")
     def validate_username(self, key, username):
 
-        min_length = 4
+        min_length = 3
         max_length = 32
 
         if not min_length <= len(username) <= max_length:

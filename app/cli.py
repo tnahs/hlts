@@ -173,7 +173,7 @@ def register_cli(app):
         click.echo("Create user...")
 
         username = click.prompt("Username")
-        password = click.prompt("Password (6-32 characters)", hide_input=True, confirmation_prompt=True)
+        password = click.prompt("Password (6-32)", hide_input=True, confirmation_prompt=True)
         email = click.prompt("Email")
         is_admin = click.prompt("Admin?", type=bool, default=False)
 
@@ -256,11 +256,11 @@ def register_cli(app):
         if user and click.confirm("User exists! Edit user?", abort=True):
 
             if click.confirm("Change Username?"):
-                new_username = click.prompt("New Username")
+                new_username = click.prompt("New Username (3-32)")
                 user.username = new_username
 
             if click.confirm("Change Password?"):
-                new_password = click.prompt("New Password (6-32 characters)", hide_input=True, confirmation_prompt=True)
+                new_password = click.prompt("New Password (6-32)", hide_input=True, confirmation_prompt=True)
                 user.validate_password(new_password)
 
             if click.confirm("Change Email?"):

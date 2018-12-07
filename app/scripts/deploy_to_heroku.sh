@@ -52,10 +52,10 @@ function deploy_herokuapp {
     read -e -p "App Domain URL: "           -i $DEFAULT_APP_DOMAIN_URL APP_DOMAIN_URL
     read    -p "App Subdomain: "               APP_SUBDOMAIN_NAME
 
-    read    -p "Username (4-32): "             USER_USERNAME
+    read    -p "Username (3-32): "             USER_USERNAME
     read    -p "E-mail: "                      USER_EMAIL
     read    -p "Password (6-32): "             USER_PASSWORD
-    read -e -p "Admin Username (4-32): "    -i $DEFAULT_ADMIN_USERNAME ADMIN_USERNAME
+    read -e -p "Admin Username (3-32): "    -i $DEFAULT_ADMIN_USERNAME ADMIN_USERNAME
     read -e -p "Admin E-mail: "             -i $DEFAULT_ADMIN_EMAIL ADMIN_EMAIL
     read -e -p "Admin Password (6-32): "    -i $DEFAULT_ADMIN_PASSWORD ADMIN_PASSWORD
 
