@@ -46,32 +46,8 @@
                 "author": "Robert Henri",
                 "name": "The Art Spirit"
             },
-            "tags": [
-                "art"
-            ],
-            "collections": [
-                "star"
-            ],
-            "metadata": {
-                "created": "",
-                "modified": "",
-                "origin": "user",
-                "is_protected": false,
-                "in_trash": false
-            }
-        },
-        {
-            "id": "",
-            "passage": "01:17:36 I've never seen the movie and I never will.\r\n01:18:25 From this supposed failure, come a lot of creation.\r\n01:18:32 In the life, thing come, you say \"yes.\"\r\n01:18:37 Thing go away, you say \"yes.\"\r\n01:18:40 We don't do Dune? Yes!",
-            "notes": "Director: Frank Pavich",
-            "source": {
-                "name": "Jodorowsky's Dune (2013)",
-                "author": "Alejandro Jodorowsky"
-            },
             "tags": [],
-            "collections": [
-                "star"
-            ],
+            "collections": [],
             "metadata": {
                 "created": "",
                 "modified": "",

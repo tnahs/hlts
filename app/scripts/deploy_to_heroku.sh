@@ -127,12 +127,14 @@ function deploy_herokuapp {
     echo
     echo "Next Steps:"
     echo "1. Connect $APP_NAME to HLTS repo."
-    echo "2. Initialize Database and HLTS Beta:"
+    echo "2. Initialize Database, User and Beta:"
     echo "   ----------------------------------"
     echo "   heroku run flask db upgrade --app $APP_NAME"
+    echo "   heroku run flask create_app_user --app $APP_NAME"
     echo "   heroku run flask init_beta --app $APP_NAME"
     echo "   ----------------------------------"
     echo "3. Configure $APP_NAME's DNS provider to point to the DNS Target."
+    echo "   NOTE: Don't forget to add a . after the DNS Target!"
     echo
 }
 

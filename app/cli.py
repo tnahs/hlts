@@ -35,7 +35,7 @@ def register_cli(app):
             except:
                 click.echo("Unexpected error: {0}".format(sys.exc_info()[0]))
 
-    def run_create_default_user():
+    def run_create_app_user():
 
         user = User(username=getenv("USER_USERNAME"),
                     email=getenv("USER_EMAIL"),
@@ -59,10 +59,10 @@ def register_cli(app):
             click.echo("Unexpected error: {0}.".format(sys.exc_info()[0]))
 
         else:
-            click.echo("Created Default User!")
+            click.echo("Created App User!")
             click.echo("<Username: {0.username}> <is admin: {0.is_admin}>".format(user))
 
-    def run_create_admin():
+    def run_create_app_admin():
 
         user = User(username=getenv("ADMIN_USERNAME"),
                     email=getenv("ADMIN_EMAIL"),
@@ -86,7 +86,7 @@ def register_cli(app):
             click.echo("Unexpected error: {0}.".format(sys.exc_info()[0]))
 
         else:
-            click.echo("Created Admin User!")
+            click.echo("Created App Admin!")
             click.echo("<Username: {0.username}> <is admin: {0.is_admin}>".format(user))
 
     def run_create_welcome_annotations():
@@ -148,16 +148,16 @@ def register_cli(app):
         run_create_welcome_annotations()
 
     @app.cli.command(
-        name="create_default_user",
-        help="Create default user.")
-    def create_default_user():
-        run_create_default_user()
+        name="create_app_user",
+        help="Create app user.")
+    def create_app_user():
+        run_create_app_user()
 
     @app.cli.command(
-        name="create_admin",
+        name="create_app_admin",
         help="Create app admin.")
-    def create_admin():
-        run_create_admin()
+    def create_app_admin():
+        run_create_app_admin()
 
     @app.cli.command(
         name="create_welcome_annotations",
@@ -337,7 +337,7 @@ def register_cli(app):
                 click.echo("Removed all users!")
 
             # Create users
-            run_create_default_user()
+            run_create_app_user()
 
     @app.cli.command(
         name="erase_all_annotations",
@@ -369,24 +369,4 @@ def register_cli(app):
 
             run_drop_db()
             run_init_db()
-            run_create_default_user()
-
-    @app.cli.command(
-        name="show_dashboard_notification",
-        help="Show Dashboard Notification.")
-    def show_dashboard_notification():
-
-        show_current_users()
-
-        username = click.prompt("Username")
-
-        user = User.query.filter_by(username=username).first()
-
-        if user and click.confirm("User exists! Show dashboard notification?", abort=True):
-
-            user.show_dashboard_notification = True
-            click.echo("Now showing dashboard notification for {0}".format(user.username))
-
-        else:
-
-            click.echo("User does not exist!")
+            run_create_app_user()
