@@ -9,7 +9,15 @@ Welcome to the HLTS Beta!
 
 <br>
 
+If you do run across a bug or any sort of quirky behavior please [report it](/misc/contact)!
 
+<br>
+
+App will take a second to wake up.
+
+<br>
+
+light patching will be done
 
 <br>
 
