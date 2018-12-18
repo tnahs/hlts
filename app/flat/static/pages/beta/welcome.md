@@ -1,18 +1,34 @@
 title: Welcome to the HLTS Beta!
 
-Thank you so much for participating in the HLTS Beta! Most of the challenge with HLTS up until this point has been setting up the core functionality. Thus the hope for this beta is to help solve some functionality problems namely: *entering data* and *finding entered data* and finally *interacting with data*.
+<br>
 
-As for the second problem, HLTS provides three methods to find entered data: Tags, Collections and a custom search syntax (see: [Searching Annotations](/manual/main/#searching-annotations)). Tags and Collections work roughly in the same way, however, serve two separate functions, namely: Tags as "topic markers" and Collections as "project folders". (see: [Tags and Collections](/manual/main/#tags-and-collections)) However the question would be: *Are there better or more efficient / useful / interesting ways of finding data?*
+Thank you so much for participating and welcome to the HLTS Beta! What started out as a desire to extract annotations from Apple Books evolved into a sort of online "commonplace book":
 
-And finally, interacting with data. One of the original intentions behind HLTS was to make it possible to interact or re-interact with the saved Annotations. With a physical book it's possible and sometimes preferable to just flip through and find a quick passage to read. To emulate this, the [Random Annotation/Tag](/random/default) page was created. However, it's not very interactive or smart. So: *Is there a good way to stumble across an Annotation without having to explicitly search for it?* Or is this even a good question?
+>Commonplace books are a way to compile knowledge, [...] essentially scrapbooks filled with items of every kind: recipes, quotes, letters, poems, tables of weights and measures, proverbs, prayers, legal formulas. [...] Each commonplace book is unique to its creator's particular interests.
 
-And a quick word on the UI. Most of the focus on this beta has been to get the inner workings up and running. As a result the UI is rather under-developed. (HLTS is semi-mobile-friendly, so certain things might not display properly.) For the moment it's purpose is to be clear and utilitarian. There are many ideas for a more slick and responsive UI, but that's for future releases.
+>[Wikipedia - Commonplace book](https://en.wikipedia.org/wiki/Commonplace_book)
 
+Although HLTS only supports text at this time, structurally it's intended to be free-form. Add text from wherever you see fit and the app will organize it based on four categories: `tags` `collections` `sources` and `authors`. Each of these categories are indexed (see: [HLTS index](/index)) for easy access. There are various other ways passages are organized but like the index they are all works in progress. The hope in the end is to create a design that makes interacting with passages near effortless. Be it inputting passages or accessing them. Take for example accessing, would it be possible to come up with a system that promotes organization alongside one that promotes spontaneity?
 
+For example, there have been discussions on building an associative system that scans passage text, searches out keywords and suggests otherwise un-related passages based on these keywords. Essentially building a bit of a rabbit hole into your own passages, jumping from one passage to another based on loose, literal associations. Currently `tags` are used to simulate this but they can be some work to organize, however this system would make it somewhat automated.
+
+Therefore the hope for the beta is to answer these few questions. More concisely put: *Is it useful?* If not, are there any glaring roadblocks preventing you from using it? And if you do find it useful, are there any features or changes that would make it more effective? In other words, *Is there a better way to interact with the data?*
 
 <br>
 
-That's it for the essentials! Oh and, what does "HLTS" mean? It's a shortened version of "highlights". It's the "code name" for the app, but not at all set in stone. Likewise for any other element from the API to database model to the UI. All the work you see is a "work in progress" and very much open for critique and feedback so please don't hesitate to contact us with your questions/comments!
+A quick side-note on creating Annotations (see: [Annotations](/manual/main/#annotations)). In HLTS, Annotations can be added manually or by using the API which provides two endpoints to input data remotely and in bulk. Opening up the possibility to write sibling apps on any platform that could communicate with HLTS (see: [HLTS API](/manual/main/#api)).
+
+<br>
+
+And finally a word on the UI. Most of the focus on this beta has been to get the inner workings up and running. As a result the UI has been polished to an "okay" finish. HLTS is semi-mobile-friendly, so certain things might not display properly. For the moment its purpose is to be clear and utilitarian. If you have any ideas for a more slick and interactive UI, then please don't hesitate to send in a suggestion.
+
+<br>
+
+That's it for the essentials! Oh and, what does "HLTS" mean? It's a shortened version of "highlights". It's the "codename" for the app, but not at all the final name, which is open for suggestions. Likewise for any other element from the API to the database model to the UI. All the work you see is a "work in progress" and very much open for critique and feedback, your comments and suggestions are highly valuable, so please don't hesitate to send any!
+
+<br>
+
+For a list of more detailed questions and known issues please visit the [HLTS Beta Notes](/beta/main) page. And for more information on how to use HLTS please visit the [HLTS Manual](/manual/main)!
 
 <br>
 
@@ -20,5 +36,3 @@ Thanks!
 The HLTS Team
 
 <br>
-
-For a more details please visit the [HLTS Beta Notes](/beta/main) page. And for more information on how to use HLTS please visit the [HLTS Manual](/manual/main)!

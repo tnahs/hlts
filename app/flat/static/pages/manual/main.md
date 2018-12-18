@@ -37,7 +37,7 @@ date: 2018-11-22
 
 Each entry in HLTS is called an `Annotation` and each Annotation comes with six user-editable fields: `passage` `source` `author` `notes` `tags` and `collections`. The intention was to create a model with generic fields that would provide enough flexibility to enter and organize any sort of thought, idea or citation.
 
-There are two ways to create an Annotation. Through the [New Annotation](/new) page or through the [API](/manual/main/#api).
+There are two ways to create an Annotation. Through the [New Annotation](/new/annotation) page or through the [API](/manual/main/#api).
 
 <br>
 
@@ -45,7 +45,7 @@ There are two ways to create an Annotation. Through the [New Annotation](/new) p
 
 ### [Tags and Collections](#tags-and-collections)
 
-All Annotations can have a set of `tags` and `collections`. Both are nearly identical in the way they are implemented under the hood and in the UI however in principle they serve two different functions. An Annotation's `tags` is a list of topics pertaining the content of the Annotation. They serve more as a "property" of the Annotation. Whereas an Annotation's `collections` are more to be considered as a bin that holds or connects different Annotations regardless of their tags.
+All Annotations can have a set of `tags` and `collections`. Both are nearly identical in the way they are implemented under the hood and in the UI however in principle they serve two different functions. An Annotation's `tags` is a list of topics pertaining the content of the Annotation. They serve more as a "property" of the Annotation. Whereas an Annotation's `collections` are more to be considered as a bin that holds or connects different Annotations regardless of their tags. However these structures are in no way enforced.
 
 Currently, Tags and Collections are created on the [New Annotation](/new) page by entering a name in the `Add Tags...` to `Add to Collections...` field. In order to edit the tag name and/or attributes see [Customizing Tags and Collections](#customizing-tags-and-collections). Later versions will provide a UI to create and edit Tags and Collections.
 
@@ -53,7 +53,7 @@ Currently, Tags and Collections are created on the [New Annotation](/new) page b
 
 <a class="paddedAnchor" name="bulk-editing"></a>
 
-### [Bulk Editing](#bulk-editing-tags-and-collection)
+### [Bulk Editing](#bulk-editing)
 
 The Annotation editor (see: [Editing Annotations](#editing-annotations)) allows users to add/edit/remove a single Tag/Collection/Source/Author however to edit all occurrences of a specific Tag/Collection/Source/Author, users can use a Bulk Editor. Accessible through the [Index](/index) page or by following one of these links: [Edit Tags](/edit/tags), [Edit Collections](/edit/collections), [Edit Sources](/edit/sources), [Edit Authors](/edit/authors)
 

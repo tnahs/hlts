@@ -1507,13 +1507,13 @@ mark {
 .markdown strong {
 
 	font-weight: 500;
-	color: hsl(220, 100%, 70%);
+	/* color: hsl(220, 100%, 70%); */
 }
 
 .markdown em {
 
 	font-style: italic;
-	color: hsl(220, 100%, 70%);
+	/* color: hsl(220, 100%, 70%); */
 }
 
 .markdown u {
@@ -1521,7 +1521,7 @@ mark {
 	text-decoration: underline;
 	text-decoration-skip: ink;
 	text-decoration-color: var(--body-text-color-faded);
-	color: hsl(220, 100%, 70%);
+	/* color: hsl(220, 100%, 70%); */
 }
 
 .markdown del {
