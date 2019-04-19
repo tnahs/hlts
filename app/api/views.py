@@ -4,7 +4,8 @@ from . import api
 
 from app.models import Annotation, Tag, Collection, Source, Author
 from app.tools import SortIt, AsyncImport
-from app.api.tools import api_key_required, api_error_response
+from app.api.tools import api_key_required, api_error_response, api_success_response, ApiImport
+from app.api.errors import ApiError
 from flask import jsonify, g, request, current_app
 
 
@@ -239,3 +240,65 @@ def async_import_annotations(mode=None):
     response = jsonify({"response": "success"})
     response.status_code = 201
     return response
+
+
+# NEW #########################################################################
+
+
+@api.route("/error500/", methods=["GET"])
+@api_key_required
+def error500():
+
+    return api_error_response(500, "Dummy Internal Server Error")
+
+
+@api.route("/error400/", methods=["GET"])
+@api_key_required
+def error400():
+
+    return api_error_response(400, "Dummy Bad Request Error")
+
+
+@api.route("/error401/", methods=["GET"])
+@api_key_required
+def error401():
+
+    return api_error_response(401, "Dummy Unauthorized Error")
+
+
+@api.route("/error403/", methods=["GET"])
+@api_key_required
+def error403():
+
+    return api_error_response(403, "Dummy Forbidden Error")
+
+
+@api.route("/error404/", methods=["GET"])
+@api_key_required
+def error404():
+
+    return api_error_response(404, "Dummy Not Found Error")
+
+
+@api.route("/error405/", methods=["GET"])
+@api_key_required
+def error405():
+
+    return api_error_response(405, "Dummy Method Not Allowed Error")
+
+
+@api.route("/import/", methods=["POST"])
+@api.route("/import/<string:mode>", methods=["POST"])
+@api_key_required
+def serial_import_annotations(mode=None):
+
+    data = request.get_json() or []
+
+    api_import = ApiImport(mode, data)
+
+    try:
+        api_import.run()
+        return api_success_response()
+
+    except ApiError as error:
+        return api_error_response(error.status_code, error.message)
