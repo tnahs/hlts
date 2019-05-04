@@ -1138,6 +1138,13 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
 
         for name in tags:
 
+            """ FIXME: This errors out if the tag is not lower-case.
+            File ".../hlts/app/models.py", line 836, in validate_name
+                raise AssertionError("tag '{0}' already exists".format(name))
+            AssertionError: tag 'dmn' already exists
+            """
+            name = name.lower()
+
             tag = Tag.query.filter_by(name=name).first()
 
             if not tag:
@@ -1158,6 +1165,9 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
         collections = filter(None, set(collections))
 
         for name in collections:
+
+            """ FIXME: Added name.lower() just in case. See above FIXME for details. """
+            name = name.lower()
 
             collection = Collection.query.filter_by(name=name).first()
 

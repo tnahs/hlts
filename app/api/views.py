@@ -4,8 +4,8 @@ from . import api
 
 from app.models import Annotation, Tag, Collection, Source, Author
 from app.tools import SortIt, AsyncImport
-from app.api.tools import api_key_required, api_error_response, api_success_response, ApiImport
-from app.api.errors import ApiError
+from app.api.tools import (ImportApi, ImportApiError, api_key_required,
+    api_response_error, api_response_success)
 from flask import jsonify, g, request, current_app
 
 
@@ -14,6 +14,26 @@ from flask import jsonify, g, request, current_app
 def verify_api_key():
 
     return jsonify({"result": "success"})
+
+
+""" POST """
+
+
+@api.route("/import/", methods=["POST"])
+@api.route("/import/<string:mode>", methods=["POST"])
+@api_key_required
+def serial_import_annotations(mode=None):
+
+    data = request.get_json() or []
+
+    import_api = ImportApi(mode, data)
+
+    try:
+        import_api.run()
+        return api_response_success(message=import_api.message)
+
+    except ImportApiError as error:
+        return api_response_error(status_code=error.status_code, message=error.message)
 
 
 """ GET """
@@ -201,104 +221,46 @@ def index_authors(mode=None):
     return jsonify(results)
 
 
-"""
-
-POST
-
-import add: Add annotation only if does not currently exist.
-
-import refresh: Delete and re-add annotation if exists but only if unprotected.
-
-"""
-
-
-@api.route("/async/import/annotations", methods=["POST"])
-@api.route("/async/import/annotations/<string:mode>", methods=["POST"])
-@api_key_required
-def async_import_annotations(mode=None):
-
-    # WIPASYNC
-
-    app = current_app._get_current_object()
-
-    annotations = request.get_json() or []
-
-    async_import = AsyncImport(context=app)
-
-    if mode == "add":
-
-        async_import.add(annotations)
-
-    elif mode == "refresh":
-
-        async_import.refresh(annotations)
-
-    else:
-
-        return api_error_response(400, message="import type not selected...")
-
-    response = jsonify({"response": "success"})
-    response.status_code = 201
-    return response
-
-
-# NEW #########################################################################
+""" Error testing. """
 
 
 @api.route("/error500/", methods=["GET"])
 @api_key_required
 def error500():
 
-    return api_error_response(500, "Dummy Internal Server Error")
+    return api_response_error(status_code=500, message="Dummy Internal Server Error")
 
 
 @api.route("/error400/", methods=["GET"])
 @api_key_required
 def error400():
 
-    return api_error_response(400, "Dummy Bad Request Error")
+    return api_response_error(status_code=400, message="Dummy Bad Request Error")
 
 
 @api.route("/error401/", methods=["GET"])
 @api_key_required
 def error401():
 
-    return api_error_response(401, "Dummy Unauthorized Error")
+    return api_response_error(status_code=401, message="Dummy Unauthorized Error")
 
 
 @api.route("/error403/", methods=["GET"])
 @api_key_required
 def error403():
 
-    return api_error_response(403, "Dummy Forbidden Error")
+    return api_response_error(status_code=403, message="Dummy Forbidden Error")
 
 
 @api.route("/error404/", methods=["GET"])
 @api_key_required
 def error404():
 
-    return api_error_response(404, "Dummy Not Found Error")
+    return api_response_error(status_code=404, message="Dummy Not Found Error")
 
 
 @api.route("/error405/", methods=["GET"])
 @api_key_required
 def error405():
 
-    return api_error_response(405, "Dummy Method Not Allowed Error")
-
-
-@api.route("/import/", methods=["POST"])
-@api.route("/import/<string:mode>", methods=["POST"])
-@api_key_required
-def serial_import_annotations(mode=None):
-
-    data = request.get_json() or []
-
-    api_import = ApiImport(mode, data)
-
-    try:
-        api_import.run()
-        return api_success_response()
-
-    except ApiError as error:
-        return api_error_response(error.status_code, error.message)
+    return api_response_error(status_code=405, message="Dummy Method Not Allowed Error")

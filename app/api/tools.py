@@ -4,22 +4,20 @@ from functools import wraps
 
 from app import db
 from app.models import User, Annotation
-from app.api.errors import ApiError
 
-from flask import g, request, jsonify
-from werkzeug.http import HTTP_STATUS_CODES
+from flask import g, request, jsonify, current_app
 
 
 def api_key_required(func):
     @wraps(func)
     def check_api_key(*args, **kwargs):
 
-        # Try to login using the api_key url arg
+        # Try to login using the api_key url arg.
         api_key = request.args.get("api_key")
         if api_key:
             user = User.query.filter_by(api_key=api_key).first()
 
-        # Next, try to login using Bearer Authorization
+        # Next, try to login using Bearer Authorization.
         api_key = request.headers.get("Authorization")
         if api_key:
             api_key = api_key = api_key.replace("Bearer ", "", 1)
@@ -29,54 +27,55 @@ def api_key_required(func):
             g.current_user = user
             return func(*args, **kwargs)
 
-        return api_error_response(401, "Invalid API Key!")
+        return api_response_error(401, "Invalid API Key!")
 
     return check_api_key
 
 
-def api_error_response(status_code, message=None):
-
-    payload = {
-        "error": HTTP_STATUS_CODES.get(status_code, "Unknown Error"),
-        "message": message
-    }
-
-    response = jsonify(payload)
-    response.status_code = status_code
-    return response
+class Error(Exception):
+    pass
 
 
-# NEW #########################################################################
+class ImportApiError(Error):
+
+    def __init__(self, status_code, message):
+
+        self.status_code = status_code
+        self.message = message
+
+        current_app.logger.error("{0} Error: {1}".format(self.status_code, self.message))
 
 
-def api_success_response():
+class ImportApi(object):
 
-    payload = {
-        "message": "success"
-    }
-
-    response = jsonify(payload)
-    response.status_code = 201
-    return response
-
-
-class ApiImport(object):
-
-    max_chunk_size = 100
+    _max_chunk_size = 100
 
     def __init__(self, mode, data):
 
-        self.mode = mode
-        self.data = data
+        self._mode = mode
+        self._data = data
+        self._chunk_size = len(self._data)
+
+        self._imported = 0
+        self._errors = []
 
         self._validate()
 
+    def _validate(self):
+
+        if self._chunk_size > self._max_chunk_size:
+            raise ApiError(status_code=400,
+                           message="Data chunk size over {0}.".format(self.max_chunk_size))
+
+        if self._chunk_size == 0:
+            raise ApiError(status_code=400, message="No data received.")
+
     def run(self):
 
-        if self.mode == "add":
+        if self._mode == "add":
             self._add_data()
 
-        elif self.mode == "refresh":
+        elif self._mode == "refresh":
             self._refresh_data()
 
         else:
@@ -84,15 +83,9 @@ class ApiImport(object):
                            message="Unrecognized import mode. Valid options "
                                    "are 'add' or 'refresh'.")
 
-    def _validate(self):
-
-        if len(self.data) > self.max_chunk_size:
-            raise ApiError(status_code=400,
-                           message="Data chunk size over {0}.".format(self.max_chunk_size))
-
     def _add_data(self):
 
-        for item in self.data:
+        for item in self._data:
 
             """ Set `id` to `None` if item has no `id`. """
             if not item["id"]:
@@ -107,11 +100,12 @@ class ApiImport(object):
             if existing:
                 continue
 
-            self._create_commit_annotation(item)
+            """ Create, add and commit annotation. """
+            self._create_annotation(item)
 
     def _refresh_data(self):
 
-        for item in self.data:
+        for item in self._data:
 
             """ Set `id` to `None` if item has no `id`. """
             if not item["id"]:
@@ -129,19 +123,80 @@ class ApiImport(object):
                     continue
 
                 """ Otherwise delete the annotation. """
-                db.session.delete(existing)
-                db.session.commit()
+                try:
+                    db.session.delete(existing)
+                    db.session.commit()
 
-            self._create_commit_annotation(item)
+                except Exception as error:
+                    db.session.rollback()
+                    self._record_error(error, item)
 
-    def _create_commit_annotation(self, item):
+            """ Create, add and commit annotation. """
+            self._create_annotation(item)
 
+    def _create_annotation(self, item):
+
+        """ Create and populate new Annotation object. """
         new = Annotation()
         new.deserialize(item)
 
         try:
             db.session.add(new)
             db.session.commit()
+            self._record_imported()
 
-        except:
+        except Exception as error:
             db.session.rollback()
+            self._record_error(error, item)
+
+    def _record_imported(self):
+        self._imported += 1
+
+    def _record_error(self, error, item):
+
+        self._errors.append({
+                "error": error,
+                "annotation": item
+            }
+        )
+
+    @property
+    def message(self):
+
+        data = {
+            "mode": self._mode,
+            "chunk_size": self._chunk_size,
+            "imported": self._imported,
+            "errors": {
+                "count": len(self._errors),
+                "details": self._errors
+            },
+        }
+
+        return data
+
+
+def api_response_error(status_code, message):
+
+    data = {
+        "status": "ERROR",
+        "message": message
+    }
+
+    response = jsonify(data)
+    response.status_code = status_code
+
+    return response
+
+
+def api_response_success(message=None):
+
+    data = {
+        "status": "SUCCESS",
+        "message": message
+    }
+
+    response = jsonify(data)
+    response.status_code = 201
+
+    return response
