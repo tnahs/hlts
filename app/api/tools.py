@@ -56,7 +56,8 @@ class ImportApi(object):
         self._data = data
         self._chunk_size = len(self._data)
 
-        self._imported = 0
+        self._count_added = 0
+        self._count_refreshed = 0
         self._errors = []
 
         self._validate()
@@ -103,6 +104,9 @@ class ImportApi(object):
             """ Create, add and commit annotation. """
             self._create_annotation(item)
 
+            """ """
+            self._log_added()
+
     def _refresh_data(self):
 
         for item in self._data:
@@ -129,10 +133,13 @@ class ImportApi(object):
 
                 except Exception as error:
                     db.session.rollback()
-                    self._record_error(error, item)
+                    self._log_error(error, item)
 
             """ Create, add and commit annotation. """
             self._create_annotation(item)
+
+            """ """
+            self._log_refreshed()
 
     def _create_annotation(self, item):
 
@@ -143,16 +150,20 @@ class ImportApi(object):
         try:
             db.session.add(new)
             db.session.commit()
-            self._record_imported()
 
         except Exception as error:
             db.session.rollback()
-            self._record_error(error, item)
+            self._log_error(error, item)
 
-    def _record_imported(self):
-        self._imported += 1
+    def _log_added(self):
+        self._count_added += 1
 
-    def _record_error(self, error, item):
+    def _log_refreshed(self):
+        self._count_refreshed += 1
+
+    def _log_error(self, error, item):
+
+        current_app.logger.error("{0} @ {1}".format(error, item))
 
         self._errors.append({
                 "error": error,
@@ -166,6 +177,7 @@ class ImportApi(object):
         data = {
             "mode": self._mode,
             "chunk_size": self._chunk_size,
+            "imported": self._count_added,
             "imported": self._imported,
             "errors": {
                 "count": len(self._errors),
