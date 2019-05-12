@@ -177,8 +177,8 @@ class ImportApi(object):
         data = {
             "mode": self._mode,
             "chunk_size": self._chunk_size,
-            "imported": self._count_added,
-            "imported": self._imported,
+            "count_added": self._count_added,
+            "count_refreshed": self._count_refreshed,
             "errors": {
                 "count": len(self._errors),
                 "details": self._errors
