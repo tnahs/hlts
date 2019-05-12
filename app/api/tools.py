@@ -71,7 +71,7 @@ class ImportApi(object):
 
     def _validate(self):
 
-        """ Annotations should be sent in chunks to prevent a timeout error. """
+        """ Annotations should be sent in chunks to help prevent Timeouts. """
         if self._chunk_size > self._max_chunk_size:
             raise ApiError(status_code=400,
                            message="Data chunk size over {0}.".format(self.max_chunk_size))
