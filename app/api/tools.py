@@ -8,16 +8,21 @@ from app.models import User, Annotation
 from flask import g, request, jsonify, current_app
 
 
+"""
+TODO: Document the API!
+"""
+
+
 def api_key_required(func):
     @wraps(func)
     def check_api_key(*args, **kwargs):
 
-        # Try to login using the api_key url arg.
+        """ Try to login using the api_key url arg. """
         api_key = request.args.get("api_key")
         if api_key:
             user = User.query.filter_by(api_key=api_key).first()
 
-        # Next, try to login using Bearer Authorization.
+        """ Next, try to login using Bearer Authorization. """
         api_key = request.headers.get("Authorization")
         if api_key:
             api_key = api_key = api_key.replace("Bearer ", "", 1)
@@ -32,18 +37,20 @@ def api_key_required(func):
     return check_api_key
 
 
-class Error(Exception):
+class ApiError(Exception):
     pass
 
 
-class ImportApiError(Error):
+class ImportApiError(ApiError):
 
     def __init__(self, status_code, message):
 
-        self.status_code = status_code
-        self.message = message
+        message = "{0} Error: {1}".format(status_code, message)
 
-        current_app.logger.error("{0} Error: {1}".format(self.status_code, self.message))
+        super(ImportApiError, self).__init__(message)
+
+        current_app.logger.error(message)
+
 
 
 class ImportApi(object):
@@ -53,8 +60,8 @@ class ImportApi(object):
     def __init__(self, mode, data):
 
         self._mode = mode
-        self._data = data
-        self._chunk_size = len(self._data)
+        self._annotations = data
+        self._chunk_size = len(self._annotations)
 
         self._count_added = 0
         self._count_refreshed = 0
@@ -64,6 +71,7 @@ class ImportApi(object):
 
     def _validate(self):
 
+        """ Annotations should be sent in chunks to prevent a timeout error. """
         if self._chunk_size > self._max_chunk_size:
             raise ApiError(status_code=400,
                            message="Data chunk size over {0}.".format(self.max_chunk_size))
@@ -74,55 +82,61 @@ class ImportApi(object):
     def run(self):
 
         if self._mode == "add":
-            self._add_data()
+            self._add_annotations()
 
         elif self._mode == "refresh":
-            self._refresh_data()
+            self._refresh_annotations()
 
         else:
             raise ApiError(status_code=400,
                            message="Unrecognized import mode. Valid options "
                                    "are 'add' or 'refresh'.")
 
-    def _add_data(self):
+    def _add_annotations(self):
 
-        for item in self._data:
+        for annotation in self._annotations:
 
-            """ Set `id` to `None` if item has no `id`. """
-            if not item["id"]:
-                item["id"] = None
+            """ Set `id` to `None` if annotation has no `id`. """
+            if not annotation["id"]:
+                annotation["id"] = None
 
             """ Check to see if any annotation exists with this `id`.
             Annotation.query_by_id() returns `None` if no annotation is found.
             """
-            existing = Annotation.query_by_id(item["id"])
+            existing = Annotation.query_by_id(annotation["id"])
 
-            """ Skip to the next item if the annotation already exists. """
+            """ Skip to the next annotation if the annotation exists. """
             if existing:
                 continue
 
-            """ Create, add and commit annotation. """
-            self._create_annotation(item)
+            new = Annotation()
+            new.deserialize(annotation)
 
-            """ """
-            self._log_added()
+            try:
+                db.session.add(new)
+                db.session.commit()
+                self._log_added()
 
-    def _refresh_data(self):
+            except Exception as error:
+                db.session.rollback()
+                self._log_error(error, annotation)
 
-        for item in self._data:
+    def _refresh_annotations(self):
 
-            """ Set `id` to `None` if item has no `id`. """
-            if not item["id"]:
-                item["id"] = None
+        for annotation in self._annotations:
+
+            """ Set `id` to `None` if annotation has no `id`. """
+            if not annotation["id"]:
+                annotation["id"] = None
 
             """ Check to see if any annotation exists with this `id`.
             Annotation.query_by_id() returns `None` if no annotation is found.
             """
-            existing = Annotation.query_by_id(item["id"])
+            existing = Annotation.query_by_id(annotation["id"])
 
             if existing:
 
-                """ Skip to the next item if the annotation is protected. """
+                """ Skip to the next annotation if the annotation is protected. """
                 if existing.is_protected:
                     continue
 
@@ -133,27 +147,22 @@ class ImportApi(object):
 
                 except Exception as error:
                     db.session.rollback()
-                    self._log_error(error, item)
+                    self._log_error(error, annotation)
 
-            """ Create, add and commit annotation. """
-            self._create_annotation(item)
+                    """ Skip to the next annotation if error occurs. """
+                    continue
 
-            """ """
-            self._log_refreshed()
+            new = Annotation()
+            new.deserialize(annotation)
 
-    def _create_annotation(self, item):
+            try:
+                db.session.add(new)
+                db.session.commit()
+                self._log_refreshed()
 
-        """ Create and populate new Annotation object. """
-        new = Annotation()
-        new.deserialize(item)
-
-        try:
-            db.session.add(new)
-            db.session.commit()
-
-        except Exception as error:
-            db.session.rollback()
-            self._log_error(error, item)
+            except Exception as error:
+                db.session.rollback()
+                self._log_error(error, annotation)
 
     def _log_added(self):
         self._count_added += 1
@@ -161,13 +170,13 @@ class ImportApi(object):
     def _log_refreshed(self):
         self._count_refreshed += 1
 
-    def _log_error(self, error, item):
+    def _log_error(self, error, annotation):
 
-        current_app.logger.error("{0} @ {1}".format(error, item))
+        current_app.logger.error("{0} @ {1}".format(error, annotation))
 
         self._errors.append({
                 "error": error,
-                "annotation": item
+                "annotation": annotation
             }
         )
 
