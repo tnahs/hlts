@@ -14,7 +14,7 @@ from flask import current_app, Response, render_template
 from werkzeug.datastructures import FileStorage
 
 
-class ExportUserData(object):
+class ExportUserData:
 
     def __init__(self, user, context):
 
@@ -83,7 +83,7 @@ class ExportUserData(object):
     #         mail.send(message)
 
 
-class RestoreUserData(object):
+class RestoreUserData:
 
     data = None
     serialized_annotations = None

@@ -26,7 +26,8 @@ def load_user(id):
 def generate_uuid(prefix=""):
     """ Genrerate UUID with optional prefix.
     """
-    return "{0}{1}".format(prefix, str(uuid.uuid4())).upper()
+    uuid_ = f"{prefix}{uuid.uuid4()}"
+    return uuid_.upper()
 
 
 def normalize_name(string, space_replacement="-"):
@@ -53,7 +54,6 @@ class PingedMixin:
 class RestoreMixin:
     """ Restore classmethod for Tags and Collections
     """
-
     @classmethod
     def restore(cls, items):
         """ items: List(dict)
@@ -402,7 +402,7 @@ class User(db.Model, UserMixin):
     show_dashboard_notification = db.Column(db.Boolean, default=True)
 
     def __init__(self, *args, **kwargs):
-        super(User, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.new_api_key()
 
@@ -427,9 +427,7 @@ class User(db.Model, UserMixin):
         max_length = 32
 
         if not min_length <= len(raw_password) <= max_length:
-            raise AssertionError(
-                "password must be {0}-{1} characters"
-                .format(min_length, max_length))
+            raise AssertionError(f"password must be {min_length}-{max_length} characters")
 
         self.set_password(raw_password)
 
@@ -467,9 +465,7 @@ class User(db.Model, UserMixin):
         max_length = 32
 
         if not min_length <= len(username) <= max_length:
-            raise AssertionError(
-                "username must be {0}-{1} characters"
-                .format(min_length, max_length))
+            raise AssertionError(f"username must be {min_length}-{max_length} characters")
 
         if self.username != username:
             if User.query.filter(User.username == username).first():
@@ -486,9 +482,7 @@ class User(db.Model, UserMixin):
             max_length = 32
 
             if not min_length <= len(fullname) <= max_length:
-                raise AssertionError(
-                    "fullname must be less than {0} characters"
-                    .format(max_length))
+                raise AssertionError(f"fullname must be less than {max_length} characters")
 
         return fullname
 
@@ -499,9 +493,7 @@ class User(db.Model, UserMixin):
         max_length = 64
 
         if not min_length <= len(email) <= max_length:
-            raise AssertionError(
-                "e-mail must be {0}-{1} characters"
-                .format(min_length, max_length))
+            raise AssertionError(f"e-mail must be {min_length}-{max_length} characters")
 
         if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
             raise AssertionError("invalid e-mail address")
@@ -525,8 +517,7 @@ class User(db.Model, UserMixin):
 
         if not min_length <= results_per_page <= max_length:
             raise AssertionError(
-                "results per page must be an integer between {0} and {1}"
-                .format(min_length, max_length))
+                f"results per page must be an integer between {min_length} and {max_length}")
 
         return results_per_page
 
@@ -543,8 +534,7 @@ class User(db.Model, UserMixin):
 
         if not min_length <= recent_days <= max_length:
             raise AssertionError(
-                "recent days must be an integer between {0} and {1}"
-                .format(min_length, max_length))
+                f"recent days must be an integer between {min_length} and {max_length}")
 
         return recent_days
 
@@ -600,7 +590,7 @@ class User(db.Model, UserMixin):
     def theme(self):
         """ Return the name of style sheet found in /static/css/themes.
         """
-        return "{0}.css".format(AppDefaults.THEME_CHOICES[self.theme_index][1])
+        return f"{AppDefaults.THEME_CHOICES[self.theme_index][1]}.css"
 
     @property
     def data(self):
@@ -692,11 +682,11 @@ class Collection(db.Model, ToDictMixin, PingedMixin, RestoreMixin):
         max_length = 32
 
         if not min_length <= len(name) <= max_length:
-            raise AssertionError("collection must be less than {0} characters".format(max_length))
+            raise AssertionError(f"collection must be less than {max_length} characters")
 
         if self.name != name:
             if Collection.query.filter(Collection.name == name).first():
-                raise AssertionError("collection '{0}' already exists".format(name))
+                raise AssertionError("collection '{name}' already exists")
 
         return name
 
@@ -765,6 +755,7 @@ class Tag(db.Model, ToDictMixin, PingedMixin, RestoreMixin):
     pinged = db.Column(db.DateTime, nullable=False, index=True, default=datetime.utcnow)
 
     def __init__(self, name):
+
         self.name = normalize_name(name)
 
     def __repr__(self):
@@ -777,11 +768,11 @@ class Tag(db.Model, ToDictMixin, PingedMixin, RestoreMixin):
         max_length = 32
 
         if not min_length <= len(name) <= max_length:
-            raise AssertionError("tag must be less than {0} characters".format(max_length))
+            raise AssertionError(f"tag must be less than {max_length} characters")
 
         if self.name != name:
             if Tag.query.filter(Tag.name == name).first():
-                raise AssertionError("tag '{0}' already exists".format(name))
+                raise AssertionError(f"tag '{v}' already exists")
 
         return name
 
@@ -867,9 +858,7 @@ class Source(db.Model, ToDictMixin, PingedMixin):
                 .filter(Author.name == author_name).first()
 
             if source is not None:
-                raise AssertionError(
-                    "source/author combo '{0}/{1}' already exists"
-                    .format(name, author_name))
+                raise AssertionError(f"source/author combo '{name}/{author_name}' already exists")
 
     def edit(self, data):
 
@@ -958,7 +947,7 @@ class Author(db.Model, ToDictMixin, PingedMixin):
 
         if self.name != name:
             if Author.query.filter_by(name=name).first():
-                raise AssertionError("author '{0}' already exists".format(name))
+                raise AssertionError(f"author '{name}' already exists")
 
         return name
 
@@ -1027,7 +1016,7 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
     in_trash = db.Column(db.Boolean, default=False)
 
     def __init__(self, id=None, *args, **kwargs):
-        super(Annotation, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if not id:
             self.id = id

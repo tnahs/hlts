@@ -97,7 +97,7 @@ An Import Response looks like this:
 """
 
 
-class ApiImport(object):
+class ApiImport:
 
     _max_chunk_size = 100
 

@@ -11,7 +11,6 @@
 			<div class="icon iconIndex"></div>
 		</a>
 
-
 		<a id="buttonRecent" href="{{ url_for('main.recent') }}">
 			<div class="icon iconRecent"></div>
 		</a>
@@ -20,15 +19,8 @@
 			<div class="icon iconRandom"></div>
 		</a>
 
-		<div id="buttonCreate">
+		<a id="buttonCreate" href="{{ url_for('main.new_annotation') }}"">
 			<div class="icon iconCreateMenu"></div>
-			<div id="createMenuChoices" class="dropShadowBig">
-				<div>create a new</div>
-				<hr>
-				<a href="{{ url_for('main.new_annotation') }}">annotation</a>
-				<a class="disabled" href="#">collection</a>
-				<a class="disabled" href="#">tag</a>
-			</div>
 		</div>
 
 		<a id="buttonTrash" href="{{ url_for('main.trash') }}">

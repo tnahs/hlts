@@ -9,7 +9,8 @@ from threading import Thread
 from app import db
 from app.models import Annotation
 
-from flask import request, url_for, current_app
+import markdown
+from flask import request, url_for, current_app, Markup
 
 
 def land_url():
@@ -34,7 +35,33 @@ def async_threaded(func):
     return wrapper
 
 
-class SortIt(object):
+class Markdown:
+    """ https://facelessuser.github.io/pymdown-extensions/
+    """
+    @staticmethod
+    def convert(string):
+
+        md = markdown.Markdown(
+            extensions=[
+                "nl2br",
+                "sane_lists",
+                "pymdownx.smartsymbols",
+                "pymdownx.magiclink",
+                "pymdownx.tasklist",
+                "pymdownx.extra",
+                "pymdownx.caret",
+                "pymdownx.tilde",
+                "pymdownx.mark",
+            ]
+        )
+
+        """ http://flask.pocoo.org/docs/1.0/api/#flask.Markup
+        Marks a string as being safe for inclusion in HTML/XML output without
+        needing to be escaped. """
+        return Markup(md.convert(string))
+
+
+class SortIt:
 
     @staticmethod
     def build_alphabetized_index(results,

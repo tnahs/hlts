@@ -55,7 +55,7 @@ def paginated_annotations(template, endpoint, results, in_request=None, mode=Non
                            search_info=search_info)
 
 
-class SearchAnnotations(object):
+class SearchAnnotations:
 
     search_keys = {
         "passages":     ["p", "passage", "passages"],
