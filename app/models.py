@@ -18,67 +18,19 @@ from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm import validates
 
 
-"""
-
-How Annotations Are Created!
-
-Annotations are connected to their Source with a one-to-many relationship.
-Sources are also connected to their Author with a one-to-many relationhip.
-
-When the Annotation class is instanciated two things happen with respect to its
-source:
-
-First: In the Annotation class, Annotation.refresh_source() is run on the input
-"source" and "author". This first checks the Source database if the
-source exists by generating a UUID based on the input values of "source"
-and "author". If the source is found then the source is attached to the
-annotation. If not then a new Source object is generated and added to the
-Source database.
-
-Next: Within the Source class the function refresh_author() is run on the newly
-instanciated Source and the same process occurs checking weather the author
-exists, attaching it to the Source if it does, and creating one if it doesn't.
-
-When an Annotation's source is edited refresh_source() must be called manually
-on the Annotation after its been queried from the database.
-
-...
-
-How Tags (and Collections) Are Handled!
-
-Annotations and Tags are connected by a many-to-many relationship. when
-instanciate an Annotation with tags, the tags supplied must be a list
-containing all the annotation's tags. There is no function to "append" tags but
-rather a Annotation.refresh_tags() function. This first clears the current
-Annotation's tags, then per tag, it checks if the tag exists, if it does, it
-attaches it to the Annotation, if not, it creates a new Tag entry and attaches
-it to the Annotation.
-
-When an Annotation's tags are edited refresh_tags() must be called manually on
-the Annotation. This or Annotation.save() should be called.
-
-...
-
-TODO Editing Sources
-
-TODO Bulk Editing
-
-"""
-
-
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
 
 
 def generate_uuid(prefix=""):
-    """ Genrerate UUID with optional prefix
+    """ Genrerate UUID with optional prefix.
     """
     return "{0}{1}".format(prefix, str(uuid.uuid4())).upper()
 
 
 def normalize_name(string, space_replacement="-"):
-    """ Normalize name for Tags and Collections
+    """ Normalize name for Tags and Collections.
     """
     return string.replace(" ", space_replacement).lower()
 
@@ -1083,7 +1035,7 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
     def __init__(self, id=None, *args, **kwargs):
         super(Annotation, self).__init__(*args, **kwargs)
 
-        if id is not None:
+        if not id:
             self.id = id
 
     def __repr__(self):
@@ -1224,7 +1176,7 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
         db.session.delete(self)
 
     def serialize(self):
-        """ Serialize annotation into a dictionary
+        """ Serialize annotation into a dictionary.
         Dates: Exported as ISO 8601 Format
         """
         data = {
@@ -1249,7 +1201,7 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
         return data
 
     def deserialize(self, data):
-        """ De-serialize annotation from a dictionary
+        """ De-serialize annotation from a dictionary.
         Dates: Supports importing only ISO 8601 Format
         """
 
