@@ -36,10 +36,10 @@ def async_threaded(func):
 
 
 class Markdown:
-    """ https://facelessuser.github.io/pymdown-extensions/
-    """
+
     @staticmethod
     def convert(string):
+        """ Extensions: https://facelessuser.github.io/pymdown-extensions/ """
 
         md = markdown.Markdown(
             extensions=[
@@ -80,7 +80,8 @@ class SortIt:
             '9':
                 [{'name': u'9000'}]
         }
-        results: List[dict] - Must be a list of dictionaries.
+
+        results: List(dict)
         """
 
         index_characters = string.ascii_uppercase + string.digits
@@ -120,12 +121,10 @@ class SortIt:
 
     @staticmethod
     def by_name(results, sort_key="name"):
-        """ results: List[dict] - Must be a list of dictionaries.
-        """
+        """ results: List(dict) """
         return sorted(results, key=lambda k: k[sort_key], reverse=False)
 
     @staticmethod
     def by_frequency(results, sort_key="frequency"):
-        """ results: List[dict] - Must be a list of dictionaries.
-        """
+        """ results: List(dict) """
         return sorted(results, key=lambda k: k[sort_key], reverse=True)

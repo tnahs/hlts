@@ -233,9 +233,9 @@ def register_cli(app):
             click.echo("User does not exist!")
 
     @app.cli.command(
-        name="generate_new_api_key",
+        name="generate_grant_new_api_key",
         help="Generate new token.")
-    def generate_new_api_key():
+    def generate_grant_new_api_key():
 
         show_current_users()
 
@@ -247,7 +247,7 @@ def register_cli(app):
 
         if user and click.confirm("User exists! Generate new API Key?", abort=True):
 
-            user.new_api_key()
+            user.grant_new_api_key()
             click.echo("New API Key: {0}".format(user.api_key))
 
         else:

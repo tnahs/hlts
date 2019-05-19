@@ -24,19 +24,20 @@ def load_user(id):
 
 
 def generate_uuid(prefix=""):
-    """ Genrerate UUID with optional prefix.
+    """ Genrerate UUID with an optional prefix.
     """
     uuid_ = f"{prefix}{uuid.uuid4()}"
     return uuid_.upper()
 
 
 def normalize_name(string, space_replacement="-"):
-    """ Normalize name for Tags and Collections.
+    """ Normalize name for Collections and Tags.
     """
     return string.replace(" ", space_replacement).lower()
 
 
 class PingedMixin:
+    """ Pinged classmethod for Collections, Tags, Sources and Authors. """
 
     @classmethod
     def get_recently_pinged(cls, days):
@@ -52,12 +53,11 @@ class PingedMixin:
 
 
 class RestoreMixin:
-    """ Restore classmethod for Tags and Collections
-    """
+    """ Restore classmethod for Tags and Collections. """
+
     @classmethod
     def restore(cls, items):
-        """ items: List(dict)
-        """
+        # items: List(dict)
 
         for item in items:
 
@@ -75,12 +75,10 @@ class ToDictMixin:
 
     @staticmethod
     def query_to_single_dict(query):
-
         return query.serialize()
 
     @staticmethod
     def query_to_multiple_dict(query):
-
         return [item.serialize() for item in query]
 
     @staticmethod
@@ -113,8 +111,7 @@ class ToDictMixin:
 
 
 class AnnotationQueryMixin:
-    """ Common queries
-    """
+    """ Commonly used Annotation queries. """
 
     @staticmethod
     def get_all():
@@ -207,9 +204,7 @@ class AnnotationQueryMixin:
 
         try:
             tag = Tag.query.filter_by(name=in_request).one()
-
         except NoResultFound:
-
             return Annotation.query.filter_by(id=None)
 
         results = Annotation.query \
@@ -217,11 +212,10 @@ class AnnotationQueryMixin:
             .filter(Annotation.tags.contains(tag)) \
             .order_by(Annotation.modified.desc())
 
-        """ Alternate method to get tagged annotations
-        results = tag.annotations \
-            .filter_by(in_trash=False) \
-            .order_by(Annotation.modified.desc())
-        """
+        # Alternate method to get tagged annotations.
+        # results = tag.annotations \
+        #     .filter_by(in_trash=False) \
+        #     .order_by(Annotation.modified.desc())
 
         return results
 
@@ -230,9 +224,7 @@ class AnnotationQueryMixin:
 
         try:
             collection = Collection.query.filter_by(name=in_request).one()
-
         except NoResultFound:
-
             return Annotation.query.filter_by(id=None)
 
         results = Annotation.query \
@@ -240,21 +232,18 @@ class AnnotationQueryMixin:
             .filter(Annotation.collections.contains(collection)) \
             .order_by(Annotation.modified.desc())
 
-        """ Alternate method to get tagged annotations
-        results = collection.annotations \
-            .filter_by(in_trash=False) \
-            .order_by(Annotation.modified.desc())
-        """
+        # Alternate method to get tagged annotations.
+        # results = collection.annotations \
+        #     .filter_by(in_trash=False) \
+        #     .order_by(Annotation.modified.desc())
 
         return results
 
 
 class AnnotationUtilsMixin:
-    """ Process and return data from Annotations.
-    """
+    """ Misc utilities to process and return data from Annotations. """
 
-    """ filter by
-    """
+    # filter_by x
 
     @staticmethod
     def filter_query_by_source_id(query, in_request):
@@ -276,11 +265,8 @@ class AnnotationUtilsMixin:
 
         try:
             tag = Tag.query.filter_by(name=in_request).one()
-
         except NoResultFound:
-
             return Annotation.query.filter_by(id=None)
-
         results = query.filter(Annotation.tags.contains(tag))
 
         return results
@@ -290,93 +276,74 @@ class AnnotationUtilsMixin:
 
         try:
             collection = Collection.query.filter_by(name=in_request).one()
-
         except NoResultFound:
-
             return Annotation.query.filter_by(id=None)
 
         results = query.filter(Annotation.collections.contains(collection))
 
         return results
 
-    """ get x from query
-    """
+    # Get x from query
 
     @staticmethod
     def get_sources_from_query(query):
-        """ Compile a dictionary of sources from query.
-        """
+        """ Compile a dictionary of sources from query. """
+
         query = query.join(Source)
 
         info = []
-
         for source in Source.query.all():
-
             if query.filter(Source.name == source.name).first():
-
                 info.append(source.serialize())
 
         return info
 
     @staticmethod
     def get_authors_from_query(query):
-        """ Compile a dictionary of authors from query.
-        """
+        """ Compile a dictionary of authors from query. """
+
         query = query.join(Source).join(Author)
 
         info = []
-
         for author in Author.query.all():
-
             if query.filter(Author.name == author.name).first():
-
                 info.append(author.serialize())
 
         return info
 
     @staticmethod
     def get_tags_from_query(query):
-        """ Compile a dictionary of tags from query.
-        """
+        """ Compile a dictionary of tags from query. """
+
         query = query.join(Annotation.tags)
 
         info = []
-
         for tag in Tag.query.all():
-
             if query.filter(Tag.name == tag.name).first():
-
                 info.append(tag.serialize())
 
         return info
 
     @staticmethod
     def get_collections_from_query(query):
-        """ Compile a dictionary of collections from query.
-        """
+        """ Compile a dictionary of collections from query. """
+
         query = query.join(Annotation.collections)
 
         info = []
-
         for collection in Collection.query.all():
-
             if query.filter(Collection.name == collection.name).first():
-
                 info.append(collection.serialize())
 
         return info
 
     @staticmethod
     def get_untagged_from_query(query):
-        """ Compile a dictionary of untagged annotations from query.
-        """
+        """ Compile a dictionary of untagged annotations from query. """
 
         untagged = []
-
         for annotation in query:
-
             if not annotation.tags:
-
                 untagged.append(annotation.serialize())
 
         return untagged
@@ -399,30 +366,32 @@ class User(db.Model, UserMixin):
     results_per_page = db.Column(db.Integer, default=AppDefaults.RESULTS_PER_PAGE)
     recent_days = db.Column(db.Integer, default=AppDefaults.RECENT_DAYS)
 
+    # v1.1.0 Add
+
+    # v1.1.0 Remove
     show_dashboard_notification = db.Column(db.Boolean, default=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.new_api_key()
+        self.grant_new_api_key()
 
     def __repr__(self):
         return f"<{self.__class__.__name__} id:{self.id} username:{self.username}>"
 
     @staticmethod
-    def generate_api_key():
+    def _generate_api_key():
         return binascii.hexlify(os.urandom(16)).decode()
 
-    def new_api_key(self):
-        self.api_key = self.generate_api_key()
+    def grant_new_api_key(self):
+        self.api_key = self._generate_api_key()
 
     def set_password(self, raw_password):
-
         self.password = bcrypt.generate_password_hash(raw_password)
 
     def validate_password(self, raw_password):
-        """ Validates password and sets it
-        """
+        """ Validates and sets password. """
+
         min_length = 6
         max_length = 32
 
@@ -588,14 +557,13 @@ class User(db.Model, UserMixin):
 
     @property
     def theme(self):
-        """ Return the name of style sheet found in /static/css/themes.
-        """
+        """ Return the name of style sheet found in /static/css/themes. """
         return f"{AppDefaults.THEME_CHOICES[self.theme_index][1]}.css"
 
     @property
     def data(self):
-        """ Serialize and compile user settings and annotations into dictionary
-        """
+        """ Serialize User Settings and Annotations into a dictionary. """
+
         query = Annotation.query.all()
         annotations = Annotation.query_to_multiple_dict(query)
 
@@ -619,8 +587,8 @@ class User(db.Model, UserMixin):
         return data
 
     def serialize(self):
-        """ Serialize user into a dictionary.
-        """
+        """ Serialize User into a dictionary. """
+
         data = {
             "username": self.username,
             "fullname": self.fullname,
@@ -639,8 +607,8 @@ class User(db.Model, UserMixin):
         return data
 
     def deserialize(self, data):
-        """ De-serialize user from a dictionary
-        """
+        """ De-serialize User from a dictionary. """
+
         self.fullname = data["fullname"]
         self.theme_index = data["settings"]["theme_index"]
         self.results_per_page = data["settings"]["results_per_page"]
@@ -705,8 +673,8 @@ class Collection(db.Model, ToDictMixin, PingedMixin, RestoreMixin):
         return self.annotations.count()
 
     def serialize(self):
-        """ Serialize collection into a dictionary
-        """
+        """ Serialize Collection into a dictionary. """
+
         data = {
             "id": self.id,
             "name": self.name,
@@ -719,17 +687,18 @@ class Collection(db.Model, ToDictMixin, PingedMixin, RestoreMixin):
 
         return data
 
-    @classmethod
-    def remove_orphans(cls, session):
-        """ Remove orphaned collections that are not pinned or have a color.
-        """
-        session.query(Collection) \
-            .filter(
-                ~Collection.annotations.any(),
-                Collection.color=="",
-                Collection.pinned==False,
-                Collection.description=="") \
-            .delete(synchronize_session=False)
+    # Disabled
+    # @classmethod
+    # def remove_orphans(cls, session):
+    #     """ Remove orphaned Collections that are not pinned or have a color. """
+    #
+    #     session.query(Collection) \
+    #         .filter(
+    #             ~Collection.annotations.any(),
+    #             Collection.color=="",
+    #             Collection.pinned==False,
+    #             Collection.description=="") \
+    #         .delete(synchronize_session=False)
 
 
 # Disabled
@@ -791,8 +760,8 @@ class Tag(db.Model, ToDictMixin, PingedMixin, RestoreMixin):
         return self.annotations.count()
 
     def serialize(self):
-        """ Serialize tag into a dictionary
-        """
+        """ Serialize Tag into a dictionary. """
+
         data = {
             "id": self.id,
             "name": self.name,
@@ -805,17 +774,18 @@ class Tag(db.Model, ToDictMixin, PingedMixin, RestoreMixin):
 
         return data
 
-    @classmethod
-    def remove_orphans(cls, session):
-        """ Remove orphaned tags that are not pinned or have a color.
-        """
-        session.query(Tag) \
-            .filter(
-                ~Tag.annotations.any(),
-                Tag.color=="",
-                Tag.pinned==False,
-                Tag.description=="") \
-            .delete(synchronize_session=False)
+    # Disabled
+    # @classmethod
+    # def remove_orphans(cls, session):
+    #     """ Remove orphaned Tags that are not pinned or have a color. """
+    #
+    #     session.query(Tag) \
+    #         .filter(
+    #             ~Tag.annotations.any(),
+    #             Tag.color=="",
+    #             Tag.pinned==False,
+    #             Tag.description=="") \
+    #         .delete(synchronize_session=False)
 
 
 # Disabled
@@ -875,15 +845,12 @@ class Source(db.Model, ToDictMixin, PingedMixin):
 
         if not author_name:
             id = AppDefaults.AUTHOR_NONE["ID"]
-
             author = Author.query.filter_by(id=id).first()
-
         else:
             author = Author.query.filter_by(name=author_name).first()
 
         if not author:
             author = Author(id, author_name)
-
             db.session.add(author)
 
         # Ping to show in recently modified
@@ -896,8 +863,8 @@ class Source(db.Model, ToDictMixin, PingedMixin):
         return self.annotations.count()
 
     def serialize(self):
-        """ Serialize source into a dictionary
-        """
+        """ Serialize Source into a dictionary. """
+
         data = {
             "id": self.id,
             "name": self.name,
@@ -910,8 +877,8 @@ class Source(db.Model, ToDictMixin, PingedMixin):
 
     @classmethod
     def remove_orphans(cls, session):
-        """ Remove orphaned authors
-        """
+        """ Remove orphaned Sources. """
+
         session.query(Source) \
             .filter(Source.annotations==None) \
             .delete(synchronize_session=False)
@@ -967,8 +934,8 @@ class Author(db.Model, ToDictMixin, PingedMixin):
             .count()
 
     def serialize(self):
-        """ Serialize author into a dictionary
-        """
+        """ Serialize Author into a dictionary. """
+
         data = {
             "id": self.id,
             "name": self.name,
@@ -981,8 +948,8 @@ class Author(db.Model, ToDictMixin, PingedMixin):
 
     @classmethod
     def remove_orphans(cls, session):
-        """ Remove orphaned sources
-        """
+        """ Remove orphaned Authors. """
+
         session.query(Author) \
             .filter(Author.sources==None) \
             .delete(synchronize_session=False)
@@ -1012,8 +979,16 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
     modified = db.Column(db.DateTime, nullable=False, index=True, default=datetime.utcnow)
 
     origin = db.Column(db.String(64), nullable=False, default=AppDefaults.ORIGIN)
-    is_protected = db.Column(db.Boolean, nullable=False, default=True)
     in_trash = db.Column(db.Boolean, default=False)
+
+    # v1.1.0 Rename to is_refreshable
+    is_protected = db.Column(db.Boolean, nullable=False, default=True)
+
+    # v1.1.0 Add
+    # is_starred = db.Column(db.Boolean, nullable=False, default=False)
+    # is_refreshable = db.Column(db.Boolean, nullable=False, default=False)
+
+    # v1.1.0 Remove
 
     def __init__(self, id=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -1026,14 +1001,12 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
 
     @property
     def is_tagged(self):
-        """ Returns a boolean based on the number of tags
-        """
+        """ Returns a boolean based on the number of Tags. """
         return bool(len(self.tags))
 
     @property
     def in_collection(self):
-        """ Returns a boolean based on the number of collections
-        """
+        """ Returns a boolean based on the number of Collections. """
         return bool(len(self.collections))
 
     def refresh_source(self, source_name=None, author_name=None):
@@ -1061,9 +1034,7 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
 
         self.source_id = source.id
 
-    def refresh_tags(self, tags):
-        """ tags: list
-        """
+    def refresh_tags(self, tags: list):
 
         self.tags = []
 
@@ -1084,7 +1055,7 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
             if not tag:
                 tag = Tag(name)
 
-            # Ping to show in recently modified
+            # Ping to show in recently modified.
             tag.ping()
 
             self.tags.append(tag)
@@ -1138,19 +1109,16 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
         self.passage = u"DUPLICATE\n\n{0.passage}".format(self)
 
     def trash(self):
-        """ place in trash
-        """
+        """ Place in trash. """
         self.in_trash = True
 
     def restore(self):
-        """ remove from trash
-        """
+        """ Remove from trash. """
         self.in_trash = False
         self.modified = datetime.utcnow()
 
     def delete(self):
-        """ delete
-        """
+        """ Hard delete. """
         self.source_id = None
         self.tags = []
         self.collections = []
@@ -1158,9 +1126,11 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
         db.session.delete(self)
 
     def serialize(self):
-        """ Serialize annotation into a dictionary.
+        """ Serialize Annotation into a dictionary.
+
         Dates: Exported as ISO 8601 Format
         """
+
         data = {
             "id": self.id,
             "passage": self.passage,
@@ -1183,7 +1153,8 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
         return data
 
     def deserialize(self, data):
-        """ De-serialize annotation from a dictionary.
+        """ De-serialize Annotation from a dictionary.
+
         Dates: Supports importing only ISO 8601 Format
         """
 
@@ -1193,9 +1164,11 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
         self.passage = data["passage"]
         self.notes = data["notes"]
 
+        # TODO: Place dateparser in a try/except block.
         if data["metadata"]["created"]:
             self.created = dateparser(data["metadata"]["created"])
 
+        # TODO: Place dateparser in a try/except block.
         if data["metadata"]["modified"]:
             self.modified = dateparser(data["metadata"]["modified"])
 

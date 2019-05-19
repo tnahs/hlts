@@ -15,6 +15,7 @@ from werkzeug.datastructures import FileStorage
 
 
 class ExportUserData:
+    """ TODO: Make sure this can handle exporting thousands of Annotations. """
 
     def __init__(self, user, context):
 
@@ -24,14 +25,12 @@ class ExportUserData:
 
     @property
     def user_data(self):
-        return json.dumps(self.user.data, indent=4, separators=(",", ": "))
+        return json.dumps(self.user.data, indent=4)
 
     @property
     def user_data_filename(self):
-
-        date = self.date.strftime("%Y.%m.%d")
-
-        return "{0}_{1}.hlts".format(self.user.username, date)
+        date = self.date.strftime("%Y-%m-%d")
+        return f"{self.user.username}_{date}.hlts"
 
     @property
     def user_data_attachment(self):
@@ -48,8 +47,8 @@ class ExportUserData:
             self.user_data,
             mimetype="text/json",
             headers={
-                "Content-disposition":
-                "attachment; filename={0}".format(self.user_data_filename)}
+                "Content-disposition": f"attachment; filename={self.user_data_filename}"
+            }
         )
 
         return response
