@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/local/bin/python3
 
 import os
 import re
@@ -35,7 +35,7 @@ def normalize_name(string, space_replacement="-"):
     return string.replace(" ", space_replacement).lower()
 
 
-class PingedMixin(object):
+class PingedMixin:
 
     @classmethod
     def get_recently_pinged(cls, days):
@@ -50,7 +50,7 @@ class PingedMixin(object):
         return results
 
 
-class RestoreMixin(object):
+class RestoreMixin:
     """ Restore classmethod for Tags and Collections
     """
 
@@ -71,7 +71,7 @@ class RestoreMixin(object):
             db.session.add(query)
 
 
-class ToDictMixin(object):
+class ToDictMixin:
 
     @staticmethod
     def query_to_single_dict(query):
@@ -112,7 +112,7 @@ class ToDictMixin(object):
         return data
 
 
-class AnnotationQueryMixin(object):
+class AnnotationQueryMixin:
     """ Common queries
     """
 
@@ -249,7 +249,7 @@ class AnnotationQueryMixin(object):
         return results
 
 
-class AnnotationUtilsMixin(object):
+class AnnotationUtilsMixin:
     """ Process and return data from Annotations.
     """
 
@@ -407,8 +407,7 @@ class User(db.Model, UserMixin):
         self.new_api_key()
 
     def __repr__(self):
-
-        return u"<{0.__class__.__name__} id:{0.id} username:{0.username}>".format(self)
+        return f"<{self.__class__.__name__} id:{self.id} username:{self.username}>"
 
     @staticmethod
     def generate_api_key():
@@ -684,8 +683,7 @@ class Collection(db.Model, ToDictMixin, PingedMixin, RestoreMixin):
         self.name = normalize_name(name)
 
     def __repr__(self):
-
-        return u"<{0.__class__.__name__} id:{0.id} name:{0.name}>".format(self)
+        return f"<{self.__class__.__name__} id:{self.id} name:{self.name}>"
 
     @validates("name")
     def validate_name(self, key, name):
@@ -767,12 +765,10 @@ class Tag(db.Model, ToDictMixin, PingedMixin, RestoreMixin):
     pinged = db.Column(db.DateTime, nullable=False, index=True, default=datetime.utcnow)
 
     def __init__(self, name):
-
         self.name = normalize_name(name)
 
     def __repr__(self):
-
-        return u"<{0.__class__.__name__} id:{0.id} name:{0.name}>".format(self)
+        return f"<{self.__class__.__name__} id:{self.id} name:{self.name}>"
 
     @validates("name")
     def validate_name(self, key, name):
@@ -859,8 +855,7 @@ class Source(db.Model, ToDictMixin, PingedMixin):
         self.refresh_author(author_name=author_name)
 
     def __repr__(self):
-
-        return u"<{0.__class__.__name__} id:{0.id} name:{0.name} author:{0.author.name}>".format(self)
+        return f"<{self.__class__.__name__} id:{self.id} name:{self.name} author:{self.author.name}>"
 
     def validate_source(self, name, author_name):
 
@@ -956,8 +951,7 @@ class Author(db.Model, ToDictMixin, PingedMixin):
         self.name = author_name
 
     def __repr__(self):
-
-        return u"<{0.__class__.__name__} id:{0.id} name:{0.name}>".format(self)
+        return f"<{self.__class__.__name__} id:{self.id} name:{self.name}>"
 
     @validates("name")
     def validate_name(self, key, name):
@@ -1039,8 +1033,7 @@ class Annotation(db.Model, ToDictMixin, AnnotationQueryMixin, AnnotationUtilsMix
             self.id = id
 
     def __repr__(self):
-
-        return u"<{0.__class__.__name__} id:{0.id}>".format(self)
+        return f"<{self.__class__.__name__} id:{self.id}>"
 
     @property
     def is_tagged(self):

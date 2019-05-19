@@ -1,8 +1,8 @@
-#!/usr/bin/env python
+#!/usr/local/bin/python3
 
 import re
 import string
-from urlparse import urlparse, urljoin
+from urllib.parse import urlparse, urljoin
 from functools import wraps
 from threading import Thread
 
@@ -32,87 +32,6 @@ def async_threaded(func):
         thread = Thread(target=func, args=args, kwargs=kwargs)
         thread.start()
     return wrapper
-
-
-class ContextThread(Thread):
-    def __init__(self, *args, **kwargs):
-        super(ContextThread, self).__init__(*args, **kwargs)
-
-        self.app = current_app._get_current_object()
-
-    def run(self):
-        with self.app.app_context():
-            super(ContextThread, self).run()
-
-
-class AsyncImport(object):
-
-    # WIPASYNC
-
-    def __init__(self, context):
-
-        self.app = context
-
-    @async_threaded
-    def refresh(self, annotations):
-
-        with self.app.app_context():
-
-            for annotation in annotations:
-
-                if not annotation["id"]:
-                    annotation["id"] = None
-
-                existing = Annotation.query_by_id(annotation["id"])
-
-                if existing:
-
-                    if existing.is_protected:
-
-                        continue
-
-                    elif not existing.is_protected:
-
-                        db.session.delete(existing)
-                        db.session.commit()
-
-                importing = Annotation()
-                importing.deserialize(annotation)
-
-                try:
-                    db.session.add(importing)
-                    db.session.commit()
-
-                except:
-                    db.session.rollback()
-
-    @async_threaded
-    def add(self, annotations):
-
-        with self.app.app_context():
-
-            for annotation in annotations:
-
-                if not annotation["id"]:
-                    annotation["id"] = None
-
-                existing = Annotation.query_by_id(annotation["id"])
-
-                if existing:
-
-                    continue
-
-                elif not existing:
-
-                    importing = Annotation()
-                    importing.deserialize(annotation)
-
-                    try:
-                        db.session.add(importing)
-                        db.session.commit()
-
-                    except:
-                        db.session.rollback()
 
 
 class SortIt(object):
@@ -168,7 +87,7 @@ class SortIt(object):
                     index[character].append(item)
 
         # Remove empty index items
-        filtered_index = dict((k, v) for k, v in index.iteritems() if v)
+        filtered_index = dict((k, v) for k, v in index.items() if v)
 
         return filtered_index
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/local/bin/python3
 
 from . import main
 
@@ -7,7 +7,7 @@ from datetime import datetime
 
 import app.defaults as AppDefaults
 
-from app import db, pages
+from app import db
 from app.models import Annotation, Source, Author, Tag, Collection
 from app.tools import home_url, SortIt
 from app.main.tools import SearchAnnotations, paginated_annotations
@@ -48,8 +48,6 @@ Menubar pages
 @main.route("/dashboard/")
 @login_required
 def dashboard():
-
-    notification = pages.get("dashboard/notification")
 
     today = datetime.utcnow()
 
@@ -122,7 +120,6 @@ def dashboard():
             daily_topic_annotations = []
 
     dash = {
-        "notification": notification,
         "today": today,
         "annotation_count": annotation_count,
         "tag_count": tag_count,

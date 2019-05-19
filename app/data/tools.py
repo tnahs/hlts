@@ -1,17 +1,16 @@
-#!/usr/bin/env python
+#!/usr/local/bin/python3
 
+import io
 import json
 import sys
 from datetime import datetime
 import copy
-from StringIO import StringIO
 
-from app import db, mail
+from app import db
 from app.models import User, Annotation
 from app.tools import async_threaded
 
 from flask import current_app, Response, render_template
-from flask_mail import Message
 from werkzeug.datastructures import FileStorage
 
 
@@ -37,7 +36,7 @@ class ExportUserData(object):
     @property
     def user_data_attachment(self):
 
-        data = StringIO()
+        data = io.StringIO()
         data.write(self.user_data)
         data.seek(0)
 
@@ -55,33 +54,33 @@ class ExportUserData(object):
 
         return response
 
-    def email(self):
+    # def email(self):
 
-        date = self.date.strftime("%B %d, %Y")
-        user = self.user.display_name
+    #     date = self.date.strftime("%B %d, %Y")
+    #     user = self.user.display_name
 
-        subject = "{0}'s HLTS data from {1}".format(user, date)
-        body = render_template("data/email.txt", user=user, date=date)
+    #     subject = "{0}'s HLTS data from {1}".format(user, date)
+    #     body = render_template("data/email.txt", user=user, date=date)
 
-        sender = ("The HLTS Team", current_app.config["MAIL_USERNAME"])
-        recipients = [self.user.email]
+    #     sender = ("The HLTS Team", current_app.config["MAIL_USERNAME"])
+    #     recipients = [self.user.email]
 
-        message = Message(
-            subject,
-            body=body,
-            sender=sender,
-            recipients=recipients)
+    #     message = Message(
+    #         subject,
+    #         body=body,
+    #         sender=sender,
+    #         recipients=recipients)
 
-        self.send_email(message, self.user_data_filename, self.user_data_attachment)
+    #     self.send_email(message, self.user_data_filename, self.user_data_attachment)
 
-    @async_threaded
-    def send_email(self, message, filename, data):
+    # @async_threaded
+    # def send_email(self, message, filename, data):
 
-        with self.app.app_context():
+    #     with self.app.app_context():
 
-            message.attach(filename, "text/json", data)
+    #         message.attach(filename, "text/json", data)
 
-            mail.send(message)
+    #         mail.send(message)
 
 
 class RestoreUserData(object):
@@ -101,7 +100,7 @@ class RestoreUserData(object):
 
         Validator written to work with Werkzug FileStorage class. In the
         future we need to add a method to verify other input streams as well as
-        being able to handle whether the input json is a string or an objet and
+        being able to handle whether the input json is a string or an object and
         load it accordingly.
 
         """

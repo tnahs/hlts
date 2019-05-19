@@ -1,15 +1,12 @@
-#!/usr/bin/env python
+#!/usr/local/bin/python3
 
-from logging import StreamHandler, Formatter, INFO, ERROR
-from logging.handlers import RotatingFileHandler, SMTPHandler
+from logging import StreamHandler, Formatter, INFO
+from logging.handlers import RotatingFileHandler
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from flask_mail import Mail
 from flask_bcrypt import Bcrypt
-from flask_flatpages import FlatPages
-from flask_misaka import Misaka
 
 
 from config import BaseConfig
@@ -17,14 +14,7 @@ from config import BaseConfig
 
 db = SQLAlchemy()
 login = LoginManager()
-mail = Mail()
 bcrypt = Bcrypt()
-pages = FlatPages()
-md = Misaka(fenced_code=True, underline=True, highlight=True,
-            space_headers=True, superscript=True, strikethrough=True,
-            autolink=True, no_intra_emphasis=True, hard_wrap=True,
-            escape=False
-            )
 
 
 def create_app(config=BaseConfig):
@@ -35,10 +25,7 @@ def create_app(config=BaseConfig):
 
     db.init_app(app)
     login.init_app(app)
-    mail.init_app(app)
     bcrypt.init_app(app)
-    pages.init_app(app)
-    md.init_app(app)
 
     from app.user import user
     app.register_blueprint(user)
@@ -51,9 +38,6 @@ def create_app(config=BaseConfig):
 
     from app.data import data
     app.register_blueprint(data)
-
-    from app.flat import flat
-    app.register_blueprint(flat)
 
     from app.api import api
     app.register_blueprint(api, url_prefix="/api")

@@ -55,10 +55,7 @@
 		<div id="mainMenuChoices" class="dropShadowBig">
 			<div>signed in as {{ current_user.display_name }}</div>
 			<hr>
-			<a href="{{ url_for('flat.page', which='manual/main') }}">manual</a>
-			<a href="{{ url_for('flat.page', which='beta/main') }}">beta notes</a>
 			<a href="{{ url_for('main.tools') }}">tools</a>
-			<hr>
 			<a href="{{ url_for('user.settings') }}">settings</a>
 			<a href="{{ url_for('user.logout') }}">logout</a>
 		</div>
@@ -76,9 +73,6 @@
 			<a href="{{ url_for('main.recent') }}">recent</a>
 			<a href="{{ url_for('main.random', mode='default') }}">random</a>
 			<a href="{{ url_for('main.trash') }}">trash</a>
-			<hr>
-			<a href="{{ url_for('flat.page', which='manual/main') }}">manual</a>
-			<a href="{{ url_for('flat.page', which='beta/main') }}">beta notes</a>
 			<a href="{{ url_for('main.tools') }}">tools</a>
 			<hr>
 			<a href="{{ url_for('user.settings') }}">settings</a>

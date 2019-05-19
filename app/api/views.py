@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/local/bin/python3
 
 from . import api
 
@@ -8,14 +8,11 @@ from flask import jsonify, request
 
 # API Error Handling
 
-
 @api.errorhandler(ApiError)
 def handle_api_import_error(api_error):
     return api_error.send_response()
 
-
 # GET
-
 
 @api.route("/verify_api_key", methods=["GET"])
 @api_key_required
@@ -23,9 +20,7 @@ def verify_api_key():
 
     return jsonify({"result": "success"})
 
-
 # POST
-
 
 @api.route("/import/", methods=["POST"])
 @api.route("/import/<string:mode>", methods=["POST"])
@@ -39,9 +34,7 @@ def import_annotations(mode=None):
 
     return api_import.send_response()
 
-
 # Dummy Error Responses
-
 
 @api.route("/error/<int:status_code>/", methods=["GET"])
 @api_key_required

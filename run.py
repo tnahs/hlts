@@ -1,3 +1,5 @@
+#!/usr/local/bin/python3
+
 from app import create_app, db
 
 import app.defaults as AppDefaults

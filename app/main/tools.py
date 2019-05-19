@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/local/bin/python3
 
 import re
 
@@ -67,7 +67,7 @@ class SearchAnnotations(object):
     }
 
     term_min_length = 2
-    key_symbols = "-:"
+    key_symbols = ":"
     bool_words_AND = ["and"]
     bool_words_OR = ["or"]
     bool_default = bool_words_OR[0]
@@ -194,7 +194,7 @@ class SearchAnnotations(object):
 
         """ Append remaining text to _terms.
         """
-        if user_query.strip() > 0:
+        if len(user_query.strip()) > 0:
 
             _terms.extend(term.strip() for term in user_query.split(" "))
 
@@ -206,7 +206,7 @@ class SearchAnnotations(object):
 
         """ Remove blank items in _terms
         """
-        _terms = filter(None, _terms)
+        _terms = list(filter(None, _terms))
 
         """ Reject queries wth _bool but no _terms
         """

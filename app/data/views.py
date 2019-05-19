@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/local/bin/python3
 
 from . import data
 
@@ -22,19 +22,19 @@ def download_user_data():
     return export.download()
 
 
-@data.route("/email_user_data")
-@login_required
-def email_user_data():
+# @data.route("/email_user_data")
+# @login_required
+# def email_user_data():
 
-    app = current_app._get_current_object()
+#     app = current_app._get_current_object()
 
-    export = ExportUserData(user=current_user, context=app)
+#     export = ExportUserData(user=current_user, context=app)
 
-    export.email()
+#     export.email()
 
-    flash("e-mailed HLTS data to {0}".format(current_user.email), "flashSuccess")
+#     flash("e-mailed HLTS data to {0}".format(current_user.email), "flashSuccess")
 
-    return redirect(url_for("main.tools"))
+#     return redirect(url_for("main.tools"))
 
 
 @data.route("/restore_user_data", methods=["GET", "POST"])
@@ -56,7 +56,8 @@ def restore_user_data():
         try:
             restore.validate(data)
         except Exception as error:
-            flash(error.message, "flashWarning")
+            # TODO: Exception message not bubbling up.
+            flash(repr(error), "flashWarning")
             return redirect(url_for("data.restore_user_data"))
 
         else:
@@ -64,7 +65,8 @@ def restore_user_data():
             try:
                 restore.execute()
             except Exception as error:
-                flash(error.message, "flashWarning")
+                # TODO: Exception message not bubbling up.
+                flash(repr(error), "flashWarning")
                 return redirect(url_for("data.restore_user_data"))
 
             else:

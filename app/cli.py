@@ -89,44 +89,6 @@ def register_cli(app):
             click.echo("Created App Admin!")
             click.echo("<Username: {0.username}> <is admin: {0.is_admin}>".format(user))
 
-    def run_create_welcome_annotations():
-
-        welcome_json = path.join(current_app.root_path, "init", "welcome.json")
-
-        with open(welcome_json) as f:
-            welcome = json.load(f)
-
-        Collection.restore(welcome["collections"])
-
-        for annotation in welcome["annotations"]:
-
-            importing = Annotation()
-            importing.deserialize(annotation)
-
-            db.session.add(importing)
-
-        try:
-            db.session.commit()
-
-        except AssertionError as error:
-            db.session.rollback()
-            click.echo(error)
-
-        except IntegrityError as error:
-            db.session.rollback()
-            click.echo(error)
-
-        else:
-            click.echo("Added welcome annotations!")
-
-    def show_current_users():
-
-        users = User.query.all()
-        click.echo("Current users:")
-        click.echo("------------------------------")
-        click.echo(users)
-        click.echo("------------------------------")
-
     """ CLI Methods """
 
     @app.cli.command(
@@ -142,12 +104,6 @@ def register_cli(app):
         run_drop_db()
 
     @app.cli.command(
-        name="init_beta",
-        help="Create default user and welcome annotations.")
-    def init_beta():
-        run_create_welcome_annotations()
-
-    @app.cli.command(
         name="create_app_user",
         help="Create app user.")
     def create_app_user():
@@ -158,12 +114,6 @@ def register_cli(app):
         help="Create app admin.")
     def create_app_admin():
         run_create_app_admin()
-
-    @app.cli.command(
-        name="create_welcome_annotations",
-        help="Create welcome annotations.")
-    def create_welcome_annotations():
-        run_create_welcome_annotations()
 
     @app.cli.command(
         name="create_user",
@@ -184,19 +134,15 @@ def register_cli(app):
 
         try:
             db.session.commit()
-
         except AssertionError as error:
             db.session.rollback()
             click.echo(error)
-
         except IntegrityError as error:
             db.session.rollback()
             click.echo(error)
-
         except:
             db.session.rollback()
             click.echo("Unexpected error: {0}.".format(sys.exc_info()[0]))
-
         else:
             click.echo("Created User!")
             click.echo("<Username: {0.username}> <is admin: {0.is_admin}>".format(user))
@@ -220,19 +166,15 @@ def register_cli(app):
 
             try:
                 db.session.commit()
-
             except AssertionError as error:
                 db.session.rollback()
                 click.echo(error)
-
             except IntegrityError as error:
                 db.session.rollback()
                 click.echo(error)
-
             except:
                 db.session.rollback()
                 click.echo("Unexpected error: {0}.".format(sys.exc_info()[0]))
-
             else:
                 click.echo("Deleted user!")
 
@@ -273,19 +215,15 @@ def register_cli(app):
 
             try:
                 db.session.commit()
-
             except AssertionError as error:
                 db.session.rollback()
                 click.echo(error)
-
             except IntegrityError as error:
                 db.session.rollback()
                 click.echo(error)
-
             except:
                 db.session.rollback()
                 click.echo("Unexpected error: {0}.".format(sys.exc_info()[0]))
-
             else:
                 click.echo("Updated User!")
                 click.echo("<Username: {0.username}> <is admin: {0.is_admin}>".format(user))
@@ -328,11 +266,9 @@ def register_cli(app):
 
             try:
                 db.session.commit()
-
             except:
                 db.session.rollback()
                 click.echo("Unexpected error: {0}.".format(sys.exc_info()[0]))
-
             else:
                 click.echo("Removed all users!")
 
@@ -362,7 +298,7 @@ def register_cli(app):
 
     @app.cli.command(
         name="reset_app",
-        help="Drop databases & re-create users.")
+        help="Drop databases & re-create user.")
     def reset_app():
 
         if click.confirm("WARNING! Perform full reset?", abort=True):

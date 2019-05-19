@@ -4,23 +4,14 @@ verify_ssl = true
 name = "pypi"
 
 [requires]
-python_version = "2.7"
-
-[dev-packages]
-pytest = "*"
+python_version = "3.7"
 
 [packages]
-"psycopg2" = "*"
+flask = "*"
+flask-sqlalchemy = "*"
+flask-bcrypt = "*"
+flask-login = "*"
+flask-wtf = "*"
 gunicorn = "*"
-Flask = "*"
-SQLAlchemy = "==1.1.14"
-Flask-SQLAlchemy = "*"
-Flask-Login = "*"
-Flask-WTF = "*"
-Flask-Misaka = "*"
-Flask-Bcrypt = "*"
-"psycopg2-binary" = "*"
 python-dateutil = "*"
-flask-mail = "*"
-flask-flatpages = "*"
-pytest = "*"
+psycopg2-binary = "*"

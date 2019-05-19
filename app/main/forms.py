@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/local/bin/python3
 
 from app.models import Tag, Collection, Source, Author
 
