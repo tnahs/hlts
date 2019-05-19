@@ -686,7 +686,7 @@ class Collection(db.Model, ToDictMixin, PingedMixin, RestoreMixin):
 
         if self.name != name:
             if Collection.query.filter(Collection.name == name).first():
-                raise AssertionError("collection '{name}' already exists")
+                raise AssertionError(f"collection '{name}' already exists")
 
         return name
 
