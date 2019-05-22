@@ -15,21 +15,24 @@ from celery.result import AsyncResult
 
 # Testing Celery --------------------------------------------------------------
 
-@data.route("/view_worker")
-def view_worker():
+@data.route("/worker/")
+def worker():
 
     worker = {
         "id": "NONE",
         "state": "NONE"
     }
 
-    return render_template("data/view_worker.html", worker=worker)
+    return render_template("data/worker.html", worker=worker)
 
 
 @data.route("/run_worker", methods=["POST"])
 def run_worker():
 
-    task = take_nap.delay(10)
+    new_worker = request.get_json(force=True)
+    nap_length = new_worker.get("napLength", 1)
+
+    task = take_nap.delay(nap_length)
 
     new_worker = {
         "id": task.id,
@@ -43,7 +46,6 @@ def run_worker():
 def get_state():
 
     which_worker = request.get_json(force=True)
-
     id_ = which_worker.get("id", None)
 
     result = celery.AsyncResult(id_)

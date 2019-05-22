@@ -1,8 +1,10 @@
 
+<div>Nap for how long?: <input type="text" id="nap-length" value=10></div>
 <div>Worker: <span id="worker-id">{{ worker.id }}</span></div>
 <div>State: <span id="worker-state">{{ worker.state }}</span></div>
 <div>Info: <span id="worker-info">{{ worker.info }}</span></div>
-<div>Progress: <span id="worker-progress"></span></div>
+<div id="worker-progress"></div>
+<div id="worker-progress-full"></div>
 <button id="run-worker">Run Worker!</button>
 
 
@@ -17,12 +19,18 @@
 
     function runWorker() {
 
+        const dot = "="
+
+        const napLength = document.querySelector("#nap-length");
         const workerID = document.querySelector("#worker-id");
         const workerState = document.querySelector("#worker-state");
+        const workerProgressFull = document.querySelector("#worker-progress-full");
+        workerProgressFull.innerText = dot.repeat(napLength.value)
 
         fetch("/run_worker", {
             method: "POST",
-            credentials: "include"
+            credentials: "include",
+            body: JSON.stringify({napLength: napLength.value})
         })
             .then(response => response.json())
             .then(data => {
@@ -46,8 +54,6 @@
         const workerInfo = document.querySelector("#worker-info");
         const workerProgress = document.querySelector("#worker-progress");
 
-        console.log(workerState.innerText)
-
         if (workerState.innerText == "NONE" ||
             workerState.innerText == "PENDING" ||
             workerState.innerText == "STARTED" ||
@@ -62,8 +68,8 @@
                 .then(data => {
 
                     workerState.innerText = data.state
-                    workerInfo.innerText = JSON.stringify(data.info)
-                    workerProgress.innerText = workerProgress.innerText + "."
+                    workerInfo.innerText = data.info["message"] || data.info
+                    workerProgress.innerText = workerProgress.innerText + "="
                 }
             )
             .catch((error) => {
