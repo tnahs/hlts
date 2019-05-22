@@ -33,8 +33,11 @@ class LoginForm(FlaskForm):
 
         if self.user:
 
+            # FIXED for Python 3. Was getting "Invalid Salt" Exception on Heroku
+            password = field.data.encode('utf-8')
+
             try:
-                self.user.check_password(field.data)
+                self.user.check_password(password)
 
             except ValueError as error:
                 flash(error, "flashWarning")
