@@ -16,7 +16,6 @@ from celery.result import AsyncResult
 # Testing Celery --------------------------------------------------------------
 
 @data.route("/view_worker")
-@login_required
 def view_worker():
 
     worker = {
@@ -28,7 +27,6 @@ def view_worker():
 
 
 @data.route("/run_worker", methods=["POST"])
-@login_required
 def run_worker():
 
     task = take_nap.delay(10)
@@ -67,7 +65,6 @@ def get_state():
 
 
 @data.route("/download_user_data")
-@login_required
 def download_user_data():
 
     app = current_app._get_current_object()
