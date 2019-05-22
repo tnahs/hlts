@@ -2,13 +2,68 @@
 
 from . import data
 
+from app import celery
 from app.tools import home_url
 from app.data.tools import ExportUserData, RestoreUserData
 from app.data.forms import RestoreDataForm
+from app.data.tasks import take_nap
 
-from flask import redirect, url_for, request, flash, render_template, \
-    current_app
+from flask import redirect, url_for, request, flash, render_template, current_app, jsonify
 from flask_login import login_required, current_user
+from celery.result import AsyncResult
+
+
+# Testing Celery --------------------------------------------------------------
+
+@data.route("/view_worker")
+@login_required
+def view_worker():
+
+    worker = {
+        "id": "NONE",
+        "state": "NONE"
+    }
+
+    return render_template("data/view_worker.html", worker=worker)
+
+
+@data.route("/run_worker", methods=["POST"])
+@login_required
+def run_worker():
+
+    task = take_nap.delay(10)
+
+    new_worker = {
+        "id": task.id,
+        "state": task.state
+    }
+
+    return jsonify(new_worker)
+
+
+@data.route("/get_state", methods=["POST"])
+def get_state():
+
+    which_worker = request.get_json(force=True)
+
+    id_ = which_worker.get("id", None)
+
+    result = celery.AsyncResult(id_)
+
+    response = {
+        "id": id_,
+        "state": result.state,
+    }
+
+    try:
+        result.info
+        response["info"] = result.info
+    except:
+        pass
+
+    return jsonify(response)
+
+# Testing Celery --------------------------------------------------------------
 
 
 @data.route("/download_user_data")
@@ -25,15 +80,15 @@ def download_user_data():
 # @data.route("/email_user_data")
 # @login_required
 # def email_user_data():
-
+#
 #     app = current_app._get_current_object()
-
+#
 #     export = ExportUserData(user=current_user, context=app)
-
+#
 #     export.email()
-
+#
 #     flash("e-mailed HLTS data to {0}".format(current_user.email), "flashSuccess")
-
+#
 #     return redirect(url_for("main.tools"))
 
 

@@ -7,7 +7,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
-
+from celery import Celery
 
 from config import BaseConfig
 
@@ -15,6 +15,7 @@ from config import BaseConfig
 db = SQLAlchemy()
 login = LoginManager()
 bcrypt = Bcrypt()
+celery = Celery(__name__, broker=BaseConfig.CELERY_BROKER_URL)
 
 
 def create_app(config=BaseConfig):
@@ -26,20 +27,18 @@ def create_app(config=BaseConfig):
     db.init_app(app)
     login.init_app(app)
     bcrypt.init_app(app)
-
-    from app.user import user
-    app.register_blueprint(user)
+    celery.conf.update(app.config)
 
     from app.main import main
-    app.register_blueprint(main)
-
+    from app.user import user
     from app.errors import errors
-    app.register_blueprint(errors)
-
     from app.data import data
-    app.register_blueprint(data)
-
     from app.api import api
+
+    app.register_blueprint(main)
+    app.register_blueprint(user)
+    app.register_blueprint(errors)
+    app.register_blueprint(data)
     app.register_blueprint(api, url_prefix="/api")
 
     login.login_view = "user.login"
@@ -62,3 +61,5 @@ def create_app(config=BaseConfig):
         app.logger.addHandler(local_handler)
 
     return app
+
+from app import models
