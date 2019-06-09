@@ -47,4 +47,5 @@ Temporary Items
 .env
 *.sqlite
 .rdb
+tmp/
 ~*

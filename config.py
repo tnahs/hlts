@@ -26,7 +26,4 @@ class BaseConfig:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR / 'db.sqlite'}")
 
-    CELERY_BROKER_URL = os.environ.get("REDIS_URL", "redis://")
-    CELERY_RESULT_BACKEND = os.environ.get("REDIS_URL", "redis://")
-
     LOGGING_TO_STOUT = str_to_bool(os.getenv("LOGGING_TO_STOUT"), False)

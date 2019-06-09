@@ -2,68 +2,12 @@
 
 from . import data
 
-from app import celery
 from app.tools import home_url
 from app.data.tools import ExportUserData, RestoreUserData
 from app.data.forms import RestoreDataForm
-from app.data.tasks import take_nap
 
 from flask import redirect, url_for, request, flash, render_template, current_app, jsonify
 from flask_login import login_required, current_user
-from celery.result import AsyncResult
-
-
-# Testing Celery --------------------------------------------------------------
-
-@data.route("/worker/")
-def worker():
-
-    worker = {
-        "id": "NONE",
-        "state": "NONE"
-    }
-
-    return render_template("data/worker.html", worker=worker)
-
-
-@data.route("/run_worker", methods=["POST"])
-def run_worker():
-
-    new_worker = request.get_json(force=True)
-    nap_length = new_worker.get("napLength", 1)
-
-    task = take_nap.delay(nap_length)
-
-    new_worker = {
-        "id": task.id,
-        "state": task.state
-    }
-
-    return jsonify(new_worker)
-
-
-@data.route("/get_state", methods=["POST"])
-def get_state():
-
-    which_worker = request.get_json(force=True)
-    id_ = which_worker.get("id", None)
-
-    result = celery.AsyncResult(id_)
-
-    response = {
-        "id": id_,
-        "state": result.state,
-    }
-
-    try:
-        result.info
-        response["info"] = result.info
-    except:
-        pass
-
-    return jsonify(response)
-
-# Testing Celery --------------------------------------------------------------
 
 
 @data.route("/download_user_data")
