@@ -387,7 +387,7 @@ class User(db.Model, UserMixin):
         self.api_key = self._generate_api_key()
 
     def set_password(self, raw_password):
-        self.password = bcrypt.generate_password_hash(raw_password)
+        self.password = bcrypt.generate_password_hash(raw_password).decode('utf8')
 
     def validate_password(self, raw_password):
         """ Validates and sets password. """

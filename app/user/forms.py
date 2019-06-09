@@ -34,7 +34,7 @@ class LoginForm(FlaskForm):
         if self.user:
 
             # FIXME Getting "Invalid Salt" Exception on Heroku. Can't login.
-            password = field.data.encode('utf-8')
+            password = field.data
 
             try:
                 self.user.check_password(password)
